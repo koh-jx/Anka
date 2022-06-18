@@ -71,7 +71,6 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
           {isRegister && (
               <Button 
                 color="primary"
-                className={styles.button}
                 variant="contained"
                 style={{ 
                   borderRadius: 25, 
@@ -92,7 +91,6 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
             <>
               <Button 
                 color="primary"
-                className={styles.button}
                 variant="contained"
                 style={{ 
                   borderRadius: 25, 
@@ -101,7 +99,8 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
                   marginRight: 'auto', 
                   width: '50%', 
                   fontFamily: 'Roboto', 
-                  fontWeight: 'bold' 
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap'
                 }}
                 onClick={loginUser}
               >
@@ -119,7 +118,8 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
                   marginRight: 'auto', 
                   width: '50%', 
                   fontFamily: 'Roboto', 
-                  fontWeight: 'bold' 
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap'
                 }}
                 onClick={() => setIsRegister(true)}
               >

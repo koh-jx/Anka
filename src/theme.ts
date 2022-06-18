@@ -13,6 +13,9 @@ const theme = createTheme({
     error: {
       main: red.A400,
     },
+    background: {
+      default: '#FFDBB5',
+    }
   },
   typography: {
     fontFamily: '"Staatliches", "Roboto", "Helvetica", "Arial", sans-serif',
