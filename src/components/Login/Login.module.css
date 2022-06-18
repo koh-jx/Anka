@@ -32,10 +32,9 @@ h1 {
     justify-content: center;
 
 }
-/* 
-.button {
-    width: 50%;
-    color: #fff;
-    margin-left: auto;
-    margin-right: auto;
-} */
+
+.title {
+    font-family: 'Staatliches';
+    font-weight: 100;
+    font-size: 40px;
+}

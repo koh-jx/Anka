@@ -14,7 +14,7 @@ function App() {
         <Header />
       </div>
       <div className="wrapper">
-        {!isLoggedIn && <Login />}
+        {!isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
         {isLoggedIn && < AppRoutes />}
       </div>
     </div>

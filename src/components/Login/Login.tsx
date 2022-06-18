@@ -1,58 +1,135 @@
-import React, { ReactElement } from 'react'
-import TextField from '@mui/material/TextField';
-import Button from "@mui/material/Button";
+import React, { ReactElement, useState } from 'react'
+import {
+  Alert,
+  Button,
+  TextField,
+} from '@mui/material';
 
 import styles from './Login.module.css'
 
 
-function Login(): ReactElement {
-    return <div className={ [styles.wrapper, styles.center].join(' ') }>
-      <div className={ [styles.loginBox, styles.center].join(' ') }>
-        <h1>Welcome to Anka</h1>
-        <form className={ [styles.form, styles.center].join(' ') }>
-            <TextField
-                color="primary"
-                id="username"
-                fullWidth
-                label="Username"
-                margin="normal"
-                variant="filled"
-                style={{ backgroundColor: 'rgba(255,255,255,1)', borderRadius: 25 }}
-            />
+function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}): ReactElement {
+  const [isRegister, setIsRegister] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-            <TextField
-                color="primary"
-                id="password"
-                fullWidth
-                label="Password"
-                type="password"
-                margin="normal"
-                variant="filled"
-                style={{ backgroundColor: 'rgba(255,255,255,1)', borderRadius: 25 }}
-            />
-    
-            <Button 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+
+  const loginUser = () => {
+    if (username === 'admin' && password === 'admin') {
+      setIsLoggedIn(true);
+    } else {
+      setShowAlert(true);
+      setAlertMessage('Invalid username or password');
+    }
+  }
+
+  const registerUser = () => {
+    if (username === 'admin' && password === 'admin') {
+      setIsLoggedIn(true);
+    } else {
+      setShowAlert(true);
+      // 2 cases: username already taken or either field is blank
+      setAlertMessage('Invalid username or password');
+    }
+  }
+  
+  console.log(showAlert, alertMessage);
+
+  return <div className={ [styles.wrapper, styles.center].join(' ') }>
+    <div className={ [styles.loginBox, styles.center].join(' ') }>
+      <h1 className={styles.title}>Welcome to Anka</h1>
+      <form className={ [styles.form, styles.center].join(' ') }>
+          <TextField
               color="primary"
-              className={styles.button}
-              type="submit"
-              variant="contained"
-              style={{ borderRadius: 25, color: 'white', marginLeft: 'auto', marginRight: 'auto', width: '50%' }}
-            >
-              Login
-            </Button>
-            
-            <Button 
-              color="secondary"
-              className={styles.button}
-              type="submit"
-              variant="contained"
-              style={{ borderRadius: 25, color: 'black', marginLeft: 'auto', marginRight: 'auto', width: '50%' }}
-            >
-              Create a new account
-            </Button>
-        </form>
-      </div>
+              id="username"
+              fullWidth
+              label="Username"
+              margin="normal"
+              variant="filled"
+              style={{ backgroundColor: 'rgba(255,255,255,1)', fontFamily: 'Staatliches' }}
+              onChange={(e) => setUsername(e.target.value)}
+          />
+
+          <TextField
+              color="primary"
+              id="password"
+              fullWidth
+              label="Password"
+              type="password"
+              margin="normal"
+              variant="filled"
+              style={{ backgroundColor: 'rgba(255,255,255,1)', fontFamily: 'Staatliches' }}
+              onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {showAlert && (
+            <Alert severity="error">{alertMessage}</Alert>
+          )}
+
+          {isRegister && (
+              <Button 
+                color="primary"
+                className={styles.button}
+                variant="contained"
+                style={{ 
+                  borderRadius: 25, 
+                  color: 'white', 
+                  marginLeft: 'auto', 
+                  marginRight: 'auto', 
+                  width: '50%', 
+                  fontFamily: 'Roboto', 
+                  fontWeight: 'bold' 
+                }}
+                onClick={registerUser}
+              >
+                Create new account
+              </Button>
+          )}
+  
+          {!isRegister && (
+            <>
+              <Button 
+                color="primary"
+                className={styles.button}
+                variant="contained"
+                style={{ 
+                  borderRadius: 25, 
+                  color: 'white', 
+                  marginLeft: 'auto', 
+                  marginRight: 'auto', 
+                  width: '50%', 
+                  fontFamily: 'Roboto', 
+                  fontWeight: 'bold' 
+                }}
+                onClick={loginUser}
+              >
+                Login
+              </Button>
+              
+              <Button 
+                color="secondary"
+                className={styles.button}
+                variant="contained"
+                style={{ 
+                  borderRadius: 25, 
+                  color: 'black', 
+                  marginLeft: 'auto', 
+                  marginRight: 'auto', 
+                  width: '50%', 
+                  fontFamily: 'Roboto', 
+                  fontWeight: 'bold' 
+                }}
+                onClick={() => setIsRegister(true)}
+              >
+                Create a new account
+              </Button>
+            </>
+          )}
+      </form>
     </div>
+  </div>
 }
 
 export default Login;
