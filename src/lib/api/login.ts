@@ -9,8 +9,8 @@ type UserLogin = {
 };
 
 const checkUserExists = async (username: string): Promise<boolean> => {
-    const res = await ankaApi.get(`/users/${username}`);
-    return res.status === 200;
+    const res = await ankaApi.get(`/users/exists/${username}`);
+    return res.data;
 }
 
 export const registerNewUser = async (username: string, password: string): Promise<void> => {

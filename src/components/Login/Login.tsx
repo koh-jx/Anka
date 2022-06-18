@@ -29,7 +29,6 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
     await login(username, password)
       .then ((data) => {
         setIsLoggedIn(true);
-        console.log(data);
       }).catch((err : any) => {
         setShowAlert(true);
         setAlertMessage("Invalid email or password");
@@ -41,7 +40,6 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
     await registerNewUser(username, password)
       .then ((data) => {
         setIsLoggedIn(true);
-        console.log(data);
       }).catch((err : any) => {
         console.log(err);
         setShowAlert(true);
