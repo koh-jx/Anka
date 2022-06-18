@@ -16,7 +16,7 @@ function Header(
     {isLoggedIn: boolean, setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
 ): ReactElement {
 
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     
     const logoutUser = async () => {
         await logout()
@@ -32,7 +32,8 @@ function Header(
                 className={[styles.logo, styles.animateLogo, isLoggedIn && styles.shiftLogo].join(' ')}
                 src={logo}
                 alt="Anka"
-                // onClick={() => navigate('/')}
+                onClick={() => navigate('/')}
+                role="button"
             />
 
             {isLoggedIn && 
