@@ -5,6 +5,8 @@ import {
   TextField,
 } from '@mui/material';
 
+import { login, registerNewUser } from '../../lib/api/login'
+
 import styles from './Login.module.css'
 
 
@@ -16,26 +18,31 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const loginUser = () => {
-    if (username === 'admin' && password === 'admin') {
-      setIsLoggedIn(true);
-    } else {
-      setShowAlert(true);
-      setAlertMessage('Invalid username or password');
-    }
+  const loginUser = async () => {
+    await login(username, password)
+      .then ((data) => {
+        setIsLoggedIn(true);
+        console.log(data);
+      }).catch((err : any) => {
+        setShowAlert(true);
+        setAlertMessage('Invalid username or password');
+        console.log(err);
+      }
+    );
   }
 
-  const registerUser = () => {
-    if (username === 'admin' && password === 'admin') {
-      setIsLoggedIn(true);
-    } else {
-      setShowAlert(true);
-      // 2 cases: username already taken or either field is blank
-      setAlertMessage('Invalid username or password');
-    }
+  const registerUser = async () => {
+    await registerNewUser(username, password)
+      .then ((data) => {
+        setIsLoggedIn(true);
+        console.log(data);
+      }).catch((err : any) => {
+        setShowAlert(true);
+        setAlertMessage('Invalid username or password');
+        console.log(err);
+      }
+    );
   }
-  
-  console.log(showAlert, alertMessage);
 
   return <div className={ [styles.wrapper, styles.center].join(' ') }>
     <div className={ [styles.loginBox, styles.center].join(' ') }>
@@ -83,7 +90,7 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
                 }}
                 onClick={registerUser}
               >
-                Create new account
+                Create account
               </Button>
           )}
   
