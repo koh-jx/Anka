@@ -6,20 +6,33 @@
     justify-content: center;
 }
 
-/* .title {
-  color: aliceblue;
-  display: inline-block;
-  justify-content: center;
-  align-content: center;
-  flex-direction: column;
-  margin-left: auto;
-  margin-right: 0;
-} */
-
 .logo {
   display: inline-block;
-  margin-left: auto;
-  margin-right: auto;
-  max-width:100%;
-  max-height:100%;
+}
+
+.animateLogo {
+  transition: transform .35s ease-in-out;
+}
+
+.menuBar {
+  opacity: 1;
+}
+
+.fadeIn {
+  -webkit-animation: fade 0.75s linear;
+  animation: fade 0.75s linear;
+}
+
+@-webkit-keyframes fade {
+  0%   { opacity: 0 }
+  100% { opacity: 1 }
+}
+
+@keyframes fade {
+  0%   { opacity: 0 }
+  100% { opacity: 1 }
+}
+
+.shiftLogo {
+  transform: translateX(calc(100px - 50vw));
 }

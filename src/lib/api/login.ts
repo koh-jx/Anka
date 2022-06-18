@@ -1,7 +1,14 @@
 import Axios from 'axios';
 
-const ankaApi = Axios.create({ baseURL: process.env.REACT_APP_URL, timeout: 500000 });
+const ankaApi = Axios.create({ 
+    baseURL: process.env.REACT_APP_URL, 
+    timeout: 500000,
+    headers: {
+        Authorization: 'Bearer '+ localStorage.getItem('jwt')
+    }
+});
 
+// Data returned when user is logged in
 type UserLogin = {
     access_token: string;
 };
@@ -51,10 +58,17 @@ export const login = async (username: string, password: string): Promise<UserLog
     });
 };
 
+
+// Local Storage-related functions
+
 export const setJwtToLocalStorage = (jwt: string) => {
     window.localStorage.setItem('jwt', jwt);
 }
 
 export const logout = async (): Promise<void> => {
     window.localStorage.removeItem('jwt');
+}
+
+export const checkIsLoggedIn = (): boolean => {
+    return window.localStorage.getItem('jwt') !== null;
 }

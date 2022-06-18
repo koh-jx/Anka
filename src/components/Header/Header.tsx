@@ -2,16 +2,98 @@ import React, { ReactElement } from 'react'
 
 import styles from './Header.module.css';
 import logo from '../../assets/logo.png';
+
+import { logout } from '../../lib/api/login';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
  
-function Header(): ReactElement {
+function Header(
+    { 
+        isLoggedIn, 
+        setIsLoggedIn 
+    } 
+    : 
+    {isLoggedIn: boolean, setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
+): ReactElement {
+
+    // const navigate = useNavigate();
+    
+    const logoutUser = async () => {
+        await logout()
+            .then(() => {
+                setIsLoggedIn(false);
+            }
+        );
+    }
+
     return (
         <div className={styles.header}>
-            {/* <h2 className={styles.title}>Anka</h2> */}
             <img
-                className={styles.logo}
+                className={[styles.logo, styles.animateLogo, isLoggedIn && styles.shiftLogo].join(' ')}
                 src={logo}
                 alt="Anka"
+                // onClick={() => navigate('/')}
             />
+
+            {isLoggedIn && 
+                <div className={[styles.menuBar, isLoggedIn && styles.fadeIn].join(' ')}>
+                    <Button 
+                        style={{ 
+                            fontSize: '1.2rem',
+                            position: 'fixed',
+                            right: '70%',
+                            top: '5%',
+                            width: '10%',
+                            color: 'white',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        Your sets
+                    </Button>
+                    <Button 
+                        style={{ 
+                            fontSize: '1.2rem',
+                            position: 'fixed',
+                            right: '50%',
+                            top: '5%',
+                            width: '10%',
+                            color: 'white',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        Your notes
+                    </Button>
+                    <Button 
+                        color="secondary"
+                        variant="contained"
+                        style={{ 
+                            position: 'fixed',
+                            right: '10%',
+                            top: '5%',
+                            color: 'black',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        Select Language
+                    </Button>
+                    {/* // To change to menu dropdown once more functions are added (profile?)*/}
+                    <Button 
+                        color="secondary"
+                        variant="contained"
+                        style={{ 
+                            position: 'fixed',
+                            right: '3%',
+                            top: '5%',
+                            // width: '5%',
+                            color: 'black',
+                            whiteSpace: 'nowrap'
+                        }}
+                        onClick={logoutUser}
+                    >
+                        Logout
+                    </Button>
+                </div>
+            }
         </div>
     );
 }

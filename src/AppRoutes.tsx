@@ -3,13 +3,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Dashboard from './components/Dashboard';
 
-function AppRoutes(
-  { setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
-): ReactElement {
+function AppRoutes(): ReactElement {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard setIsLoggedIn={setIsLoggedIn}/>} />
+        <Route path="/" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );
