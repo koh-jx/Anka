@@ -3,9 +3,7 @@ import Axios from 'axios';
 const ankaApi = Axios.create({ baseURL: process.env.REACT_APP_URL, timeout: 500000 });
 
 type UserLogin = {
-    id: string;
-    authToken: string;
-    username: string;
+    access_token: string;
 };
 
 const checkUserExists = async (username: string): Promise<boolean> => {
@@ -43,20 +41,24 @@ export const login = async (username: string, password: string): Promise<UserLog
         ankaApi
         .post('/auth/login', { username, password })
         .then(({ data }) => {
-            const {
-            id,
-            authToken,
-            username,
-            } = data;
+            const {access_token} = data;
 
-            resolve({
-            id,
-            authToken,
-            username,
-            });
+            resolve({access_token});
         })
         .catch(err => {
             reject(err.request.response);
         });
     });
 };
+
+export const logout = (): Promise<void> =>
+  new Promise((resolve, reject) => {
+    ankaApi
+      .post('/auth/logout')
+      .then(({ data }) => {
+        resolve(data);
+      })
+      .catch(() => {
+        reject();
+      });
+  });
