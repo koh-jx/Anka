@@ -18,6 +18,13 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
+  const reset = (newRegisterState: boolean) => {
+    setUsername("");
+    setPassword("");
+    setShowAlert(false);
+    setIsRegister(newRegisterState)
+  }
+
   const loginUser = async () => {
     await login(username, password)
       .then ((data) => {
@@ -25,8 +32,7 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
         console.log(data);
       }).catch((err : any) => {
         setShowAlert(true);
-        setAlertMessage('Invalid username or password');
-        console.log(err);
+        setAlertMessage("Invalid email or password");
       }
     );
   }
@@ -37,9 +43,9 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
         setIsLoggedIn(true);
         console.log(data);
       }).catch((err : any) => {
-        setShowAlert(true);
-        setAlertMessage('Invalid username or password');
         console.log(err);
+        setShowAlert(true);
+        setAlertMessage(err.message);
       }
     );
   }
@@ -55,6 +61,7 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
               label="Username"
               margin="normal"
               variant="filled"
+              value={username}
               style={{ backgroundColor: 'rgba(255,255,255,1)', fontFamily: 'Staatliches' }}
               onChange={(e) => setUsername(e.target.value)}
           />
@@ -67,6 +74,7 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
               type="password"
               margin="normal"
               variant="filled"
+              value={password}
               style={{ backgroundColor: 'rgba(255,255,255,1)', fontFamily: 'Staatliches' }}
               onChange={(e) => setPassword(e.target.value)}
           />
@@ -76,6 +84,7 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
           )}
 
           {isRegister && (
+            <>
               <Button 
                 color="primary"
                 variant="contained"
@@ -92,6 +101,26 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
               >
                 Create account
               </Button>
+
+              <Button 
+                color="secondary"
+                className={styles.button}
+                variant="contained"
+                style={{ 
+                  borderRadius: 25, 
+                  color: 'black', 
+                  marginLeft: 'auto', 
+                  marginRight: 'auto', 
+                  width: '50%', 
+                  fontFamily: 'Roboto', 
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap'
+                }}
+                onClick={() => reset(false)}
+              >
+                Back
+              </Button>
+            </>
           )}
   
           {!isRegister && (
@@ -128,7 +157,7 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
                   fontWeight: 'bold',
                   whiteSpace: 'nowrap'
                 }}
-                onClick={() => setIsRegister(true)}
+                onClick={() => reset(true)}
               >
                 Create a new account
               </Button>

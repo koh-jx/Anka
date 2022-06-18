@@ -8,9 +8,18 @@ type UserLogin = {
     username: string;
 };
 
-export const registerNewUser = (username: string, password: string): Promise<void> => {
+const checkUserExists = async (username: string): Promise<boolean> => {
+    const res = await ankaApi.get(`/users/${username}`);
+    return res.status === 200;
+}
+
+export const registerNewUser = async (username: string, password: string): Promise<void> => {
     if (!username || !password)
         return Promise.reject(new Error('Enter both email and password'));
+
+    if (await checkUserExists(username)) {
+        return Promise.reject(new Error('User already exists'));
+    }
     
     return new Promise ((resolve, reject) => {
         ankaApi
@@ -26,7 +35,7 @@ export const registerNewUser = (username: string, password: string): Promise<voi
 
 }
   
-export const login = (username: string, password: string): Promise<UserLogin> => {
+export const login = async (username: string, password: string): Promise<UserLogin> => {
     if (!username || !password)
         return Promise.reject(new Error('Enter both email and password'));
 
