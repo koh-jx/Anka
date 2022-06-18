@@ -51,14 +51,10 @@ export const login = async (username: string, password: string): Promise<UserLog
     });
 };
 
-export const logout = (): Promise<void> =>
-  new Promise((resolve, reject) => {
-    ankaApi
-      .post('/auth/logout')
-      .then(({ data }) => {
-        resolve(data);
-      })
-      .catch(() => {
-        reject();
-      });
-  });
+export const setJwtToLocalStorage = (jwt: string) => {
+    window.localStorage.setItem('jwt', jwt);
+}
+
+export const logout = async (): Promise<void> => {
+    window.localStorage.removeItem('jwt');
+}

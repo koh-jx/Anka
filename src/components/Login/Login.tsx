@@ -5,12 +5,14 @@ import {
   TextField,
 } from '@mui/material';
 
-import { login, registerNewUser } from '../../lib/api/login'
+import { login, registerNewUser, setJwtToLocalStorage } from '../../lib/api/login'
 
 import styles from './Login.module.css'
 
 
-function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}): ReactElement {
+function Login(
+  { setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
+): ReactElement {
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -29,8 +31,8 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
     await login(username, password)
       .then ((data) => {
         setIsLoggedIn(true);
-        console.log(data);
         //put jwt in local storage
+        setJwtToLocalStorage(data.access_token);
       }).catch((err : any) => {
         setShowAlert(true);
         setAlertMessage("Invalid email or password");
@@ -43,7 +45,6 @@ function Login({ setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetSta
       .then ((data) => {
         setIsLoggedIn(true);
       }).catch((err : any) => {
-        console.log(err);
         setShowAlert(true);
         setAlertMessage(err.message);
       }

@@ -3,11 +3,22 @@ import React, { ReactElement } from 'react'
 
 import { logout } from '../../lib/api/login';
  
-function Dashboard(): ReactElement {
+function Dashboard(
+    { setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
+): ReactElement {
+
+    const logoutUser = async () => {
+        await logout()
+            .then(() => {
+                setIsLoggedIn(false);
+            }
+        );
+    }
+
     return (
         <div>
             <Button
-                onClick = {logout}
+                onClick = {logoutUser}
             >
                 Logout
             </Button>
