@@ -18,13 +18,13 @@ function Card(): ReactElement {
         <React.Fragment>
           <FrontSide
             style={{
-              backgroundColor: '#41669d',
+              backgroundColor: '#9D6A43',
               display: 'flex',
               alignItems: 'center',
               flexDirection: 'column'
             }}
           >
-            RICK
+            FRONT
             <span 
               style={{
                 fontSize:'12px',
@@ -38,13 +38,13 @@ function Card(): ReactElement {
           </FrontSide>
           <BackSide
             style={{
-              backgroundColor: '#175852',
+              backgroundColor: '#3e5641',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexDirection: 'column'
             }}>
-            ROCKS
+            BACK
             <span 
               style={{
                 fontSize:'12px',
@@ -67,7 +67,7 @@ function Card(): ReactElement {
                 style={FlippyStyle}
             >
                 <DefaultCardContents>
-                  I flip the card
+                  Pack name
                 </DefaultCardContents>
             </Flippy>
         </div>

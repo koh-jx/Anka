@@ -1,15 +1,14 @@
 .gridContainer {
-    display: grid;
-    grid-template-columns: auto auto auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
     position: absolute;
     justify-content: left;
     width: 90%;
-    border: green 5px solid;
+    /* border: green 5px solid; */
 }
 
 .gridItem {
-    /* background-color: rgba(255, 255, 255, 0.8); */
-    /* border: 1px solid rgba(0, 0, 0, 0.8); */
     padding: 20px;
     font-size: 30px;
     text-align: center;

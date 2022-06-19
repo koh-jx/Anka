@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 
 import styles from './Header.module.css';
 import logo from '../../assets/logo.png';
+import logoDark from '../../assets/logoDark.png';
 
 import { logout } from '../../lib/api/login';
 import { Button } from '@mui/material';
@@ -35,9 +36,8 @@ function Header(
         <div className={window.localStorage.getItem('mode') === 'light' ? styles.header : styles.headerDark}>
             <img
                 className={[styles.logo, styles.animateLogo, isLoggedIn && styles.shiftLogo].join(' ')}
-                src={logo}
+                src={window.localStorage.getItem('mode') === 'light' ? logo : logoDark}
                 alt="Anka"
-                // onClick={() => navigate('/')}
                 onClick={() => setMode(window.localStorage.getItem('mode') === 'light' ? 'dark' : 'light')}
                 role="button"
             />
@@ -66,6 +66,7 @@ function Header(
                             width: '10%',
                             color: 'white',
                             whiteSpace: 'nowrap'
+                            // onClick={() => navigate('/')}
                         }}
                     >
                         Your notes

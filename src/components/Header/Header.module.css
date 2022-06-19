@@ -16,6 +16,7 @@
 
   position: fixed;
   top: 0;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 .headerDark {
@@ -36,11 +37,17 @@
   
   position: fixed;
   top: 0;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 .logo {
   display: inline-block;
   cursor: pointer;
+}
+
+.logo:hover {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 100%;
 }
 
 .animateLogo {
