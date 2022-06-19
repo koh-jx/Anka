@@ -30,7 +30,6 @@ function App() {
   );
 
   return (
-    // <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <div className="App">
           < AppRoutes 
@@ -41,7 +40,6 @@ function App() {
           />
         </div>
       </ThemeProvider>
-    // </ColorModeContext.Provider>
   );
 }
 

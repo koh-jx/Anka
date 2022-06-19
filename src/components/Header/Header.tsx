@@ -32,7 +32,7 @@ function Header(
     }
 
     return (
-        <div className={styles.header}>
+        <div className={window.localStorage.getItem('mode') === 'light' ? styles.header : styles.headerDark}>
             <img
                 className={[styles.logo, styles.animateLogo, isLoggedIn && styles.shiftLogo].join(' ')}
                 src={logo}

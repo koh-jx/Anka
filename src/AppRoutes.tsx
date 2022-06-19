@@ -34,8 +34,10 @@ function AppRoutes(
         />
       </div>
       <div 
-        className= {mode === 'light' ? "wrapper" : "wrapper-dark"}
+        className= {mode === 'light' ? "background" : "background-dark"}
       >
+      </div>
+      <div className="wrapper">  
         { !isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
         <div className={[isLoggedIn && 'fadeIn'].join(' ')}>
           { isLoggedIn && 
@@ -44,7 +46,6 @@ function AppRoutes(
             </Routes>
           }
         </div>
-          
       </div>
     </BrowserRouter>
   );

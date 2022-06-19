@@ -9,7 +9,7 @@ const FlippyStyle = {
     fontFamily: 'sans-serif',
     fontSize: '30px',
     justifyContent: 'center',
-    margin: '10px auto'
+    // margin: '10px auto'
 }
   
 function Card(): ReactElement {
