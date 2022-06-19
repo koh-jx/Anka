@@ -73,6 +73,9 @@ function Login(
                   background: 'rgba(255,255,255,0.8)',
                 }
               }}
+              InputLabelProps={{
+                style: { color: '#000' },
+              }}
               onChange={(e) => setUsername(e.target.value)}
           />
 
@@ -90,6 +93,9 @@ function Login(
                   color: 'black',
                   background: 'rgba(255,255,255,0.8)',
                 }
+              }}
+              InputLabelProps={{
+                style: { color: '#000' },
               }}
               onChange={(e) => setPassword(e.target.value)}
           />
@@ -109,7 +115,7 @@ function Login(
                   marginRight: 'auto', 
                   width: '50%', 
                   fontFamily: 'Roboto', 
-                  fontWeight: 'bold' 
+                  fontWeight: 'bold',
                 }}
                 onClick={registerUser}
               >
@@ -127,7 +133,7 @@ function Login(
                   width: '50%', 
                   fontFamily: 'Roboto', 
                   fontWeight: 'bold',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
                 }}
                 onClick={() => reset(false)}
               >
