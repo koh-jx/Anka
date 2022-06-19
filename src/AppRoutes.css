@@ -32,3 +32,18 @@
     padding: 20px;
     box-sizing: border-box;
 }
+
+.fadeIn {
+    -webkit-animation: fade 0.75s linear;
+    animation: fade 0.75s linear;
+}
+
+@-webkit-keyframes fade {
+    0%   { opacity: 0 }
+    100% { opacity: 1 }
+}
+
+@keyframes fade {
+    0%   { opacity: 0 }
+    100% { opacity: 1 }
+}

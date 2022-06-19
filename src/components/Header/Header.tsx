@@ -81,7 +81,7 @@ function Header(
                             whiteSpace: 'nowrap'
                         }}
                     >
-                        Select Language
+                        Select Pack
                     </Button>
                     {/* // To change to menu dropdown once more functions are added (profile?)*/}
                     <Button 

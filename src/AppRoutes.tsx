@@ -37,11 +37,14 @@ function AppRoutes(
         className= {mode === 'light' ? "wrapper" : "wrapper-dark"}
       >
         { !isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
-        { isLoggedIn && 
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-          </Routes>
-        }
+        <div className={[isLoggedIn && 'fadeIn'].join(' ')}>
+          { isLoggedIn && 
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+            </Routes>
+          }
+        </div>
+          
       </div>
     </BrowserRouter>
   );

@@ -1,12 +1,10 @@
 import React, { ReactElement } from 'react'
-
+import DeckManager from '../DeckManager';
+  
 function Dashboard(): ReactElement {
-
-
-
-    return (
+    return (    
         <div>
-            Dashboard
+            <DeckManager />
         </div>
     );
 }
