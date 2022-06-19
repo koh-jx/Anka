@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import './AppRoutes.css';
 
 import Header from './components/Header';
@@ -21,6 +22,9 @@ function AppRoutes(
     setMode: React.Dispatch<React.SetStateAction<'light' | 'dark'>>,
   }
 ): ReactElement {
+
+  const location = useLocation();
+
   return (
     <BrowserRouter>
       <div 
@@ -37,9 +41,17 @@ function AppRoutes(
       >
         { !isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
         { isLoggedIn && 
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-          </Routes>
+          <TransitionGroup>
+            <CSSTransition
+              key={location.key}
+              classNames="fade"
+              timeout={300}
+            >
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+              </Routes>
+            </CSSTransition>
+          </TransitionGroup>
         }
       </div>
     </BrowserRouter>
