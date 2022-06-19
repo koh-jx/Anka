@@ -5,18 +5,23 @@ import logo from '../../assets/logo.png';
 
 import { logout } from '../../lib/api/login';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
  
 function Header(
     { 
         isLoggedIn, 
-        setIsLoggedIn 
+        setIsLoggedIn, 
+        setMode,
     } 
     : 
-    {isLoggedIn: boolean, setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
+    {
+        isLoggedIn: boolean, 
+        setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>,
+        setMode: React.Dispatch<React.SetStateAction<'light' | 'dark'>>,
+    }
 ): ReactElement {
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     
     const logoutUser = async () => {
         await logout()
@@ -32,7 +37,8 @@ function Header(
                 className={[styles.logo, styles.animateLogo, isLoggedIn && styles.shiftLogo].join(' ')}
                 src={logo}
                 alt="Anka"
-                onClick={() => navigate('/')}
+                // onClick={() => navigate('/')}
+                onClick={() => setMode(window.localStorage.getItem('mode') === 'light' ? 'dark' : 'light')}
                 role="button"
             />
 
@@ -71,7 +77,7 @@ function Header(
                             position: 'fixed',
                             right: '10%',
                             top: '5%',
-                            color: 'black',
+                            color: 'secondary',
                             whiteSpace: 'nowrap'
                         }}
                     >
@@ -86,7 +92,7 @@ function Header(
                             right: '3%',
                             top: '5%',
                             // width: '5%',
-                            color: 'black',
+                            color: 'secondary',
                             whiteSpace: 'nowrap'
                         }}
                         onClick={logoutUser}

@@ -9,17 +9,32 @@ import Login from './components/Login';
 function AppRoutes(
   { 
       isLoggedIn, 
-      setIsLoggedIn 
+      setIsLoggedIn,
+      mode,
+      setMode
   } 
   : 
-  {isLoggedIn: boolean, setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
+  {
+    isLoggedIn: boolean, 
+    setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>,
+    mode: 'light' | 'dark',
+    setMode: React.Dispatch<React.SetStateAction<'light' | 'dark'>>,
+  }
 ): ReactElement {
   return (
     <BrowserRouter>
-      <div className="header">
-        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+      <div 
+        className= {mode === 'light' ? "header" : "header-dark"}
+      >
+        <Header 
+          isLoggedIn={isLoggedIn} 
+          setIsLoggedIn={setIsLoggedIn} 
+          setMode={setMode}
+        />
       </div>
-      <div className="wrapper">
+      <div 
+        className= {mode === 'light' ? "wrapper" : "wrapper-dark"}
+      >
         { !isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
         { isLoggedIn && 
           <Routes>

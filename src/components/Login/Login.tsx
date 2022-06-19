@@ -52,31 +52,45 @@ function Login(
   }
 
   return <div className={ [styles.wrapper, styles.center].join(' ') }>
-    <div className={ [styles.loginBox, styles.center].join(' ') }>
+    <div className={ window.localStorage.getItem('mode') === 'light'
+        ? [styles.loginBox, styles.center].join(' ')
+        : [styles.loginBoxDark, styles.center].join(' ')
+      }>
       <h1 className={styles.title}>Welcome to Anka</h1>
       <form className={ [styles.form, styles.center].join(' ') }>
           <TextField
-              color="primary"
               id="username"
               fullWidth
               label="Username"
               margin="normal"
               variant="filled"
               value={username}
-              style={{ backgroundColor: 'rgba(255,255,255,1)', fontFamily: 'Staatliches' }}
+              sx={{ 
+                fontFamily: 'Staatliches',
+                color: 'black',
+                input: {
+                  color: 'black',
+                  background: 'rgba(255,255,255,0.8)',
+                }
+              }}
               onChange={(e) => setUsername(e.target.value)}
           />
 
           <TextField
-              color="primary"
               id="password"
               fullWidth
               label="Password"
               type="password"
-              margin="normal"
               variant="filled"
               value={password}
-              style={{ backgroundColor: 'rgba(255,255,255,1)', fontFamily: 'Staatliches' }}
+              sx={{ 
+                fontFamily: 'Staatliches',
+                color: 'black',
+                input: {
+                  color: 'black',
+                  background: 'rgba(255,255,255,0.8)',
+                }
+              }}
               onChange={(e) => setPassword(e.target.value)}
           />
 
@@ -91,7 +105,6 @@ function Login(
                 variant="contained"
                 style={{ 
                   borderRadius: 25, 
-                  color: 'white', 
                   marginLeft: 'auto', 
                   marginRight: 'auto', 
                   width: '50%', 
@@ -109,7 +122,6 @@ function Login(
                 variant="contained"
                 style={{ 
                   borderRadius: 25, 
-                  color: 'black', 
                   marginLeft: 'auto', 
                   marginRight: 'auto', 
                   width: '50%', 
@@ -131,7 +143,6 @@ function Login(
                 variant="contained"
                 style={{ 
                   borderRadius: 25, 
-                  color: 'white', 
                   marginLeft: 'auto', 
                   marginRight: 'auto', 
                   width: '50%', 
@@ -150,7 +161,6 @@ function Login(
                 variant="contained"
                 style={{ 
                   borderRadius: 25, 
-                  color: 'black', 
                   marginLeft: 'auto', 
                   marginRight: 'auto', 
                   width: '50%', 
