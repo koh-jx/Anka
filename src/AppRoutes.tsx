@@ -23,7 +23,7 @@ function AppRoutes(
   }
 ): ReactElement {
 
-  const location = useLocation();
+  // const location = useLocation();
 
   return (
     <BrowserRouter>
@@ -41,17 +41,17 @@ function AppRoutes(
       >
         { !isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
         { isLoggedIn && 
-          <TransitionGroup>
-            <CSSTransition
-              key={location.key}
-              classNames="fade"
-              timeout={300}
-            >
+          // <TransitionGroup>
+          //   <CSSTransition
+          //     key={location.key}
+          //     classNames="fade"
+          //     timeout={300}
+          //   >
               <Routes>
                 <Route path="/" element={<Dashboard />} />
               </Routes>
-            </CSSTransition>
-          </TransitionGroup>
+          //   </CSSTransition>
+          // </TransitionGroup>
         }
       </div>
     </BrowserRouter>

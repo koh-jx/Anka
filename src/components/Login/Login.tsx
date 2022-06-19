@@ -51,6 +51,16 @@ function Login(
     );
   }
 
+  const keyPressSubmit = (e: any) => {
+    if(e.keyCode === 13){
+      if(isRegister){
+        registerUser();
+      } else {
+        loginUser();
+      }
+   }
+  }
+
   return <div className={ [styles.wrapper, styles.center].join(' ') }>
     <div className={ window.localStorage.getItem('mode') === 'light'
         ? [styles.loginBox, styles.center].join(' ')
@@ -98,6 +108,7 @@ function Login(
                 style: { color: '#000' },
               }}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={keyPressSubmit}
           />
 
           {showAlert && (
