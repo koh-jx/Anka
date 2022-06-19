@@ -46,6 +46,7 @@ h1 {
     font-family: 'Staatliches';
     font-weight: 100;
     font-size: 40px;
+    text-shadow: 1px 3px 5px #000;
 }
 
 .textField {
