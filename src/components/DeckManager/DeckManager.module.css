@@ -4,8 +4,10 @@
     flex-wrap:wrap;
     position: absolute;
     justify-content: left;
-    width: 90%;
-    border: green 5px solid;
+    width: 70%;
+    background-color: rgb(0, 0, 0, 0.1);
+    box-shadow: inset 0px 0px 10px rgb(0, 0, 0, 0.25);
+    border-radius: 15px;
 }
 
 .gridItem {
@@ -14,6 +16,22 @@
     text-align: center;
 }
 
-.toolBar {
+.card {
+    width: 200px;
+    height: 270px;
+    /* border:20px; */
+    background-color: rgb(0, 0, 0, 0.2);
+    font-size: 30px;
+    justify-content: center; 
+    transition: 0.5s;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+    border-radius: 15px;
+    box-shadow: inset 0px 0px 20px rgb(0, 0, 0, 0.5);
     
+}
+
+.card:hover {
+    background-color: rgb(0, 0, 0, 0.3);
 }
