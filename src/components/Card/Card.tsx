@@ -12,7 +12,15 @@ const FlippyStyle = {
     // margin: '10px auto'
 }
   
-function Card(): ReactElement {
+function Card(
+  { 
+    frontCardface, backCardface, tags
+  } : {
+    frontCardface: ReactElement,
+    backCardface: ReactElement,
+    tags: string[]
+  }
+): ReactElement {
 
     const DefaultCardContents = ({ children } : { children: any }) => (
         <React.Fragment>
@@ -24,7 +32,8 @@ function Card(): ReactElement {
               flexDirection: 'column'
             }}
           >
-            FRONT
+            {frontCardface}
+            {/* FRONT
             <span 
               style={{
                 fontSize:'12px',
@@ -34,7 +43,7 @@ function Card(): ReactElement {
               }}>
               {children}<br />
               (FRONT SIDE)
-            </span>
+            </span> */}
           </FrontSide>
           <BackSide
             style={{
@@ -44,7 +53,8 @@ function Card(): ReactElement {
               justifyContent: 'center',
               flexDirection: 'column'
             }}>
-            BACK
+              {backCardface}
+            {/* BACK
             <span 
               style={{
                 fontSize:'12px',
@@ -54,7 +64,7 @@ function Card(): ReactElement {
               }}>
               {children}<br />
               (BACK SIDE)
-            </span>
+            </span> */}
           </BackSide>
         </React.Fragment>
     );

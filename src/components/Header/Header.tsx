@@ -78,7 +78,6 @@ function Header(
                             position: 'fixed',
                             right: '10%',
                             top: '5%',
-                            color: 'secondary',
                             whiteSpace: 'nowrap'
                         }}
                     >
@@ -92,8 +91,6 @@ function Header(
                             position: 'fixed',
                             right: '3%',
                             top: '5%',
-                            // width: '5%',
-                            color: 'secondary',
                             whiteSpace: 'nowrap'
                         }}
                         onClick={logoutUser}

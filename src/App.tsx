@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import { lightTheme, darkTheme } from './theme';
+
 
 import './App.css';
 import AppRoutes from './AppRoutes';
@@ -31,6 +33,7 @@ function App() {
 
   return (
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <div className="App">
           < AppRoutes 
             isLoggedIn={isLoggedIn} 

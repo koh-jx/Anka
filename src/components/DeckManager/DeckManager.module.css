@@ -5,11 +5,15 @@
     position: absolute;
     justify-content: left;
     width: 90%;
-    /* border: green 5px solid; */
+    border: green 5px solid;
 }
 
 .gridItem {
     padding: 20px;
     font-size: 30px;
     text-align: center;
+}
+
+.toolBar {
+    
 }
