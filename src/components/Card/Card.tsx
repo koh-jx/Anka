@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react'
 import Flippy, { FrontSide, BackSide } from 'react-flippy';
       
 const FlippyStyle = {
-    width: '200px',
-    height: '270px',
+    width: '290px',
+    height: '210px',
     textAlign: 'center',
     color: '#FFF',
     fontFamily: 'sans-serif',
