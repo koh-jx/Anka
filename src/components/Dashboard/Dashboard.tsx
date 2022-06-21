@@ -1,6 +1,7 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Box from '@mui/material/Box';
 import DeckManager from '../DeckManager';
+
 
 import styles from './Dashboard.module.css';
   
@@ -11,9 +12,6 @@ function Dashboard(): ReactElement {
                 width: "100%",
                 marginY: "2vh",
                 minHeight: "75vh",
-                // display: "flex",
-                // width:"100%",
-                // height:"100%",
                 backgroundColor: 'primary.light',
                 borderRadius: '20px',
                 boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.25)',
