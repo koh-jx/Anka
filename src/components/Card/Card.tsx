@@ -12,6 +12,12 @@ const FlippyStyle = {
     // margin: '10px auto'
 }
   
+export interface CardInterface {
+  front: ReactElement;
+  back: ReactElement;
+  tags: string[];
+}
+
 function Card(
   { 
     frontCardface, backCardface, tags
@@ -29,7 +35,8 @@ function Card(
               backgroundColor: '#9D6A43',
               display: 'flex',
               alignItems: 'center',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              borderRadius: '10px',
             }}
           >
             {frontCardface}
@@ -51,7 +58,8 @@ function Card(
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              borderRadius: '10px',
             }}>
               {backCardface}
             {/* BACK

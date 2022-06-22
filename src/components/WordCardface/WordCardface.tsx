@@ -3,13 +3,13 @@ import React, { ReactElement } from 'react'
 function WordCardface(
   {
     title,
-    subtitle,
+    // subtitle,
     description,
     // tags,
   } :
   {
     title: string,
-    subtitle: string,
+    // subtitle: string,
     description: string,
     // tags,
   }
