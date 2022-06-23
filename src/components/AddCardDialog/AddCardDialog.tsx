@@ -6,6 +6,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import { useSnackbar } from 'notistack';
+import { Fragment } from 'react';
 
 import Card from '../Card/Card';
 import { CardInterface } from '../Card/Card';
@@ -26,8 +28,12 @@ const Transition = React.forwardRef(function Transition(
 
 
 export default function AddCardDialog(
-  {dialogOpen, handleClose}
-  : {dialogOpen: boolean, handleClose: (toAdd : CardInterface | null) => void}
+  {dialogOpen, handleClose, undo}
+  : {
+    dialogOpen: boolean, 
+    handleClose: (toAdd : CardInterface | null) => void,
+    undo: (cardToRemove : CardInterface) => void
+  }
 ) {
 
   const [frontTitle, setFrontTitle] = React.useState('Front');
@@ -35,6 +41,7 @@ export default function AddCardDialog(
   const [backTitle, setBackTitle] = React.useState('Back');
   const [backDescription, setBackDescription] = React.useState('');
   const [tags, setTags] = React.useState([]);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const createObject = () => {
     const result = {
@@ -42,7 +49,33 @@ export default function AddCardDialog(
       back: createBack(),
       tags,
     }
+
+    const action = (key: any) => (
+      <Fragment>
+          <Button 
+            sx={{color: "white"}}
+            onClick={() => {
+              undo(result);
+              closeSnackbar(key);
+            }}
+          >
+              Undo
+          </Button>
+          <Button 
+            sx={{color: "white"}}
+            onClick={() => { closeSnackbar(key) }}
+          >
+              Dismiss
+          </Button>
+      </Fragment>
+    );
+
     handleClose(result);
+    enqueueSnackbar('Flashcard created!', { 
+      variant: 'success',
+      autoHideDuration: 3000,
+      action
+    });
     resetDialog();
   }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { SnackbarProvider } from 'notistack';
 import { lightTheme, darkTheme } from './theme';
 
 
@@ -34,14 +35,16 @@ function App() {
   return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="App">
-          < AppRoutes 
-            isLoggedIn={isLoggedIn} 
-            setIsLoggedIn={setIsLoggedIn} 
-            mode={mode}
-            setMode={setMode}
-          />
-        </div>
+          <SnackbarProvider maxSnack={5}>
+            <div className="App">
+              < AppRoutes 
+                isLoggedIn={isLoggedIn} 
+                setIsLoggedIn={setIsLoggedIn} 
+                mode={mode}
+                setMode={setMode}
+              />
+            </div>
+          </SnackbarProvider>
       </ThemeProvider>
   );
 }

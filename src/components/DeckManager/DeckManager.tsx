@@ -23,6 +23,10 @@ function DeckManager(): ReactElement {
         setDialogOpen(false);
     }
 
+    const removeCard = (cardToRemove : CardInterface) => {
+        setCards(cards.filter(card => card !== cardToRemove));
+    }
+
     return (    
         <div className={styles.deckManager}>
             <div className={styles.gridContainer}>
@@ -46,7 +50,7 @@ function DeckManager(): ReactElement {
                             
                         }}/>
                     </div>
-                    <AddCardDialog dialogOpen={dialogOpen} handleClose={handleClickClose}/>
+                    <AddCardDialog dialogOpen={dialogOpen} handleClose={handleClickClose} undo={removeCard}/>
                 </div>
             </div>
             <div className={styles.sidebar}>
