@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -30,28 +30,41 @@ export default function AddCardDialog(
     dialogOpen, 
     handleClose, 
     undo,
-    // editObject,
-    // editIndex,
+    editObject,
+    editIndex,
+    editHandleClose,
+    editUndo,
   }
   : {
     dialogOpen: boolean, 
     handleClose: (toAdd : CardInterface | null) => void,
     undo: (cardToRemove : CardInterface) => void
-    // editObject: CardInterface | null,
-    // editIndex: number | null,
+    editObject: CardInterface | null,
+    editIndex: number | null,
+    editHandleClose: (toEdit : CardInterface | null) => void,
+    editUndo: (cardToUndo : CardInterface) => void,
   }
 ) {
 
-  // const [frontTitle, setFrontTitle] = React.useState(editObject ? editObject.frontCardFaceProps.frontTitle: 'Front');
-  // const [frontDescription, setFrontDescription] = React.useState(editObject ? editObject.frontCardFaceProps.frontDescription : '');
-  // const [backTitle, setBackTitle] = React.useState(editObject ? editObject.backCardFaceProps.backTitle :'Back');
-  // const [backDescription, setBackDescription] = React.useState(editObject ? editObject.backCardFaceProps.backDescription : '');
   const [frontTitle, setFrontTitle] = React.useState('Front');
   const [frontDescription, setFrontDescription] = React.useState('');
   const [backTitle, setBackTitle] = React.useState('Back');
   const [backDescription, setBackDescription] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  React.useEffect(() => {
+    if (editObject) {
+      setFrontTitle(editObject.frontCardFaceProps.frontTitle);
+      setFrontDescription(editObject.frontCardFaceProps.frontDescription);
+      setBackTitle(editObject.backCardFaceProps.backTitle);
+      setBackDescription(editObject.backCardFaceProps.backDescription);
+      setTags(editObject.tags);
+    } else {
+      resetDialog();
+    }
+  }
+  , [editObject, dialogOpen]);
 
   const createCardInfo = () : CardInterface => {
     return {
@@ -69,6 +82,38 @@ export default function AddCardDialog(
     }
   }
   const addCard = () => {
+    const result = createCardInfo();
+
+    const action = (key: any) => (
+      <Fragment>
+          <Button 
+            sx={{color: "white"}}
+            onClick={() => {
+              undo(result);
+              closeSnackbar(key);
+            }}
+          >
+              Undo
+          </Button>
+          <Button 
+            sx={{color: "white"}}
+            onClick={() => { closeSnackbar(key) }}
+          >
+              Dismiss
+          </Button>
+      </Fragment>
+    );
+
+    handleClose(result);
+    enqueueSnackbar('Flashcard created!', { 
+      variant: 'success',
+      autoHideDuration: 3000,
+      action
+    });
+    resetDialog();
+  }
+
+  const editCard = () => {
     const result = createCardInfo();
 
     const action = (key: any) => (
@@ -132,7 +177,9 @@ export default function AddCardDialog(
           fontFamily: 'Staatliches',
           color: 'text.secondary',
         }}
-      >Create new Flashcard</DialogTitle>
+      >
+        {editObject ? "Edit Flashcard" : "Create new Flashcard"}
+      </DialogTitle>
       <DialogContent>
         <div className={styles.card}>
           {createCard(createCardInfo())}
@@ -154,9 +201,9 @@ export default function AddCardDialog(
         <Button 
           color="primary"
           variant="contained"
-          onClick={addCard}
+          onClick={() => editObject ? editCard() : addCard()}
         >
-          Create
+          {editObject ? "Edit" : "Create"}
         </Button>
       </DialogActions>
     </Dialog>
