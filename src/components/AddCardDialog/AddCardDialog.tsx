@@ -5,12 +5,25 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
 
 import Card from '../Card/Card';
 import { CardInterface } from '../Card/Card';
 import WordCardface from '../WordCardface';
 
 import styles from './AddCardDialog.module.css';
+
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 
 export default function AddCardDialog(
   {dialogOpen, handleClose}
@@ -56,6 +69,8 @@ export default function AddCardDialog(
 
   return (
     <Dialog 
+      TransitionComponent={Transition}
+      keepMounted
       open={dialogOpen} 
       onClose={() => null}  // Prevent closing on clicking outside dialog
       PaperProps={{
