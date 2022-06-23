@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -31,7 +31,7 @@ export default function AddCardDialog(
     handleClose, 
     undo,
     editObject,
-    editIndex,
+    setEditObject,
     editHandleClose,
     editUndo,
   }
@@ -40,7 +40,7 @@ export default function AddCardDialog(
     handleClose: (toAdd : CardInterface | null) => void,
     undo: (cardToRemove : CardInterface) => void
     editObject: CardInterface | null,
-    editIndex: number | null,
+    setEditObject: (cardToEdit : CardInterface | null) => void,
     editHandleClose: (toEdit : CardInterface | null) => void,
     editUndo: (cardToUndo : CardInterface) => void,
   }
@@ -53,15 +53,13 @@ export default function AddCardDialog(
   const [tags, setTags] = React.useState<string[]>([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (editObject) {
       setFrontTitle(editObject.frontCardFaceProps.frontTitle);
       setFrontDescription(editObject.frontCardFaceProps.frontDescription);
       setBackTitle(editObject.backCardFaceProps.backTitle);
       setBackDescription(editObject.backCardFaceProps.backDescription);
       setTags(editObject.tags);
-    } else {
-      resetDialog();
     }
   }
   , [editObject, dialogOpen]);
@@ -115,13 +113,14 @@ export default function AddCardDialog(
 
   const editCard = () => {
     const result = createCardInfo();
+    console.log(result);
 
     const action = (key: any) => (
       <Fragment>
           <Button 
             sx={{color: "white"}}
             onClick={() => {
-              undo(result);
+              editUndo(result);
               closeSnackbar(key);
             }}
           >
@@ -136,9 +135,9 @@ export default function AddCardDialog(
       </Fragment>
     );
 
-    handleClose(result);
-    enqueueSnackbar('Flashcard created!', { 
-      variant: 'success',
+    editHandleClose(result);
+    enqueueSnackbar('Flashcard edited!', { 
+      variant: 'info',
       autoHideDuration: 3000,
       action
     });
@@ -155,6 +154,7 @@ export default function AddCardDialog(
 
   const cancelAdd = () => {
     resetDialog();
+    setEditObject(null);
     handleClose(null);
   }
 

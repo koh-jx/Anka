@@ -37,7 +37,7 @@ function DeckManager(): ReactElement {
     }
 
     const handleEditClickClose = (toEdit: CardInterface | null) => {
-        if (toEdit && editIndex) {
+        if (toEdit && editIndex !== null) {
             const newCards = [...cards];
             newCards[editIndex] = toEdit;
             setCards(newCards);
@@ -93,7 +93,7 @@ function DeckManager(): ReactElement {
                         handleClose={handleClickClose} 
                         undo={removeCard}
                         editObject={editObject}
-                        editIndex={editIndex}
+                        setEditObject={setEditObject}
                         editHandleClose={handleEditClickClose}
                         editUndo={undoEditCard}
                     />
