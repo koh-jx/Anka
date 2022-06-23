@@ -9,7 +9,6 @@ const FlippyStyle = {
     fontFamily: 'sans-serif',
     fontSize: '30px',
     justifyContent: 'center',
-    // margin: '10px auto'
 }
   
 export interface CardInterface {
@@ -32,29 +31,19 @@ function Card(
         <React.Fragment>
           <FrontSide
             style={{
-              backgroundColor: '#9D6A43',
+              backgroundColor: '#bd6508',
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center',
               flexDirection: 'column',
               borderRadius: '10px',
             }}
           >
             {frontCardface}
-            {/* FRONT
-            <span 
-              style={{
-                fontSize:'12px',
-                position: 'absolute',
-                bottom: '10px',
-                width: '100%'
-              }}>
-              {children}<br />
-              (FRONT SIDE)
-            </span> */}
           </FrontSide>
           <BackSide
             style={{
-              backgroundColor: '#3e5641',
+              backgroundColor: '#777',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -62,17 +51,6 @@ function Card(
               borderRadius: '10px',
             }}>
               {backCardface}
-            {/* BACK
-            <span 
-              style={{
-                fontSize:'12px',
-                position: 'absolute',
-                bottom: '10px',
-                width: '100%'
-              }}>
-              {children}<br />
-              (BACK SIDE)
-            </span> */}
           </BackSide>
         </React.Fragment>
     );

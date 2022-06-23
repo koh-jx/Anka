@@ -22,7 +22,7 @@ export const lightTheme = createTheme({
     },
     text: {
       primary: '#FFFFFF',
-      secondary: '#f0f8ff',
+      secondary: '#000000',
     }
   },
   typography: {
@@ -53,7 +53,7 @@ export const darkTheme = createTheme({
       default: '#373737',
     },
     text: {
-      primary: '#f0f8ff',
+      primary: '#000000',
       secondary: '#FFFFFF',
     }
   },

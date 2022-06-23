@@ -4,12 +4,13 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import Card from '../Card/Card';
 import { CardInterface } from '../Card/Card';
 import WordCardface from '../WordCardface';
+
+import styles from './AddCardDialog.module.css';
 
 export default function AddCardDialog(
   {dialogOpen, handleClose}
@@ -54,14 +55,31 @@ export default function AddCardDialog(
   }
 
   return (
-    <Dialog open={dialogOpen} onClose={cancelAdd}>
-      <DialogTitle>Create new Flashcard</DialogTitle>
+    <Dialog 
+      open={dialogOpen} 
+      onClose={() => null}  // Prevent closing on clicking outside dialog
+      PaperProps={{
+        style: {
+          // Cant use primary theme here for some reason
+          backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme main.light
+          borderRadius: '10px',
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{ 
+          fontFamily: 'Staatliches',
+          color: 'text.secondary',
+        }}
+      >Create new Flashcard</DialogTitle>
       <DialogContent>
-        <Card
-          frontCardface={createFront()}
-          backCardface={createBack()}
-          tags={tags}
-        />
+        <div className={styles.card}>
+          <Card
+            frontCardface={createFront()}
+            backCardface={createBack()}
+            tags={tags}
+          />
+        </div>
         <TextField
           margin="normal"
           id="frontTitle"
@@ -148,8 +166,21 @@ export default function AddCardDialog(
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={cancelAdd}>Cancel</Button>
-        <Button onClick={createObject}>Create</Button>
+        <Button 
+          color="secondary"
+          variant="contained"
+          onClick={cancelAdd}
+        >
+          Cancel
+        </Button>
+
+        <Button 
+          color="primary"
+          variant="contained"
+          onClick={createObject}
+        >
+          Create
+        </Button>
       </DialogActions>
     </Dialog>
   );
