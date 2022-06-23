@@ -3,9 +3,9 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import Card from '../Card';
-import { CardInterface } from '../Card/Card';
+import { createCard, CardInterface } from '../Card/Card';
 import AddCardDialog from './AddCardDialog';
+
 
 import styles from './DeckManager.module.css';
   
@@ -13,6 +13,12 @@ function DeckManager(): ReactElement {
     
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardInterface[]>([]);
+
+    // const [editFrontTitle, setEditFrontTitle] = useState('');
+    // const [editBackTitle, setEditBackTitle] = useState('');
+    // const [editFrontDesc, setEditFrontDesc] = useState('');
+    // const [editBackDesc, setEditBackDesc] = useState('');
+    // const [editObject, setEditObject] = useState<CardInterface | null>(null);
     
     const handleClickOpen = () => {
         setDialogOpen(true);
@@ -29,20 +35,27 @@ function DeckManager(): ReactElement {
         setCards(cards.filter(card => card !== cardToRemove));
     }
 
+    // const editCard = (cardToEdit : CardInterface) => {
+    //     setEditObject({
+    //         frontTitle: cardToEdit.front,
+    //         back: cardToEdit.back,
+    //     });
+    //     setDialogOpen(true);
+    // }
+
+
+
     return (    
         <div className={styles.deckManager}>
             <div className={styles.gridContainer}>
                 { cards.map(card => (
                     <div className={styles.gridItem}>
-                        <Card
-                            frontCardface={card.front}
-                            backCardface={card.back}
-                            tags={card.tags}
-                        />
+                        {createCard(card)}
                         <div className={styles.cardSettings}>
                             <ModeEditIcon 
                                 className={styles.cardSettingsIcon}
                                 sx={{color: "text.secondary"}} 
+                                // onClick={() => editCard(card)}
                             />
                             <DeleteIcon 
                                 className={styles.cardSettingsIcon} 
@@ -63,7 +76,11 @@ function DeckManager(): ReactElement {
                             
                         }}/>
                     </div>
-                    <AddCardDialog dialogOpen={dialogOpen} handleClose={handleClickClose} undo={removeCard}/>
+                    <AddCardDialog 
+                        dialogOpen={dialogOpen} 
+                        handleClose={handleClickClose} 
+                        undo={removeCard}
+                    />
                 </div>
             </div>
             <div className={styles.sidebar}>

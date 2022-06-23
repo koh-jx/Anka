@@ -9,10 +9,9 @@ import { TransitionProps } from '@mui/material/transitions';
 import { useSnackbar } from 'notistack';
 import { Fragment } from 'react';
 
-import Card from '../../Card/Card';
-import { CardInterface } from '../../Card/Card';
+import { createCard } from '../../Card/Card';
+import { CardInterface, CardFace } from '../../Card/Card';
 import Textfield from '../../Textfield';
-import WordCardface from '../../WordCardface';
 
 import styles from './AddCardDialog.module.css';
 
@@ -28,7 +27,11 @@ const Transition = React.forwardRef(function Transition(
 
 
 export default function AddCardDialog(
-  {dialogOpen, handleClose, undo}
+  {
+    dialogOpen, 
+    handleClose, 
+    undo
+  }
   : {
     dialogOpen: boolean, 
     handleClose: (toAdd : CardInterface | null) => void,
@@ -40,15 +43,24 @@ export default function AddCardDialog(
   const [frontDescription, setFrontDescription] = React.useState('');
   const [backTitle, setBackTitle] = React.useState('Back');
   const [backDescription, setBackDescription] = React.useState('');
-  const [tags, setTags] = React.useState([]);
+  const [tags, setTags] = React.useState<string[]>([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const createObject = () => {
-    const result = {
-      front: createFront(),
-      back: createBack(),
+  const createCardInfo = () : CardInterface => {
+    return {
+      front: CardFace.WORD,
+      back: CardFace.WORD,
       tags,
+      cardFaceProps: {
+        frontTitle,
+        frontDescription,
+        backTitle,
+        backDescription,
+      }
     }
+  }
+  const addCard = () => {
+    const result = createCardInfo();
 
     const action = (key: any) => (
       <Fragment>
@@ -92,14 +104,6 @@ export default function AddCardDialog(
     handleClose(null);
   }
 
-  const createFront = () => {
-    return (<WordCardface title={frontTitle} description={frontDescription}/>);
-  }
-
-  const createBack = () => {
-    return (<WordCardface title={backTitle} description={backDescription}/>);
-  }
-
   return (
     <Dialog 
       TransitionComponent={Transition}
@@ -122,11 +126,7 @@ export default function AddCardDialog(
       >Create new Flashcard</DialogTitle>
       <DialogContent>
         <div className={styles.card}>
-          <Card
-            frontCardface={createFront()}
-            backCardface={createBack()}
-            tags={tags}
-          />
+          {createCard(createCardInfo())}
         </div>
         <Textfield value={frontTitle} setValue={setFrontTitle} label="Front Title"/>
         <Textfield value={frontDescription} setValue={setFrontDescription} label="Front Description"/>
@@ -145,7 +145,7 @@ export default function AddCardDialog(
         <Button 
           color="primary"
           variant="contained"
-          onClick={createObject}
+          onClick={addCard}
         >
           Create
         </Button>

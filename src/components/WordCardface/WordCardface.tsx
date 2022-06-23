@@ -1,5 +1,14 @@
 import React, { ReactElement } from 'react'
 
+
+export const createWordFront = (cardFaceProps: any) : ReactElement => {
+  return (<WordCardface title={cardFaceProps.frontTitle} description={cardFaceProps.frontDescription}/>);
+}
+
+export const createWordBack = (cardFaceProps: any) : ReactElement => {
+  return (<WordCardface title={cardFaceProps.backTitle} description={cardFaceProps.backDescription}/>);
+}
+
 function WordCardface(
   {
     title,
