@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,6 +9,7 @@ import { TransitionProps } from '@mui/material/transitions';
 
 import Card from '../Card/Card';
 import { CardInterface } from '../Card/Card';
+import Textfield from '../Textfield';
 import WordCardface from '../WordCardface';
 
 import styles from './AddCardDialog.module.css';
@@ -76,7 +76,7 @@ export default function AddCardDialog(
       PaperProps={{
         style: {
           // Cant use primary theme here for some reason
-          backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme main.light
+          backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
           borderRadius: '10px',
         },
       }}
@@ -95,90 +95,10 @@ export default function AddCardDialog(
             tags={tags}
           />
         </div>
-        <TextField
-          margin="normal"
-          id="frontTitle"
-          label="Front Title"
-          type="text"
-          fullWidth
-          variant="filled"
-          value={frontTitle}
-          sx={{ 
-            fontFamily: 'Staatliches',
-            color: 'black',
-            input: {
-              color: 'black',
-              background: 'rgba(255,255,255,0.8)',
-            }
-          }}
-          InputLabelProps={{
-            style: { color: '#000' },
-          }}
-          onChange={(e) => setFrontTitle(e.target.value)}
-        />
-        <TextField
-          margin="normal"
-          id="frontDesc"
-          label="Front Description"
-          type="text"
-          fullWidth
-          variant="filled"
-          value={frontDescription}
-          sx={{ 
-            fontFamily: 'Staatliches',
-            color: 'black',
-            input: {
-              color: 'black',
-              background: 'rgba(255,255,255,0.8)',
-            }
-          }}
-          InputLabelProps={{
-            style: { color: '#000' },
-          }}
-          onChange={(e) => setFrontDescription(e.target.value)}
-        />
-        <TextField
-          margin="normal"
-          id="backTitle"
-          label="Back Title"
-          type="text"
-          fullWidth
-          variant="filled"
-          value={backTitle}
-          sx={{ 
-            fontFamily: 'Staatliches',
-            color: 'black',
-            input: {
-              color: 'black',
-              background: 'rgba(255,255,255,0.8)',
-            }
-          }}
-          InputLabelProps={{
-            style: { color: '#000' },
-          }}
-          onChange={(e) => setBackTitle(e.target.value)}
-        />
-        <TextField
-          margin="normal"
-          id="backDesc"
-          label="Back Description"
-          type="text"
-          fullWidth
-          variant="filled"
-          value={backDescription}
-          sx={{ 
-            fontFamily: 'Staatliches',
-            color: 'black',
-            input: {
-              color: 'black',
-              background: 'rgba(255,255,255,0.8)',
-            }
-          }}
-          InputLabelProps={{
-            style: { color: '#000' },
-          }}
-          onChange={(e) => setBackDescription(e.target.value)}
-        />
+        <Textfield value={frontTitle} setValue={setFrontTitle} label="Front Title"/>
+        <Textfield value={frontDescription} setValue={setFrontDescription} label="Front Description"/>
+        <Textfield value={backTitle} setValue={setBackTitle} label="Back Title"/>
+        <Textfield value={backDescription} setValue={setBackDescription} label="Front Description"/>
       </DialogContent>
       <DialogActions>
         <Button 

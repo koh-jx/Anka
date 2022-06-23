@@ -5,24 +5,25 @@ import { red } from '@mui/material/colors';
 export const lightTheme = createTheme({
   palette: {
     primary: {
-      main: '#2F423A',
-      light: '#94e2e4',
+      main: '#2F423A',    // Bluish-green
+      light: '#94e2e4',   // Light blue - for backgrounds of components
+      dark: '#DB5375',    // Bluish-green
     },
     secondary: {
-      main: '#83A0A0',
+      main: '#83A0A0',    // Lighter blue - For cancel buttons etc
     },
     error: {
-      main: red.A400,
+      main: red.A400,     // Straight up red
     },
     info: {
-      main: '#FFFFFF',
+      main: '#FFFFFF',    // Black
     },
     background: {
-      default: '#FFDBB5',
+      default: '#FFDBB5', // Sand for overall bg
     },
     text: {
-      primary: '#FFFFFF',
-      secondary: '#000000',
+      primary: '#FFFFFF',   // Black
+      secondary: '#000000', // White
     }
   },
   typography: {
@@ -37,24 +38,25 @@ export const lightTheme = createTheme({
 export const darkTheme = createTheme({
   palette: {
     primary: {
-      main: '#4e165c',
-      light: '#3e5641',
+      main: '#4e165c',      // Dark purple
+      light: '#3e5641',     // Green - For backgrounds of components
+      dark: '#b42145',
     },
     secondary: {
-      main: '#63396e',
+      main: '#63396e',      // Light purple - For cancel buttons etc
     },
     error: {
-      main: '#a24936',
+      main: '#a24936',      // Orange
     },
     info: {
-      main: '#f0f8ff',
+      main: '#f0f8ff',      // White
     },
     background: {
-      default: '#373737',
+      default: '#373737',   // Dark grey for overall bg
     },
     text: {
-      primary: '#000000',
-      secondary: '#FFFFFF',
+      primary: '#000000',   // White
+      secondary: '#FFFFFF', // Black
     }
   },
   typography: {

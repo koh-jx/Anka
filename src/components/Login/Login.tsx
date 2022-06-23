@@ -2,9 +2,11 @@ import React, { ReactElement, useState } from 'react'
 import {
   Alert,
   Button,
+  Box,
   TextField,
 } from '@mui/material';
 
+import Textfield from '../Textfield';
 import { login, registerNewUser, setJwtToLocalStorage } from '../../lib/api/login'
 
 import styles from './Login.module.css'
@@ -62,32 +64,18 @@ function Login(
   }
 
   return <div className={ [styles.wrapper, styles.center].join(' ') }>
-    <div className={ window.localStorage.getItem('mode') === 'light'
-        ? [styles.loginBox, styles.center].join(' ')
-        : [styles.loginBoxDark, styles.center].join(' ')
-      }>
+    <Box
+      sx={{
+        backgroundColor: "primary.light",
+        width: "50%",
+        padding: "60px",
+        borderRadius: "20px",
+        boxShadow: "0px 10px 15px -10px #000",
+      }}
+    >
       <h1 className={styles.title}>Welcome to Anka</h1>
       <form className={ [styles.form, styles.center].join(' ') }>
-          <TextField
-              id="username"
-              fullWidth
-              label="Username"
-              margin="normal"
-              variant="filled"
-              value={username}
-              sx={{ 
-                fontFamily: 'Staatliches',
-                color: 'black',
-                input: {
-                  color: 'black',
-                  background: 'rgba(255,255,255,0.8)',
-                }
-              }}
-              InputLabelProps={{
-                style: { color: '#000' },
-              }}
-              onChange={(e) => setUsername(e.target.value)}
-          />
+          <Textfield value={username} setValue={setUsername} label="Username" />
 
           <TextField
               id="password"
@@ -97,8 +85,6 @@ function Login(
               variant="filled"
               value={password}
               sx={{ 
-                fontFamily: 'Staatliches',
-                color: 'black',
                 input: {
                   color: 'black',
                   background: 'rgba(255,255,255,0.8)',
@@ -135,7 +121,6 @@ function Login(
 
               <Button 
                 color="secondary"
-                className={styles.button}
                 variant="contained"
                 style={{ 
                   borderRadius: 25, 
@@ -192,7 +177,7 @@ function Login(
             </>
           )}
       </form>
-    </div>
+    </Box>
   </div>
 }
 

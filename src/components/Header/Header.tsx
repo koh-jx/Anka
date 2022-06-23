@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react'
+// import { useNavigate } from 'react-router-dom';
+import { Button, Box } from '@mui/material';
 
-import styles from './Header.module.css';
+import { logout } from '../../lib/api/login';
 import logo from '../../assets/logo.png';
 import logoDark from '../../assets/logoDark.png';
 
-import { logout } from '../../lib/api/login';
-import { Button } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
- 
+import styles from './Header.module.css';
+
 function Header(
     { 
         isLoggedIn, 
@@ -33,7 +33,10 @@ function Header(
     }
 
     return (
-        <div className={window.localStorage.getItem('mode') === 'light' ? styles.header : styles.headerDark}>
+        <Box 
+            className={styles.header}
+            sx= {{ backgroundColor: "primary.dark" }}
+        >
             <img
                 className={[styles.logo, styles.animateLogo, isLoggedIn && styles.shiftLogo].join(' ')}
                 src={window.localStorage.getItem('mode') === 'light' ? logo : logoDark}
@@ -66,7 +69,7 @@ function Header(
                             width: '10%',
                             color: 'white',
                             whiteSpace: 'nowrap'
-                            // onClick={() => navigate('/')}
+                            // onClick={() => navigate('somewhere')}
                         }}
                     >
                         Your notes
@@ -99,7 +102,7 @@ function Header(
                     </Button>
                 </div>
             }
-        </div>
+        </Box>
     );
 }
 
