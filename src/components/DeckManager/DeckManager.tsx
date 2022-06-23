@@ -1,9 +1,11 @@
 import { ReactElement, useState } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import Card from '../Card';
 import { CardInterface } from '../Card/Card';
-import AddCardDialog from '../AddCardDialog';
+import AddCardDialog from './AddCardDialog';
 
 import styles from './DeckManager.module.css';
   
@@ -37,6 +39,17 @@ function DeckManager(): ReactElement {
                             backCardface={card.back}
                             tags={card.tags}
                         />
+                        <div className={styles.cardSettings}>
+                            <ModeEditIcon 
+                                className={styles.cardSettingsIcon}
+                                sx={{color: "text.secondary"}} 
+                            />
+                            <DeleteIcon 
+                                className={styles.cardSettingsIcon} 
+                                sx={{color: "text.secondary"}} 
+                                onClick={() => removeCard(card)}        
+                            />
+                        </div>
                     </div>
                 )) }
                 <div className={styles.gridItem}>

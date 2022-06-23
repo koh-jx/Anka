@@ -9,10 +9,10 @@ import { TransitionProps } from '@mui/material/transitions';
 import { useSnackbar } from 'notistack';
 import { Fragment } from 'react';
 
-import Card from '../Card/Card';
-import { CardInterface } from '../Card/Card';
-import Textfield from '../Textfield';
-import WordCardface from '../WordCardface';
+import Card from '../../Card/Card';
+import { CardInterface } from '../../Card/Card';
+import Textfield from '../../Textfield';
+import WordCardface from '../../WordCardface';
 
 import styles from './AddCardDialog.module.css';
 

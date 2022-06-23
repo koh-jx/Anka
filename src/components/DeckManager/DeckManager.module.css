@@ -13,8 +13,9 @@
 
 .gridItem {
     padding: 20px 20px 0px 20px;
-    font-size: 30px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .card {
@@ -34,6 +35,20 @@
 
 .card:hover {
     background-color: rgb(0, 0, 0, 0.3);
+}
+
+.cardSettings {
+    margin-top: 10px;
+}
+
+.cardSettingsIcon {
+    opacity: 0.4;
+    transition: 0.4s;
+}
+
+.cardSettingsIcon:hover {
+    opacity: 0.6;
+    cursor: pointer;
 }
 
 .deckManager {
