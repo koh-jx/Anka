@@ -3,7 +3,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { createCard, CardInterface } from '../Card/Card';
+import { createCard, CardInterface } from '../Card/CardFactory';
 import AddCardDialog from './AddCardDialog';
 
 
@@ -13,14 +13,13 @@ function DeckManager(): ReactElement {
     
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardInterface[]>([]);
-
-    // const [editFrontTitle, setEditFrontTitle] = useState('');
-    // const [editBackTitle, setEditBackTitle] = useState('');
-    // const [editFrontDesc, setEditFrontDesc] = useState('');
-    // const [editBackDesc, setEditBackDesc] = useState('');
-    // const [editObject, setEditObject] = useState<CardInterface | null>(null);
+    // To edit a card
+    // const [editObject, setEditObject] = useState<CardInterface | null>(null);           // The original card before edit (for undo)     
+    // const [editIndex, setEditIndex] = useState<number | null>(null);                    // The index of the card to be edited
     
     const handleClickOpen = () => {
+        // setUndoFunction(removeCard);
+        // setHandleClose(handleClickClose);
         setDialogOpen(true);
     }
 
@@ -31,19 +30,38 @@ function DeckManager(): ReactElement {
         setDialogOpen(false);
     }
 
+    // const handleEditClickClose = (toEdit: CardInterface | null) => {
+    //     if (toEdit && editIndex) {
+    //         const newCards = [...cards];
+    //         newCards[editIndex] = toEdit;
+    //         setCards(newCards);
+    //     }
+    //     setEditObject(null);
+    //     setDialogOpen(false);
+    // }
+
+    // const undoEditCard = (cardToUndo: CardInterface) => {
+    //     if (editIndex && editObject) {
+    //         const newCards = [...cards];
+    //         newCards[editIndex] = editObject;
+    //         setCards(newCards);
+    //     }
+    // }
+
     const removeCard = (cardToRemove : CardInterface) => {
         setCards(cards.filter(card => card !== cardToRemove));
     }
 
     // const editCard = (cardToEdit : CardInterface) => {
-    //     setEditObject({
-    //         frontTitle: cardToEdit.front,
-    //         back: cardToEdit.back,
-    //     });
+    //     setEditObject(cardToEdit);
+    //     setEditIndex(cards.indexOf(cardToEdit));
+    //     setHandleClose(handleEditClickClose);
+    //     setUndoFunction(undoEditCard);
     //     setDialogOpen(true);
     // }
 
-
+    // const [undoFunction, setUndoFunction] = useState<(cardToRemove: CardInterface) => void>(removeCard);
+    // const [handleClose, setHandleClose] = useState<(toAdd: CardInterface | null) => void>(handleClickClose);
 
     return (    
         <div className={styles.deckManager}>
@@ -80,6 +98,10 @@ function DeckManager(): ReactElement {
                         dialogOpen={dialogOpen} 
                         handleClose={handleClickClose} 
                         undo={removeCard}
+                        // handleClose={handleClose} 
+                        // undo={undoFunction}
+                        // editObject={editObject}
+                        // editIndex={editIndex}
                     />
                 </div>
             </div>

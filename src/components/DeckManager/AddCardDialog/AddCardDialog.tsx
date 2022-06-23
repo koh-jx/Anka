@@ -9,8 +9,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { useSnackbar } from 'notistack';
 import { Fragment } from 'react';
 
-import { createCard } from '../../Card/Card';
-import { CardInterface, CardFace } from '../../Card/Card';
+import { CardInterface, CardFace, createCard } from '../../Card/CardFactory';
 import Textfield from '../../Textfield';
 
 import styles from './AddCardDialog.module.css';
@@ -30,15 +29,23 @@ export default function AddCardDialog(
   {
     dialogOpen, 
     handleClose, 
-    undo
+    undo,
+    // editObject,
+    // editIndex,
   }
   : {
     dialogOpen: boolean, 
     handleClose: (toAdd : CardInterface | null) => void,
     undo: (cardToRemove : CardInterface) => void
+    // editObject: CardInterface | null,
+    // editIndex: number | null,
   }
 ) {
 
+  // const [frontTitle, setFrontTitle] = React.useState(editObject ? editObject.frontCardFaceProps.frontTitle: 'Front');
+  // const [frontDescription, setFrontDescription] = React.useState(editObject ? editObject.frontCardFaceProps.frontDescription : '');
+  // const [backTitle, setBackTitle] = React.useState(editObject ? editObject.backCardFaceProps.backTitle :'Back');
+  // const [backDescription, setBackDescription] = React.useState(editObject ? editObject.backCardFaceProps.backDescription : '');
   const [frontTitle, setFrontTitle] = React.useState('Front');
   const [frontDescription, setFrontDescription] = React.useState('');
   const [backTitle, setBackTitle] = React.useState('Back');
@@ -51,9 +58,11 @@ export default function AddCardDialog(
       front: CardFace.WORD,
       back: CardFace.WORD,
       tags,
-      cardFaceProps: {
+      frontCardFaceProps: {
         frontTitle,
         frontDescription,
+      },
+      backCardFaceProps: {
         backTitle,
         backDescription,
       }

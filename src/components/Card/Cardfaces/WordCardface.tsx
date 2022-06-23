@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 
 
+// Factory methods to create a word card face
 export const createWordFront = (cardFaceProps: any) : ReactElement => {
   return (<WordCardface title={cardFaceProps.frontTitle} description={cardFaceProps.frontDescription}/>);
 }
@@ -9,6 +10,8 @@ export const createWordBack = (cardFaceProps: any) : ReactElement => {
   return (<WordCardface title={cardFaceProps.backTitle} description={cardFaceProps.backDescription}/>);
 }
 
+// Word card face consisting of a title and a description
+// Note that the component is only created through the above functions and should be declared no where else.
 function WordCardface(
   {
     title,
@@ -38,5 +41,3 @@ function WordCardface(
     </>
   );  
 }
-
-export default WordCardface;

@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import Flippy, { FrontSide, BackSide } from 'react-flippy';
-import { createWordBack, createWordFront } from '../WordCardface/WordCardface';
       
 const FlippyStyle = {
     width: '290px',
@@ -12,38 +11,7 @@ const FlippyStyle = {
     justifyContent: 'center',
 }
 
-export enum CardFace {
-  WORD = 'word'
-}
-  
-export interface CardInterface {
-  front: CardFace;
-  back: CardFace;
-  tags: string[];
-  cardFaceProps: any;
-}
-
-export const createCard = (cardInfo : CardInterface) : ReactElement => {
-  var front = null;
-  // Create Front
-  if (cardInfo.front === CardFace.WORD) {
-    front = createWordFront(cardInfo.cardFaceProps);
-  }
-
-  var back = null;
-  // Create Back
-  if (cardInfo.back === CardFace.WORD) {
-    back = createWordBack(cardInfo.cardFaceProps);
-  }
-
-  if (front && back) {
-    return <Card frontCardface={front} backCardface={back} tags={cardInfo.tags} />;
-  } else {
-    return <></>;
-  }
-}
-
-
+// Card Factory uses this template to create a card
 function Card(
   { 
     frontCardface, backCardface, tags
