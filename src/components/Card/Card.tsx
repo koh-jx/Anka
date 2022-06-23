@@ -3,7 +3,7 @@ import Flippy, { FrontSide, BackSide } from 'react-flippy';
       
 const FlippyStyle = {
     width: '290px',
-    height: '210px',
+    height: '190px',
     textAlign: 'center',
     color: '#FFF',
     fontFamily: 'sans-serif',
