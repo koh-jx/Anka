@@ -58,7 +58,7 @@ function Header(
                             whiteSpace: 'nowrap'
                         }}
                     >
-                        Your sets
+                        Your decks
                     </Button>
                     <Button 
                         style={{ 

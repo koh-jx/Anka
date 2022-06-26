@@ -1,42 +1,53 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { createCard, CardInterface } from '../Card/CardFactory';
+import { createCard, CardType } from '../Card/CardFactory';
 import AddCardDialog from './AddCardDialog';
 
 
 import styles from './DeckManager.module.css';
+import { getUser, createAndAddCard, getDeck } from '../../lib/api/cardFunctions';
+import { Button } from '@mui/material';
   
 function DeckManager(): ReactElement {
     
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [cards, setCards] = useState<CardInterface[]>([]);
+    const [cards, setCards] = useState<CardType[]>([]);
     // To edit a card
-    const [editObject, setEditObject] = useState<CardInterface | null>(null);           // The original card before edit (for dialog)     
-    const [editUndoObject, setEditUndoObject] = useState<CardInterface | null>(null);   // The original card before edit (for undo),     
+    const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
+    const [editUndoObject, setEditUndoObject] = useState<CardType | null>(null);   // The original card before edit (for undo),     
     const [editIndex, setEditIndex] = useState<number | null>(null);                    // The index of the card to be edited
+
+    useEffect(() => {
+        getUser()
+            .then(user => getDeck(user.cards)
+                .then(cards => {
+                    setCards(cards)
+                }));
+    }, []);
     
     const handleClickOpen = () => {
         setDialogOpen(true);
     }
 
-    const handleClickClose = (toAdd: CardInterface | null) => {
+    const handleClickClose = (toAdd: CardType | null) => {
         if (toAdd) {
             setCards([...cards, toAdd]);
+            createAndAddCard(toAdd);
         }
         setDialogOpen(false);
     }
 
-    const editCard = (cardToEdit : CardInterface) => {
+    const editCard = (cardToEdit : CardType) => {
         setEditObject(cardToEdit);
         setEditUndoObject(cardToEdit);
         setEditIndex(cards.indexOf(cardToEdit));
         setDialogOpen(true);
     }
 
-    const handleEditClickClose = (toEdit: CardInterface | null) => {
+    const handleEditClickClose = (toEdit: CardType | null) => {
         if (toEdit && editIndex !== null) {
             const newCards = [...cards];
             newCards[editIndex] = toEdit;
@@ -46,7 +57,7 @@ function DeckManager(): ReactElement {
         setDialogOpen(false);
     }
 
-    const undoEditCard = (cardToUndo: CardInterface) => {
+    const undoEditCard = (cardToUndo: CardType) => {
         if (editIndex && editUndoObject) {
             const newCards = [...cards];
             newCards[editIndex] = editUndoObject;
@@ -54,7 +65,7 @@ function DeckManager(): ReactElement {
         }
     }
 
-    const removeCard = (cardToRemove : CardInterface) => {
+    const removeCard = (cardToRemove : CardType) => {
         setCards(cards.filter(card => card !== cardToRemove));
     }
 
@@ -100,7 +111,14 @@ function DeckManager(): ReactElement {
                 </div>
             </div>
             <div className={styles.sidebar}>
-                Sidebar that does nothing for now
+                <Button 
+                    onClick={ async () => {
+                        console.log(await(getDeck((await getUser()).cards)));
+                    }}
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                />
             </div>
         </div>
     );

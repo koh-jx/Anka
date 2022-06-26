@@ -7,9 +7,9 @@ export enum CardFace {
     WORD = 'word'
 }
     
-// CardInterface contains everything a card needs to be created
+// CardType contains everything a card needs to be created
 // cardFaceProps contains the properties of the card face (front or back)
-export interface CardInterface {
+export type CardType = {
     front: CardFace;
     back: CardFace;
     tags: string[];
@@ -24,7 +24,7 @@ export interface CardInterface {
 }
   
 // The main factory method used to create a Card and its corresponding Card Faces
-export const createCard = (cardInfo : CardInterface) : ReactElement => {
+export const createCard = (cardInfo : CardType) : ReactElement => {
     var front = null;
     // Create Front
     if (cardInfo.front === CardFace.WORD) {

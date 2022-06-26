@@ -9,7 +9,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { useSnackbar } from 'notistack';
 import { Fragment } from 'react';
 
-import { CardInterface, CardFace, createCard } from '../../Card/CardFactory';
+import { CardType, CardFace, createCard } from '../../Card/CardFactory';
 import Textfield from '../../Textfield';
 
 import styles from './AddCardDialog.module.css';
@@ -37,12 +37,12 @@ export default function AddCardDialog(
   }
   : {
     dialogOpen: boolean, 
-    handleClose: (toAdd : CardInterface | null) => void,
-    undo: (cardToRemove : CardInterface) => void
-    editObject: CardInterface | null,
-    setEditObject: (cardToEdit : CardInterface | null) => void,
-    editHandleClose: (toEdit : CardInterface | null) => void,
-    editUndo: (cardToUndo : CardInterface) => void,
+    handleClose: (toAdd : CardType | null) => void,
+    undo: (cardToRemove : CardType) => void
+    editObject: CardType | null,
+    setEditObject: (cardToEdit : CardType | null) => void,
+    editHandleClose: (toEdit : CardType | null) => void,
+    editUndo: (cardToUndo : CardType) => void,
   }
 ) {
 
@@ -64,7 +64,7 @@ export default function AddCardDialog(
   }
   , [editObject, dialogOpen]);
 
-  const createCardInfo = () : CardInterface => {
+  const createCardInfo = () : CardType => {
     return {
       front: CardFace.WORD,
       back: CardFace.WORD,
@@ -113,7 +113,6 @@ export default function AddCardDialog(
 
   const editCard = () => {
     const result = createCardInfo();
-    console.log(result);
 
     const action = (key: any) => (
       <Fragment>

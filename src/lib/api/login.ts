@@ -1,23 +1,17 @@
-import Axios from 'axios';
-
-const ankaApi = Axios.create({ 
-    baseURL: process.env.REACT_APP_URL, 
-    timeout: 500000,
-    headers: {
-        Authorization: 'Bearer '+ localStorage.getItem('jwt')
-    }
-});
+import ankaApi from "./axios";
 
 // Data returned when user is logged in
 type UserLogin = {
     access_token: string;
 };
 
+// API call to check if a user exists, to aid in registering new users
 const checkUserExists = async (username: string): Promise<boolean> => {
     const res = await ankaApi.get(`/users/exists/${username}`);
     return res.data;
 }
 
+// Regsiters a new user in the database
 export const registerNewUser = async (username: string, password: string): Promise<void> => {
     if (!username || !password)
         return Promise.reject(new Error('Enter both email and password'));
@@ -30,7 +24,6 @@ export const registerNewUser = async (username: string, password: string): Promi
         ankaApi
         .post('/users/register', { username, password })
         .then(res => {
-            console.log(res);
             resolve();
         })
         .catch(err => {
@@ -40,6 +33,8 @@ export const registerNewUser = async (username: string, password: string): Promi
 
 }
   
+// Logs the user in using the username and password
+// Returns the access token if successful
 export const login = async (username: string, password: string): Promise<UserLogin> => {
     if (!username || !password)
         return Promise.reject(new Error('Enter both email and password'));
@@ -49,7 +44,6 @@ export const login = async (username: string, password: string): Promise<UserLog
         .post('/auth/login', { username, password })
         .then(({ data }) => {
             const {access_token} = data;
-
             resolve({access_token});
         })
         .catch(err => {
@@ -59,7 +53,7 @@ export const login = async (username: string, password: string): Promise<UserLog
 };
 
 
-// Local Storage-related functions
+// Local-storage & jwt-related functions
 
 export const setJwtToLocalStorage = (jwt: string) => {
     window.localStorage.setItem('jwt', jwt);
