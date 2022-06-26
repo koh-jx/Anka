@@ -1,4 +1,4 @@
-import ankaApi from "./axios";
+import { getAnkaApi } from "./axios";
 import { CardType } from "../../components/Card/CardFactory";
 
 // Get the following data:
@@ -11,7 +11,7 @@ export const getUser = async (): Promise<{
     cards: string[];
 }> =>
   new Promise((resolve, reject) => {
-    ankaApi
+    getAnkaApi()
       .get('/users/profile')
       .then(({ data }) => {
         resolve(data);
@@ -24,7 +24,7 @@ export const getUser = async (): Promise<{
 
 export const getCard = async (id: string): Promise<CardType> =>
   new Promise((resolve, reject) => {
-    ankaApi
+    getAnkaApi()
       .get('/card?id=' + id)
       .then(({ data }) => {
         resolve(data);
@@ -45,7 +45,7 @@ export const getDeck = async (cards: string[]): Promise<CardType[]> => {
 // Create new card
 const createCard = async (card: CardType): Promise<CardType> => {
     return new Promise((resolve, reject) => {
-        ankaApi
+        getAnkaApi()
             .post('/card', {
                 front: card.front as string,
                 back: card.back as string,
@@ -67,7 +67,7 @@ const createCard = async (card: CardType): Promise<CardType> => {
 export const createAndAddCardToDeck = async (card: CardType): Promise<CardType[]> => {
     return new Promise((resolve, reject) => {
         createCard(card).then((result) => {
-            ankaApi
+            getAnkaApi()
                 .patch('users/deck', {
                     id: result.id,
                 })
@@ -84,7 +84,7 @@ export const createAndAddCardToDeck = async (card: CardType): Promise<CardType[]
 // Edit card
 export const editCardInDB = async (card: CardType): Promise<CardType> => {
     return new Promise((resolve, reject) => {
-        ankaApi
+        getAnkaApi()
             .patch('/card', {
                 id: card.id,
                 front: card.front as string,
@@ -109,10 +109,10 @@ export const editCardInDB = async (card: CardType): Promise<CardType> => {
 
 export const removeCardFromDeck = async (card: CardType): Promise<CardType[]> => {
     return new Promise((resolve, reject) => {
-        ankaApi
+        getAnkaApi()
             .delete('card?id=' + card.id)
                 .then(() => {
-                    ankaApi
+                    getAnkaApi()
                         .delete('users/deck?id=' + card.id)
                         .then(({ data }) => {
                             resolve(data);

@@ -187,7 +187,7 @@ export default function AddCardDialog(
         <Textfield value={frontTitle} setValue={setFrontTitle} label="Front Title"/>
         <Textfield value={frontDescription} setValue={setFrontDescription} label="Front Description"/>
         <Textfield value={backTitle} setValue={setBackTitle} label="Back Title"/>
-        <Textfield value={backDescription} setValue={setBackDescription} label="Front Description"/>
+        <Textfield value={backDescription} setValue={setBackDescription} label="Back   Description"/>
       </DialogContent>
       <DialogActions>
         <Button 

@@ -4,10 +4,15 @@ import {
   Button,
   Box,
   TextField,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import Textfield from '../Textfield';
 import { login, registerNewUser, setJwtToLocalStorage } from '../../lib/api/login'
+import { resetAnkaApi } from '../../lib/api/axios';
 
 import styles from './Login.module.css'
 
@@ -18,6 +23,9 @@ function Login(
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -35,6 +43,7 @@ function Login(
         setIsLoggedIn(true);
         //put jwt in local storage
         setJwtToLocalStorage(data.access_token);
+        resetAnkaApi();
       }).catch((err : any) => {
         setShowAlert(true);
         setAlertMessage("Invalid email or password");
@@ -44,9 +53,8 @@ function Login(
 
   const registerUser = async () => {
     await registerNewUser(username, password)
-      .then ((data) => {
-        setIsLoggedIn(true);
-      }).catch((err : any) => {
+      .then (() => { loginUser(); })
+      .catch((err : any) => {
         setShowAlert(true);
         setAlertMessage(err.message);
       }
@@ -81,7 +89,7 @@ function Login(
               id="password"
               fullWidth
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="filled"
               value={password}
               sx={{ 
@@ -92,6 +100,18 @@ function Login(
               }}
               InputLabelProps={{
                 style: { color: '#000' },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseDownPassword}
+                    >
+                      {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                )
               }}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={keyPressSubmit}

@@ -1,4 +1,4 @@
-import ankaApi from "./axios";
+import { getAnkaApi } from "./axios";
 
 // Data returned when user is logged in
 type UserLogin = {
@@ -7,8 +7,7 @@ type UserLogin = {
 
 // API call to check if a user exists, to aid in registering new users
 const checkUserExists = async (username: string): Promise<boolean> => {
-    const res = await ankaApi.get(`/users/exists/${username}`);
-    return res.data;
+    return getAnkaApi().get(`/users/exists/${username}`);
 }
 
 // Regsiters a new user in the database
@@ -21,13 +20,13 @@ export const registerNewUser = async (username: string, password: string): Promi
     }
     
     return new Promise ((resolve, reject) => {
-        ankaApi
-        .post('/users/register', { username, password })
-        .then(res => {
-            resolve();
-        })
-        .catch(err => {
-            reject(err);
+        getAnkaApi()
+            .post('/users/register', { username, password })
+            .then(res => {
+                resolve();
+            })
+            .catch(err => {
+                reject(err);
         });
     })
 
@@ -40,14 +39,14 @@ export const login = async (username: string, password: string): Promise<UserLog
         return Promise.reject(new Error('Enter both email and password'));
 
     return new Promise((resolve, reject) => {
-        ankaApi
-        .post('/auth/login', { username, password })
-        .then(({ data }) => {
-            const {access_token} = data;
-            resolve({access_token});
-        })
-        .catch(err => {
-            reject(err.request.response);
+        getAnkaApi()
+            .post('/auth/login', { username, password })
+            .then(({ data }) => {
+                const {access_token} = data;
+                resolve({access_token});
+            })
+            .catch(err => {
+                reject(err.request.response);
         });
     });
 };

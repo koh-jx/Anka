@@ -1,11 +1,20 @@
 import Axios from 'axios';
 
-const ankaApi = Axios.create({ 
+var ankaApi = Axios.create({ 
     baseURL: process.env.REACT_APP_URL, 
-    timeout: 500000,
+    timeout: 5000,
     headers: {
         Authorization: 'Bearer '+ localStorage.getItem('jwt')
     }
 });
 
-export default ankaApi;
+export const getAnkaApi = () => ankaApi;
+export const resetAnkaApi = () => {
+    ankaApi = Axios.create({ 
+        baseURL: process.env.REACT_APP_URL, 
+        timeout: 5000,
+        headers: {
+            Authorization: 'Bearer '+ localStorage.getItem('jwt')
+        }
+    });
+}
