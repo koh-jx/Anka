@@ -75,6 +75,20 @@ function Header(
                         Your notes
                     </Button>
                     <Button 
+                        style={{ 
+                            fontSize: '1.2rem',
+                            position: 'fixed',
+                            right: '30%',
+                            top: '5%',
+                            width: '10%',
+                            color: 'white',
+                            whiteSpace: 'nowrap'
+                            // onClick={() => navigate('somewhere')}
+                        }}
+                    >
+                        Your cards
+                    </Button>
+                    <Button 
                         color="secondary"
                         variant="contained"
                         style={{ 
