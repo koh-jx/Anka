@@ -8,7 +8,13 @@ import AddCardDialog from './AddCardDialog';
 
 
 import styles from './DeckManager.module.css';
-import { getUser, createAndAddCard, getDeck, editCardInDB } from '../../lib/api/cardFunctions';
+import { 
+    getUser, 
+    createAndAddCardToDeck, 
+    getDeck, 
+    editCardInDB, 
+    removeCardFromDeck 
+} from '../../lib/api/cardFunctions';
 import { Button } from '@mui/material';
   
 function DeckManager(): ReactElement {
@@ -35,7 +41,7 @@ function DeckManager(): ReactElement {
     const handleClickClose = (toAdd: CardType | null) => {
         if (toAdd) {
             setCards([...cards, toAdd]);
-            createAndAddCard(toAdd);
+            createAndAddCardToDeck(toAdd);
         }
         setDialogOpen(false);
     }
@@ -52,7 +58,7 @@ function DeckManager(): ReactElement {
             const newCards = [...cards];
             newCards[editIndex] = toEdit;
             setCards(newCards);
-            editCardInDB(toEdit, editIndex);
+            editCardInDB(toEdit);
         }
         setEditObject(null);
         setDialogOpen(false);
@@ -68,6 +74,7 @@ function DeckManager(): ReactElement {
 
     const removeCard = (cardToRemove : CardType) => {
         setCards(cards.filter(card => card !== cardToRemove));
+        removeCardFromDeck(cardToRemove);
     }
 
     return (    

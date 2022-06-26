@@ -43,7 +43,7 @@ export const getDeck = async (cards: string[]): Promise<CardType[]> => {
 };
 
 // Create new card
-const createCard = async (card: CardType): Promise<any> => {
+const createCard = async (card: CardType): Promise<CardType> => {
     return new Promise((resolve, reject) => {
         ankaApi
             .post('/card', {
@@ -64,7 +64,7 @@ const createCard = async (card: CardType): Promise<any> => {
     );
 }
 
-export const createAndAddCard = async (card: CardType): Promise<any> => {
+export const createAndAddCardToDeck = async (card: CardType): Promise<CardType[]> => {
     return new Promise((resolve, reject) => {
         createCard(card).then((result) => {
             ankaApi
@@ -82,12 +82,11 @@ export const createAndAddCard = async (card: CardType): Promise<any> => {
 }
 
 // Edit card
-export const editCardInDB = async (card: CardType, index: number): Promise<any> => {
-    const id = (await getUser()).cards[index];
+export const editCardInDB = async (card: CardType): Promise<CardType> => {
     return new Promise((resolve, reject) => {
         ankaApi
             .patch('/card', {
-                id,
+                id: card.id,
                 front: card.front as string,
                 back: card.back as string,
                 frontTitle: card.frontCardFaceProps.frontTitle,
@@ -96,6 +95,7 @@ export const editCardInDB = async (card: CardType, index: number): Promise<any> 
                 backDescription: card.backCardFaceProps.backDescription,
             })
             .then(({ data }) => {
+                console.log(data);
                 resolve(data);
             })
             .catch(() => {
@@ -106,3 +106,20 @@ export const editCardInDB = async (card: CardType, index: number): Promise<any> 
 }
 
 // Delete card
+
+export const removeCardFromDeck = async (card: CardType): Promise<CardType[]> => {
+    return new Promise((resolve, reject) => {
+        ankaApi
+            .delete('card?id=' + card.id)
+                .then(() => {
+                    ankaApi
+                        .delete('users/deck?id=' + card.id)
+                        .then(({ data }) => {
+                            resolve(data);
+                        })
+                        .catch(() => {
+                            reject();
+                        });
+                });
+    });
+}

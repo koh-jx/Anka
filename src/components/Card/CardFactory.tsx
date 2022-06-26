@@ -10,6 +10,7 @@ export enum CardFace {
 // CardType contains everything a card needs to be created
 // cardFaceProps contains the properties of the card face (front or back)
 export type CardType = {
+    id: string,
     front: CardFace;
     back: CardFace;
     tags: string[];

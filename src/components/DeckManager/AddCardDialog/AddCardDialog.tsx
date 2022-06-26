@@ -64,8 +64,9 @@ export default function AddCardDialog(
   }
   , [editObject, dialogOpen]);
 
-  const createCardInfo = () : CardType => {
+  const createCardInfo = (id: string) : CardType => {
     return {
+      id,               // Not yet initialised
       front: CardFace.WORD,
       back: CardFace.WORD,
       tags,
@@ -80,7 +81,7 @@ export default function AddCardDialog(
     }
   }
   const addCard = () => {
-    const result = createCardInfo();
+    const result = createCardInfo("");
 
     const action = (key: any) => (
       <Fragment>
@@ -112,7 +113,7 @@ export default function AddCardDialog(
   }
 
   const editCard = () => {
-    const result = createCardInfo();
+    const result = createCardInfo(editObject!.id);
 
     const action = (key: any) => (
       <Fragment>
@@ -181,7 +182,7 @@ export default function AddCardDialog(
       </DialogTitle>
       <DialogContent>
         <div className={styles.card}>
-          {createCard(createCardInfo())}
+          {createCard(createCardInfo(""))}
         </div>
         <Textfield value={frontTitle} setValue={setFrontTitle} label="Front Title"/>
         <Textfield value={frontDescription} setValue={setFrontDescription} label="Front Description"/>
