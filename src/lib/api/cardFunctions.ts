@@ -82,5 +82,27 @@ export const createAndAddCard = async (card: CardType): Promise<any> => {
 }
 
 // Edit card
+export const editCardInDB = async (card: CardType, index: number): Promise<any> => {
+    const id = (await getUser()).cards[index];
+    return new Promise((resolve, reject) => {
+        ankaApi
+            .patch('/card', {
+                id,
+                front: card.front as string,
+                back: card.back as string,
+                frontTitle: card.frontCardFaceProps.frontTitle,
+                frontDescription: card.frontCardFaceProps.frontDescription,
+                backTitle: card.backCardFaceProps.backTitle,
+                backDescription: card.backCardFaceProps.backDescription,
+            })
+            .then(({ data }) => {
+                resolve(data);
+            })
+            .catch(() => {
+                reject();
+            });
+    }
+    );
+}
 
 // Delete card

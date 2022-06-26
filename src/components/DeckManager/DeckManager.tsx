@@ -8,7 +8,7 @@ import AddCardDialog from './AddCardDialog';
 
 
 import styles from './DeckManager.module.css';
-import { getUser, createAndAddCard, getDeck } from '../../lib/api/cardFunctions';
+import { getUser, createAndAddCard, getDeck, editCardInDB } from '../../lib/api/cardFunctions';
 import { Button } from '@mui/material';
   
 function DeckManager(): ReactElement {
@@ -52,6 +52,7 @@ function DeckManager(): ReactElement {
             const newCards = [...cards];
             newCards[editIndex] = toEdit;
             setCards(newCards);
+            editCardInDB(toEdit, editIndex);
         }
         setEditObject(null);
         setDialogOpen(false);
