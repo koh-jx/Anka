@@ -2,14 +2,14 @@ import React, { ReactElement, useState } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Typography } from '@mui/material';
 
-import DeckManager from '../DeckManager';
 import { CardType } from '../Card/CardFactory';
+import AddDeckDialog from './AddDeckDialog';
 
 import styles from './MyDecks.module.css';
 import { useNavigate } from 'react-router-dom';
 
 
-export type Deck = {
+export type DeckType = {
     id: string;
     name: string;
     // picture: ???;
@@ -20,23 +20,33 @@ function MyDecks(): ReactElement {
     const navigate = useNavigate();
     // Currently is an array of array of cards
     // Change to array of decks ids, then when enter DeckManager then call the getDeck api
-    const [decks, setDecks] = useState<Deck[]>([]);
+    const [decks, setDecks] = useState<DeckType[]>([]);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
-    const handleClickOpen = () => {
-        setDecks([...decks, {
-            id: '',
-            name: 'Deck',
-            cards: []
-        }]);
+    const handleClickClose = (deckToAdd : DeckType | null) => {
+        if (deckToAdd) {
+            setDecks([...decks, deckToAdd]);
+        }
+        
+        setDialogOpen(false);
     }
 
-    const gotoDeck = (deck: Deck) => {
+    const handleClickOpen = () => {
+        setDialogOpen(true);
+    }
+
+    // Once read different decks then uncomment this
+    const gotoDeck = (deck: DeckType) => {
         // navigate(`/deck/${deck.id}`, {
         //     state: {
         //         deck
         //     }
         // });
         navigate(`/deck`);
+    }
+
+    const removeDeck = (deck: DeckType) => {
+        setDecks(decks.filter(d => d.id !== deck.id));
     }
 
     return ( 
@@ -71,15 +81,11 @@ function MyDecks(): ReactElement {
                                 color: 'rgb(0,0,0,0.3)'
                             }}/>
                         </div>
-                        {/* <AddCardDialog 
+                        <AddDeckDialog 
                             dialogOpen={dialogOpen} 
                             handleClose={handleClickClose} 
-                            undo={removeCard}
-                            editObject={editObject}
-                            setEditObject={setEditObject}
-                            editHandleClose={handleEditClickClose}
-                            editUndo={undoEditCard}
-                        /> */}
+                            undo={removeDeck}
+                        />
                     </div>
                 </div>
             </div>
