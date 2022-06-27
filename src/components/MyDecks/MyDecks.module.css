@@ -61,12 +61,11 @@
 .deck {
     width: 290px;
     height: 190px;
-    background-color: rgb(255, 255, 255, 0.5);
-    font-size: 30px;
+    background-color: rgb(255, 255, 255, 0.3);
     justify-content: center; 
     transition: 0.5s;
-    align-items: center;
     display: flex;
+    flex-direction: column;
     cursor: pointer;
     border-radius: 15px;
     box-shadow: 0px 10px 10px rgb(0, 0, 0, 0.5);
@@ -74,4 +73,8 @@
 
 .deck:hover {
     filter:brightness(70%);
+}
+
+.subText {
+    opacity: 60%;
 }

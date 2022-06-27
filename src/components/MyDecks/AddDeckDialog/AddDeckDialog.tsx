@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+} from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import { useSnackbar } from 'notistack';
 import { Fragment } from 'react';
 
 import { DeckType } from '../MyDecks';
 import Textfield from '../../Textfield';
-
-import styles from './AddCardDialog.module.css';
-
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -39,8 +39,9 @@ export default function AddDeckDialog(
 ) {
 
   const [name, setName] = React.useState('');
+  const [showAlert, setShowAlert] = React.useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
+  
   // useEffect(() => {
   //   if (editObject) {
   //     setTitle(editObject.frontCardFaceProps.frontTitle);
@@ -56,6 +57,11 @@ export default function AddDeckDialog(
     }
   }
   const addDeck = () => {
+    if (name.length === 0) {
+      setShowAlert(true);
+      return;
+    }
+    
     const result = createDeckInfo();
 
     const action = (key: any) => (
@@ -121,6 +127,7 @@ export default function AddDeckDialog(
 
   const resetDialog = () => {
     setName("")
+    setShowAlert(false);
   }
 
   const cancelAdd = () => {
@@ -130,51 +137,56 @@ export default function AddDeckDialog(
   }
 
   return (
-    <Dialog 
-      TransitionComponent={Transition}
-      keepMounted
-      open={dialogOpen} 
-      onClose={() => null}  // Prevent closing on clicking outside dialog
-      PaperProps={{
-        style: {
-          // Cant use primary theme here for some reason
-          backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
-          borderRadius: '10px',
-          minWidth: '30%',
-        },
-      }}
-    >
-      <DialogTitle
-        sx={{ 
-          fontFamily: 'Staatliches',
-          color: 'text.secondary',
+    <>
+      <Dialog 
+        TransitionComponent={Transition}
+        keepMounted
+        open={dialogOpen} 
+        onClose={() => null}  // Prevent closing on clicking outside dialog
+        PaperProps={{
+          style: {
+            // Cant use primary theme here for some reason
+            backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
+            borderRadius: '10px',
+            minWidth: '30%',
+          },
         }}
       >
-        {/* {editObject ? "Edit Flashcard" : "Create new Flashcard"} */}
-        Create New Deck
-      </DialogTitle>
-      <DialogContent>
-        <Textfield value={name} setValue={setName} label="Name"/>
-      </DialogContent>
-      <DialogActions>
-        <Button 
-          color="secondary"
-          variant="contained"
-          onClick={cancelAdd}
+        <DialogTitle
+          sx={{ 
+            fontFamily: 'Staatliches',
+            color: 'text.secondary',
+          }}
         >
-          Cancel
-        </Button>
+          {/* {editObject ? "Edit Flashcard" : "Create new Flashcard"} */}
+          Create New Deck
+        </DialogTitle>
+        <DialogContent>
+          <Textfield value={name} setValue={setName} label="Name"/>
+          {showAlert && (
+            <Alert severity="error">"Title cannot be empty!"</Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            color="secondary"
+            variant="contained"
+            onClick={cancelAdd}
+          >
+            Cancel
+          </Button>
 
-        <Button 
-          color="primary"
-          variant="contained"
-          // onClick={() => editObject ? editCard() : addCard()}
-          onClick={addDeck}
-        >
-          {/* {editObject ? "Edit" : "Create"} */}
-          Create
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <Button 
+            color="primary"
+            variant="contained"
+            // onClick={() => editObject ? editCard() : addCard()}
+            onClick={addDeck}
+          >
+            {/* {editObject ? "Edit" : "Create"} */}
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }

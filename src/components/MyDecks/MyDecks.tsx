@@ -27,7 +27,7 @@ function MyDecks(): ReactElement {
         if (deckToAdd) {
             setDecks([...decks, deckToAdd]);
         }
-        
+
         setDialogOpen(false);
     }
 
@@ -68,6 +68,22 @@ function MyDecks(): ReactElement {
                                 className={styles.deck}
                                 onClick={() => gotoDeck(deck)}
                             >
+                                <Typography
+                                    color="text.secondary"
+                                    variant="h4"
+                                    sx={{
+                                        textShadow: '3px 2px 2px rgba(0, 0, 0, 0.25)',
+                                    }}
+                                >
+                                    {deck.name}
+                                </Typography>
+                                <Typography
+                                    className={styles.subText}
+                                    color="text.secondary"
+                                    variant="h6"
+                                >
+                                    {deck.cards.length} cards
+                                </Typography>  
                             </div>
                         </div>
                     )) }
