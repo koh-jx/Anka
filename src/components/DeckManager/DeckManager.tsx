@@ -80,8 +80,8 @@ function DeckManager(): ReactElement {
     return (    
         <div className={styles.deckManager}>
             <div className={styles.gridContainer}>
-                { cards.map((card, index) => (
-                    <div className={styles.gridItem} key={index}>
+                { cards.map((card) => (
+                    <div className={styles.gridItem} key={card.id}>
                         {createCard(card)}
                         <div className={styles.cardSettings}>
                             <ModeEditIcon 

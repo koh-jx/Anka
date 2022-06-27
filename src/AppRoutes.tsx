@@ -4,7 +4,8 @@ import Box from '@mui/material/Box';
 import './AppRoutes.css';
 
 import Header from './components/Header';
-import Dashboard from './components/Dashboard';
+import MyDecks from './components/MyDecks';
+import DeckManager from './components/DeckManager';
 import Login from './components/Login';
 
 function AppRoutes(
@@ -55,7 +56,8 @@ function AppRoutes(
           >
             { isLoggedIn && 
               <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" element={<MyDecks />} />
+                <Route path="/deck" element={<DeckManager />} />
               </Routes>
             }
           </Box>
