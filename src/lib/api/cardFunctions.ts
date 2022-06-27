@@ -64,7 +64,7 @@ const createCard = async (card: CardType): Promise<CardType> => {
     );
 }
 
-export const createAndAddCardToDeck = async (card: CardType): Promise<CardType[]> => {
+export const createAndAddCardToDeck = async (card: CardType): Promise<CardType> => {
     return new Promise((resolve, reject) => {
         createCard(card).then((result) => {
             getAnkaApi()
@@ -72,7 +72,7 @@ export const createAndAddCardToDeck = async (card: CardType): Promise<CardType[]
                     id: result.id,
                 })
                 .then(({ data }) => {
-                    resolve(data);
+                    resolve(result);
                 })
                 .catch(() => {
                     reject();

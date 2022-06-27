@@ -24,7 +24,6 @@ function DeckManager(): ReactElement {
     // To edit a card
     const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
     const [editUndoObject, setEditUndoObject] = useState<CardType | null>(null);   // The original card before edit (for undo),     
-    const [editIndex, setEditIndex] = useState<number | null>(null);                    // The index of the card to be edited
 
     useEffect(() => {
         getUser()
@@ -40,8 +39,10 @@ function DeckManager(): ReactElement {
 
     const handleClickClose = (toAdd: CardType | null) => {
         if (toAdd) {
-            setCards([...cards, toAdd]);
-            createAndAddCardToDeck(toAdd);
+            createAndAddCardToDeck(toAdd)
+                .then(result => {
+                    setCards([...cards, result]);
+                });            
         }
         setDialogOpen(false);
     }
@@ -49,32 +50,35 @@ function DeckManager(): ReactElement {
     const editCard = (cardToEdit : CardType) => {
         setEditObject(cardToEdit);
         setEditUndoObject(cardToEdit);
-        setEditIndex(cards.indexOf(cardToEdit));
         setDialogOpen(true);
     }
 
     const handleEditClickClose = (toEdit: CardType | null) => {
-        if (toEdit && editIndex !== null) {
-            const newCards = [...cards];
-            newCards[editIndex] = toEdit;
-            setCards(newCards);
-            editCardInDB(toEdit);
+        if (toEdit) {
+            editCardInDB(toEdit)
+                .then(result => {
+                    setCards(cards.map(card => card.id === result.id ? result : card));
+                });
         }
         setEditObject(null);
         setDialogOpen(false);
     }
 
     const undoEditCard = (cardToUndo: CardType) => {
-        if (editIndex && editUndoObject) {
-            const newCards = [...cards];
-            newCards[editIndex] = editUndoObject;
-            setCards(newCards);
+        if (editUndoObject) {
+            editCardInDB(cardToUndo)
+                .then(result => {
+                    setCards(cards.map(card => card.id === result.id ? result : card));
+                });
         }
     }
 
     const removeCard = (cardToRemove : CardType) => {
-        setCards(cards.filter(card => card !== cardToRemove));
-        removeCardFromDeck(cardToRemove);
+        console.log(cardToRemove)
+        removeCardFromDeck(cardToRemove).then((data) => {
+            console.log(data)
+            setCards(cards.filter(card => card !== cardToRemove));
+        });
     }
 
     return (    

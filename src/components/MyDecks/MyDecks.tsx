@@ -1,5 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Typography } from '@mui/material';
 
 import { CardType } from '../Card/CardFactory';
@@ -22,6 +24,9 @@ function MyDecks(): ReactElement {
     // Change to array of decks ids, then when enter DeckManager then call the getDeck api
     const [decks, setDecks] = useState<DeckType[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
+    // To edit a deck
+    const [editObject, setEditObject] = useState<DeckType | null>(null); 
+    const [editUndoObject, setEditUndoObject] = useState<DeckType | null>(null);  
 
     const handleClickClose = (deckToAdd : DeckType | null) => {
         if (deckToAdd) {
@@ -43,6 +48,28 @@ function MyDecks(): ReactElement {
         //     }
         // });
         navigate(`/deck`);
+    }
+
+    const editDeck = (deck: DeckType) => {
+        setEditObject(deck);
+        setEditUndoObject(deck);
+        setDialogOpen(true);
+    }
+
+    const handleEditClickClose = (toEdit: DeckType | null) => {
+        if (toEdit) {
+            setDecks(decks.map(deck => deck.id === toEdit.id ? toEdit : deck));
+            // editDeckInDB(toEdit); just change the title
+        }
+        setEditObject(null);
+        setDialogOpen(false);
+    }
+
+    const undoEditDeck= (deckToUndo: DeckType) => {
+        if (editUndoObject) {
+            setDecks(decks.map(deck => deck.id === deckToUndo.id ? deckToUndo : deck));
+            // editDeckInDB(deckToUndo); just change the title
+        }
     }
 
     const removeDeck = (deck: DeckType) => {
@@ -85,6 +112,18 @@ function MyDecks(): ReactElement {
                                     {deck.cards.length} cards
                                 </Typography>  
                             </div>
+                            <div>
+                                <ModeEditIcon 
+                                    className={styles.cardSettingsIcon}
+                                    sx={{color: "text.secondary"}} 
+                                    onClick={() => editDeck(deck)}
+                                />
+                                <DeleteIcon 
+                                    className={styles.cardSettingsIcon} 
+                                    sx={{color: "text.secondary"}} 
+                                    onClick={() => removeDeck(deck)}        
+                                />
+                            </div>
                         </div>
                     )) }
                     <div className={styles.gridItem}>
@@ -101,6 +140,10 @@ function MyDecks(): ReactElement {
                             dialogOpen={dialogOpen} 
                             handleClose={handleClickClose} 
                             undo={removeDeck}
+                            editObject={editObject}
+                            setEditObject={setEditObject}
+                            editHandleClose={handleEditClickClose}
+                            editUndo={undoEditDeck}
                         />
                     </div>
                 </div>

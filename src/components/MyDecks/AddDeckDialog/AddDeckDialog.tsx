@@ -30,11 +30,19 @@ export default function AddDeckDialog(
     dialogOpen, 
     handleClose, 
     undo,
+    editObject,
+    setEditObject,
+    editHandleClose,
+    editUndo,
   }
   : {
     dialogOpen: boolean, 
     handleClose: (toAdd : DeckType | null) => void,
-    undo: (cardToRemove : DeckType) => void
+    undo: (cardToRemove : DeckType) => void,
+    editObject: DeckType | null,
+    setEditObject: (cardToEdit : DeckType | null) => void,
+    editHandleClose: (toEdit : DeckType | null) => void,
+    editUndo: (cardToUndo : DeckType) => void,
   }
 ) {
 
@@ -42,12 +50,12 @@ export default function AddDeckDialog(
   const [showAlert, setShowAlert] = React.useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   
-  // useEffect(() => {
-  //   if (editObject) {
-  //     setTitle(editObject.frontCardFaceProps.frontTitle);
-  //   }
-  // }
-  // , [editObject, dialogOpen]);
+  useEffect(() => {
+    if (editObject) {
+      setName(editObject.name);
+    }
+  }
+  , [editObject, dialogOpen]);
 
   const createDeckInfo = () : DeckType => {
     return {
@@ -56,12 +64,13 @@ export default function AddDeckDialog(
       cards: []
     }
   }
+
   const addDeck = () => {
     if (name.length === 0) {
       setShowAlert(true);
       return;
     }
-    
+
     const result = createDeckInfo();
 
     const action = (key: any) => (
@@ -93,37 +102,42 @@ export default function AddDeckDialog(
     resetDialog();
   }
 
-  // const editCard = () => {
-  //   const result = createCardInfo();
+  const editDeck = () => {
+    if (name.length === 0) {
+      setShowAlert(true);
+      return;
+    }
 
-  //   const action = (key: any) => (
-  //     <Fragment>
-  //         <Button 
-  //           sx={{color: "white"}}
-  //           onClick={() => {
-  //             editUndo(result);
-  //             closeSnackbar(key);
-  //           }}
-  //         >
-  //             Undo
-  //         </Button>
-  //         <Button 
-  //           sx={{color: "white"}}
-  //           onClick={() => { closeSnackbar(key) }}
-  //         >
-  //             Dismiss
-  //         </Button>
-  //     </Fragment>
-  //   );
+    const result = createDeckInfo();
 
-  //   editHandleClose(result);
-  //   enqueueSnackbar('Flashcard edited!', { 
-  //     variant: 'info',
-  //     autoHideDuration: 3000,
-  //     action
-  //   });
-  //   resetDialog();
-  // }
+    const action = (key: any) => (
+      <Fragment>
+          <Button 
+            sx={{color: "white"}}
+            onClick={() => {
+              editUndo(result);
+              closeSnackbar(key);
+            }}
+          >
+              Undo
+          </Button>
+          <Button 
+            sx={{color: "white"}}
+            onClick={() => { closeSnackbar(key) }}
+          >
+              Dismiss
+          </Button>
+      </Fragment>
+    );
+
+    editHandleClose(result);
+    enqueueSnackbar('Deck edited!', { 
+      variant: 'info',
+      autoHideDuration: 3000,
+      action
+    });
+    resetDialog();
+  }
 
   const resetDialog = () => {
     setName("")
@@ -132,7 +146,6 @@ export default function AddDeckDialog(
 
   const cancelAdd = () => {
     resetDialog();
-    // setEditObject(null);
     handleClose(null);
   }
 
@@ -158,13 +171,12 @@ export default function AddDeckDialog(
             color: 'text.secondary',
           }}
         >
-          {/* {editObject ? "Edit Flashcard" : "Create new Flashcard"} */}
-          Create New Deck
+          {editObject ? "Edit Flashcard" : "Create new Flashcard"}
         </DialogTitle>
         <DialogContent>
           <Textfield value={name} setValue={setName} label="Name"/>
           {showAlert && (
-            <Alert severity="error">"Title cannot be empty!"</Alert>
+            <Alert severity="error">Title cannot be empty!</Alert>
           )}
         </DialogContent>
         <DialogActions>
@@ -179,11 +191,9 @@ export default function AddDeckDialog(
           <Button 
             color="primary"
             variant="contained"
-            // onClick={() => editObject ? editCard() : addCard()}
-            onClick={addDeck}
+            onClick={() => editObject ? editDeck() : addDeck()}
           >
-            {/* {editObject ? "Edit" : "Create"} */}
-            Create
+            {editObject ? "Edit" : "Create"}
           </Button>
         </DialogActions>
       </Dialog>
