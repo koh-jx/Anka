@@ -1,10 +1,13 @@
 import { ReactElement, useState, useEffect, Fragment } from 'react'
+import { useLocation } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { createCard, CardType } from '../Card/CardFactory';
+import { DeckType } from '../MyDecks/MyDecks';
 import AddCardDialog from './AddCardDialog';
 
 
@@ -19,7 +22,15 @@ import {
 import { Button } from '@mui/material';
   
 function DeckManager(): ReactElement {
-    
+    const location = useLocation();
+
+    console.log(location.state);
+
+    const deckCards = (location.state as DeckType).cards;
+    const deckName = (location.state as DeckType).name;
+    const deckId = (location.state as DeckType).id;
+
+
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardType[]>([]);
 
@@ -30,6 +41,7 @@ function DeckManager(): ReactElement {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     useEffect(() => {
+        // TODO API: To get from deck id instead
         getUser()
             .then(user => getDeck(user.cards)
                 .then(cards => {
@@ -134,55 +146,67 @@ function DeckManager(): ReactElement {
     }
 
     return (    
-        <div className={styles.deckManager}>
-            <div className={styles.gridContainer}>
-                { cards.map((card) => (
-                    <div className={styles.gridItem} key={card.id}>
-                        {createCard(card)}
-                        <div className={styles.cardSettings}>
-                            <ModeEditIcon 
-                                className={styles.cardSettingsIcon}
-                                sx={{color: "text.secondary"}} 
-                                onClick={() => editCard(card)}
-                            />
-                            <DeleteIcon 
-                                className={styles.cardSettingsIcon} 
-                                sx={{color: "text.secondary"}} 
-                                onClick={() => removeCard(card)}        
-                            />
+        <>
+            <Typography
+                color="text.secondary"
+                variant="h5"
+                sx={{
+                    paddingLeft: '1rem',
+                    paddingBottom: '1rem',
+                }}
+            >
+                {deckName}
+            </Typography> 
+            <div className={styles.deckManager}>
+                <div className={styles.gridContainer}>
+                    { cards.map((card) => (
+                        <div className={styles.gridItem} key={card.id}>
+                            {createCard(card)}
+                            <div className={styles.cardSettings}>
+                                <ModeEditIcon 
+                                    className={styles.cardSettingsIcon}
+                                    sx={{color: "text.secondary"}} 
+                                    onClick={() => editCard(card)}
+                                />
+                                <DeleteIcon 
+                                    className={styles.cardSettingsIcon} 
+                                    sx={{color: "text.secondary"}} 
+                                    onClick={() => removeCard(card)}        
+                                />
+                            </div>
                         </div>
+                    )) }
+                    <div className={styles.gridItem}>
+                        <div 
+                            className={styles.card}
+                            onClick={handleClickOpen}
+                        >
+                            <AddCircleIcon sx={{ 
+                                fontSize: '6rem',
+                                color: 'rgb(0,0,0,0.3)'
+                            }}/>
+                        </div>
+                        <AddCardDialog 
+                            dialogOpen={dialogOpen} 
+                            handleClose={handleClickClose} 
+                            editObject={editObject}
+                            setEditObject={setEditObject}
+                            editHandleClose={handleEditClickClose}
+                        />
                     </div>
-                )) }
-                <div className={styles.gridItem}>
-                    <div 
-                        className={styles.card}
-                        onClick={handleClickOpen}
-                    >
-                        <AddCircleIcon sx={{ 
-                            fontSize: '6rem',
-                            color: 'rgb(0,0,0,0.3)'
-                        }}/>
-                    </div>
-                    <AddCardDialog 
-                        dialogOpen={dialogOpen} 
-                        handleClose={handleClickClose} 
-                        editObject={editObject}
-                        setEditObject={setEditObject}
-                        editHandleClose={handleEditClickClose}
+                </div>
+                <div className={styles.sidebar}>
+                    <Button 
+                        onClick={ async () => {
+                            console.log(await(getDeck((await getUser()).cards)));
+                        }}
+                        variant="contained"
+                        color="primary"
+                        size="large"
                     />
                 </div>
             </div>
-            <div className={styles.sidebar}>
-                <Button 
-                    onClick={ async () => {
-                        console.log(await(getDeck((await getUser()).cards)));
-                    }}
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                />
-            </div>
-        </div>
+        </>
     );
 }
 

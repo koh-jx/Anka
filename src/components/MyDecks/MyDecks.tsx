@@ -4,8 +4,8 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
     Button,
+    Typography
 } from '@mui/material';
-import { Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { CardType } from '../Card/CardFactory';
@@ -119,12 +119,13 @@ function MyDecks(): ReactElement {
 
     // Once read different decks then uncomment this
     const gotoDeck = (deck: DeckType) => {
-        // navigate(`/deck/${deck.id}`, {
-        //     state: {
-        //         deck
-        //     }
-        // });
-        navigate(`/deck`);
+        navigate(`/deck`, {
+            state: {
+                id: deck.id,
+                name: deck.name,
+                cards: deck.cards,
+            }
+        });
     }
 
     return ( 
