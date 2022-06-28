@@ -47,7 +47,7 @@
 }
 
 .cardSettingsIcon:hover {
-    opacity: 0.6;
+    opacity: 1.0;
     cursor: pointer;
 }
 
@@ -61,7 +61,7 @@
 .deck {
     width: 290px;
     height: 190px;
-    background-color: rgb(255, 255, 255, 0.3);
+    background-color: rgb(255, 255, 255, 0.2);
     justify-content: center; 
     transition: 0.5s;
     display: flex;
@@ -72,9 +72,9 @@
 }
 
 .deck:hover {
-    filter:brightness(70%);
+    background-color: rgb(255, 255, 255, 0.15);
 }
 
 .subText {
-    opacity: 60%;
+    opacity: 80%;
 }

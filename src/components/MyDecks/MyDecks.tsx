@@ -1,8 +1,12 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, Fragment } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {
+    Button,
+} from '@mui/material';
 import { Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 import { CardType } from '../Card/CardFactory';
 import AddDeckDialog from './AddDeckDialog';
@@ -26,18 +30,91 @@ function MyDecks(): ReactElement {
     const [dialogOpen, setDialogOpen] = useState(false);
     // To edit a deck
     const [editObject, setEditObject] = useState<DeckType | null>(null); 
-    const [editUndoObject, setEditUndoObject] = useState<DeckType | null>(null);  
+    // Snackbar
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+    // Dialog that opens when you click on the add deck button
+    const handleClickOpen = () => {
+        setDialogOpen(true);
+    }
+
+    // Close the dialog and add the deck
     const handleClickClose = (deckToAdd : DeckType | null) => {
         if (deckToAdd) {
             setDecks([...decks, deckToAdd]);
+            
+            const action = (key: any) => (
+                <Fragment>
+                    <Button 
+                    sx={{color: "white"}}
+                    onClick={() => { closeSnackbar(key) }}
+                    >
+                        Dismiss
+                    </Button>
+                </Fragment>
+            );
+        
+            enqueueSnackbar('Deck created!', { 
+                variant: 'success',
+                autoHideDuration: 1500,
+                action
+            });
         }
 
         setDialogOpen(false);
     }
 
-    const handleClickOpen = () => {
+    // Remove a deck
+    const removeDeck = (deck: DeckType) => {
+        setDecks(decks.filter(d => d.id !== deck.id));
+        const action = (key: any) => (
+            <Fragment>
+                <Button 
+                sx={{color: "white"}}
+                onClick={() => { closeSnackbar(key) }}
+                >
+                    Dismiss
+                </Button>
+            </Fragment>
+        );
+        
+        enqueueSnackbar('Deck deleted!', { 
+            variant: 'error',
+            autoHideDuration: 1500,
+            action
+        });
+    }
+
+    // Edit deck dialog
+    const editDeck = (deck: DeckType) => {
+        setEditObject(deck);
         setDialogOpen(true);
+    }
+
+    // Close the edit deck dialog and edits the deck
+    const handleEditClickClose = (toEdit: DeckType | null) => {
+        if (toEdit) {
+            setDecks(decks.map(deck => deck.id === toEdit.id ? toEdit : deck));
+            // editDeckInDB(toEdit); just change the title
+            const action = (key: any) => (
+                <Fragment>
+                    <Button 
+                    sx={{color: "white"}}
+                    onClick={() => { closeSnackbar(key) }}
+                    >
+                        Dismiss
+                    </Button>
+                </Fragment>
+            );
+            
+            enqueueSnackbar('Deck edited!', { 
+                variant: 'info',
+                autoHideDuration: 1500,
+                action
+            });
+        }
+        setEditObject(null);
+        setDialogOpen(false);
     }
 
     // Once read different decks then uncomment this
@@ -48,32 +125,6 @@ function MyDecks(): ReactElement {
         //     }
         // });
         navigate(`/deck`);
-    }
-
-    const editDeck = (deck: DeckType) => {
-        setEditObject(deck);
-        setEditUndoObject(deck);
-        setDialogOpen(true);
-    }
-
-    const handleEditClickClose = (toEdit: DeckType | null) => {
-        if (toEdit) {
-            setDecks(decks.map(deck => deck.id === toEdit.id ? toEdit : deck));
-            // editDeckInDB(toEdit); just change the title
-        }
-        setEditObject(null);
-        setDialogOpen(false);
-    }
-
-    const undoEditDeck= (deckToUndo: DeckType) => {
-        if (editUndoObject) {
-            setDecks(decks.map(deck => deck.id === deckToUndo.id ? deckToUndo : deck));
-            // editDeckInDB(deckToUndo); just change the title
-        }
-    }
-
-    const removeDeck = (deck: DeckType) => {
-        setDecks(decks.filter(d => d.id !== deck.id));
     }
 
     return ( 
@@ -109,20 +160,26 @@ function MyDecks(): ReactElement {
                                     color="text.secondary"
                                     variant="h6"
                                 >
-                                    {deck.cards.length} cards
+                                    {deck.cards.length} {deck.cards.length === 1 ? 'card' : 'cards'}
                                 </Typography>  
-                            </div>
-                            <div>
-                                <ModeEditIcon 
-                                    className={styles.cardSettingsIcon}
-                                    sx={{color: "text.secondary"}} 
-                                    onClick={() => editDeck(deck)}
-                                />
-                                <DeleteIcon 
-                                    className={styles.cardSettingsIcon} 
-                                    sx={{color: "text.secondary"}} 
-                                    onClick={() => removeDeck(deck)}        
-                                />
+                                <div>
+                                    <ModeEditIcon 
+                                        className={styles.cardSettingsIcon}
+                                        sx={{color: "text.secondary"}} 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            editDeck(deck)
+                                        }}
+                                    />
+                                    <DeleteIcon 
+                                        className={styles.cardSettingsIcon} 
+                                        sx={{color: "text.secondary"}} 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            removeDeck(deck);
+                                        }}   
+                                    />
+                                </div>
                             </div>
                         </div>
                     )) }
@@ -139,11 +196,9 @@ function MyDecks(): ReactElement {
                         <AddDeckDialog 
                             dialogOpen={dialogOpen} 
                             handleClose={handleClickClose} 
-                            undo={removeDeck}
                             editObject={editObject}
                             setEditObject={setEditObject}
                             editHandleClose={handleEditClickClose}
-                            editUndo={undoEditDeck}
                         />
                     </div>
                 </div>

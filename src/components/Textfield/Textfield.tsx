@@ -3,11 +3,12 @@ import TextField from '@mui/material/TextField';
 
 function Textfield(
   { 
-    value, setValue, label
+    value, setValue, label, onKeyDown = (e) => {}
   } : {
     value     : string,
     setValue  : React.Dispatch<React.SetStateAction<string>>,
     label     : string
+    onKeyDown ?: (e: any) => void
   }
 ): ReactElement {
     return (    
@@ -29,6 +30,7 @@ function Textfield(
           style: { color: '#000' },
         }}
         onChange={(e) => setValue(e.target.value)}
+        onKeyDown={onKeyDown}
       />
     );
 }

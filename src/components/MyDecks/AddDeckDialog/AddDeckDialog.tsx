@@ -9,7 +9,6 @@ import {
   Slide,
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
-import { useSnackbar } from 'notistack';
 import { Fragment } from 'react';
 
 import { DeckType } from '../MyDecks';
@@ -29,26 +28,21 @@ export default function AddDeckDialog(
   {
     dialogOpen, 
     handleClose, 
-    undo,
     editObject,
     setEditObject,
     editHandleClose,
-    editUndo,
   }
   : {
     dialogOpen: boolean, 
     handleClose: (toAdd : DeckType | null) => void,
-    undo: (cardToRemove : DeckType) => void,
     editObject: DeckType | null,
     setEditObject: (cardToEdit : DeckType | null) => void,
     editHandleClose: (toEdit : DeckType | null) => void,
-    editUndo: (cardToUndo : DeckType) => void,
   }
 ) {
 
   const [name, setName] = React.useState('');
   const [showAlert, setShowAlert] = React.useState(false);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   
   useEffect(() => {
     if (editObject) {
@@ -70,35 +64,8 @@ export default function AddDeckDialog(
       setShowAlert(true);
       return;
     }
-
     const result = createDeckInfo();
-
-    const action = (key: any) => (
-      <Fragment>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => {
-              undo(result);
-              closeSnackbar(key);
-            }}
-          >
-              Undo
-          </Button>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => { closeSnackbar(key) }}
-          >
-              Dismiss
-          </Button>
-      </Fragment>
-    );
-
     handleClose(result);
-    enqueueSnackbar('Deck created!', { 
-      variant: 'success',
-      autoHideDuration: 3000,
-      action
-    });
     resetDialog();
   }
 
@@ -107,35 +74,8 @@ export default function AddDeckDialog(
       setShowAlert(true);
       return;
     }
-
     const result = createDeckInfo();
-
-    const action = (key: any) => (
-      <Fragment>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => {
-              editUndo(result);
-              closeSnackbar(key);
-            }}
-          >
-              Undo
-          </Button>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => { closeSnackbar(key) }}
-          >
-              Dismiss
-          </Button>
-      </Fragment>
-    );
-
     editHandleClose(result);
-    enqueueSnackbar('Deck edited!', { 
-      variant: 'info',
-      autoHideDuration: 3000,
-      action
-    });
     resetDialog();
   }
 
@@ -146,7 +86,14 @@ export default function AddDeckDialog(
 
   const cancelAdd = () => {
     resetDialog();
+    setEditObject(null);
     handleClose(null);
+  }
+
+  const keyPressSubmit = (e: any) => {
+    if(e.keyCode === 13){
+      addDeck();
+    }
   }
 
   return (
@@ -174,7 +121,7 @@ export default function AddDeckDialog(
           {editObject ? "Edit Deck" : "Create new Deck"}
         </DialogTitle>
         <DialogContent>
-          <Textfield value={name} setValue={setName} label="Name"/>
+          <Textfield value={name} setValue={setName} label="Name" onKeyDown={keyPressSubmit}/>
           {showAlert && (
             <Alert severity="error">Title cannot be empty!</Alert>
           )}
