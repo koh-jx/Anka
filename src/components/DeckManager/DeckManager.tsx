@@ -1,7 +1,8 @@
-import { ReactElement, useState, useEffect } from 'react'
+import { ReactElement, useState, useEffect, Fragment } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useSnackbar } from 'notistack';
 
 import { createCard, CardType } from '../Card/CardFactory';
 import AddCardDialog from './AddCardDialog';
@@ -21,9 +22,12 @@ function DeckManager(): ReactElement {
     
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardType[]>([]);
+
     // To edit a card
-    const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
-    const [editUndoObject, setEditUndoObject] = useState<CardType | null>(null);   // The original card before edit (for undo),     
+    const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)        
+    
+    // Snackbar
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     useEffect(() => {
         getUser()
@@ -33,52 +37,100 @@ function DeckManager(): ReactElement {
                 }));
     }, []);
     
+    // To open the dialog when adding card
     const handleClickOpen = () => {
         setDialogOpen(true);
     }
 
+    // To close dialog after adding card
+    // Card will be processed using the api, the resultant card data along with the id will
+    // then be added to the cards array, and the snackbar to undo will be displayed
+    // If cancel the adding, toAdd will be null and the dialog will close
     const handleClickClose = (toAdd: CardType | null) => {
         if (toAdd) {
             createAndAddCardToDeck(toAdd)
                 .then(result => {
                     setCards([...cards, result]);
+                    const action = (key: any) => (
+                        <Fragment>
+                            <Button 
+                                sx={{color: "white"}}
+                                onClick={() => { closeSnackbar(key) }}
+                            >
+                                Dismiss
+                            </Button>
+                        </Fragment>
+                    );
+                    
+                    enqueueSnackbar('Flashcard created!', { 
+                        variant: 'success',
+                        autoHideDuration: 1500,
+                        action
+                    });
                 });            
+
         }
         setDialogOpen(false);
     }
 
+    // Remove card, also functions as undo add
+    const removeCard = (cardToRemove : CardType) => {
+        removeCardFromDeck(cardToRemove).then(() => {
+            setCards(cards.filter(card => {
+                return card.id !== cardToRemove.id
+            }));
+            const action = (key: any) => (
+                <Fragment>
+                    <Button 
+                        sx={{color: "white"}}
+                        onClick={() => { closeSnackbar(key) }}
+                    >
+                        Dismiss
+                    </Button>
+                </Fragment>
+            );
+            
+            enqueueSnackbar('Flashcard deleted!', { 
+                variant: 'error',
+                autoHideDuration: 1500,
+                action
+            });
+        });
+    }
+
+    // To open the dialog to edit a card
     const editCard = (cardToEdit : CardType) => {
         setEditObject(cardToEdit);
-        setEditUndoObject(cardToEdit);
         setDialogOpen(true);
     }
 
+    // To close dialog after editing card
     const handleEditClickClose = (toEdit: CardType | null) => {
         if (toEdit) {
             editCardInDB(toEdit)
                 .then(result => {
                     setCards(cards.map(card => card.id === result.id ? result : card));
+                    const action = (key: any) => (
+                        <Fragment>
+                            <Button 
+                              sx={{color: "white"}}
+                              onClick={() => { closeSnackbar(key) }}
+                            >
+                                Dismiss
+                            </Button>
+                        </Fragment>
+                      );
+                  
+                      
+                    enqueueSnackbar('Flashcard edited!', { 
+                        variant: 'info',
+                        autoHideDuration: 1500,
+                        action
+                    });
                 });
         }
         setEditObject(null);
         setDialogOpen(false);
-    }
-
-    const undoEditCard = (cardToUndo: CardType) => {
-        if (editUndoObject) {
-            editCardInDB(cardToUndo)
-                .then(result => {
-                    setCards(cards.map(card => card.id === result.id ? result : card));
-                });
-        }
-    }
-
-    const removeCard = (cardToRemove : CardType) => {
-        console.log(cardToRemove)
-        removeCardFromDeck(cardToRemove).then((data) => {
-            console.log(data)
-            setCards(cards.filter(card => card !== cardToRemove));
-        });
     }
 
     return (    
@@ -114,11 +166,9 @@ function DeckManager(): ReactElement {
                     <AddCardDialog 
                         dialogOpen={dialogOpen} 
                         handleClose={handleClickClose} 
-                        undo={removeCard}
                         editObject={editObject}
                         setEditObject={setEditObject}
                         editHandleClose={handleEditClickClose}
-                        editUndo={undoEditCard}
                     />
                 </div>
             </div>

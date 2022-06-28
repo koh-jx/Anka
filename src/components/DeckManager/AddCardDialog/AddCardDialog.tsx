@@ -6,8 +6,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { useSnackbar } from 'notistack';
-import { Fragment } from 'react';
 
 import { CardType, CardFace, createCard } from '../../Card/CardFactory';
 import Textfield from '../../Textfield';
@@ -29,20 +27,16 @@ export default function AddCardDialog(
   {
     dialogOpen, 
     handleClose, 
-    undo,
     editObject,
     setEditObject,
     editHandleClose,
-    editUndo,
   }
   : {
     dialogOpen: boolean, 
     handleClose: (toAdd : CardType | null) => void,
-    undo: (cardToRemove : CardType) => void
     editObject: CardType | null,
     setEditObject: (cardToEdit : CardType | null) => void,
     editHandleClose: (toEdit : CardType | null) => void,
-    editUndo: (cardToUndo : CardType) => void,
   }
 ) {
 
@@ -51,7 +45,6 @@ export default function AddCardDialog(
   const [backTitle, setBackTitle] = React.useState('Back');
   const [backDescription, setBackDescription] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (editObject) {
@@ -64,9 +57,10 @@ export default function AddCardDialog(
   }
   , [editObject, dialogOpen]);
 
+
   const createCardInfo = (id: string) : CardType => {
     return {
-      id,               // Not yet initialised
+      id,               // "" if adding a card, since doesn't have an id yet
       front: CardFace.WORD,
       back: CardFace.WORD,
       tags,
@@ -82,65 +76,13 @@ export default function AddCardDialog(
   }
   const addCard = () => {
     const result = createCardInfo("");
-
-    const action = (key: any) => (
-      <Fragment>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => {
-              undo(result);
-              closeSnackbar(key);
-            }}
-          >
-              Undo
-          </Button>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => { closeSnackbar(key) }}
-          >
-              Dismiss
-          </Button>
-      </Fragment>
-    );
-
     handleClose(result);
-    enqueueSnackbar('Flashcard created!', { 
-      variant: 'success',
-      autoHideDuration: 3000,
-      action
-    });
     resetDialog();
   }
 
   const editCard = () => {
     const result = createCardInfo(editObject!.id);
-
-    const action = (key: any) => (
-      <Fragment>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => {
-              editUndo(result);
-              closeSnackbar(key);
-            }}
-          >
-              Undo
-          </Button>
-          <Button 
-            sx={{color: "white"}}
-            onClick={() => { closeSnackbar(key) }}
-          >
-              Dismiss
-          </Button>
-      </Fragment>
-    );
-
     editHandleClose(result);
-    enqueueSnackbar('Flashcard edited!', { 
-      variant: 'info',
-      autoHideDuration: 3000,
-      action
-    });
     resetDialog();
   }
 

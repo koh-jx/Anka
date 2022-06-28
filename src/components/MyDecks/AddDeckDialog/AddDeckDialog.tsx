@@ -171,7 +171,7 @@ export default function AddDeckDialog(
             color: 'text.secondary',
           }}
         >
-          {editObject ? "Edit Flashcard" : "Create new Flashcard"}
+          {editObject ? "Edit Deck" : "Create new Deck"}
         </DialogTitle>
         <DialogContent>
           <Textfield value={name} setValue={setName} label="Name"/>
