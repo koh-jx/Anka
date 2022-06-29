@@ -1,7 +1,8 @@
 import { ReactElement, useState, useEffect, Fragment } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -22,14 +23,12 @@ import {
 import { Button } from '@mui/material';
   
 function DeckManager(): ReactElement {
+    // Get deck information
     const location = useLocation();
-
-    console.log(location.state);
-
-    const deckCards = (location.state as DeckType).cards;
     const deckName = (location.state as DeckType).name;
-    const deckId = (location.state as DeckType).id;
-
+    // const deckCards = (location.state as DeckType).cards;
+    // const deckId = (location.state as DeckType).id;
+    const navigate = useNavigate();
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardType[]>([]);
@@ -147,16 +146,23 @@ function DeckManager(): ReactElement {
 
     return (    
         <>
-            <Typography
-                color="text.secondary"
-                variant="h5"
-                sx={{
-                    paddingLeft: '1rem',
-                    paddingBottom: '1rem',
-                }}
-            >
-                {deckName}
-            </Typography> 
+            <div className={styles.topBar}>
+                <ArrowBackIosNewIcon 
+                    className={styles.cardSettingsIcon}
+                    sx={{color: "text.secondary"}} 
+                    onClick={() => navigate(-1)}
+                />
+                <Typography
+                    color="text.secondary"
+                    variant="h5"
+                    sx={{
+                        paddingLeft: '1rem',
+                        paddingBottom: '1rem',
+                    }}
+                >
+                    {deckName}
+                </Typography> 
+            </div>
             <div className={styles.deckManager}>
                 <div className={styles.gridContainer}>
                     { cards.map((card) => (
