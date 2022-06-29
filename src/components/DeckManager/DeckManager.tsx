@@ -14,20 +14,21 @@ import AddCardDialog from './AddCardDialog';
 
 import styles from './DeckManager.module.css';
 import { 
-    getUser, 
-    createAndAddCardToDeck, 
-    getDeck, 
-    editCardInDB, 
-    removeCardFromDeck 
+    getDeckFromArrayApi, 
+    editCardApi, 
 } from '../../lib/api/cardFunctions';
+import { 
+    createCardToDeckApi,
+    removeCardFromDeckApi,
+} from '../../lib/api/deckFunctions';
 import { Button } from '@mui/material';
   
 function DeckManager(): ReactElement {
     // Get deck information
     const location = useLocation();
     const deckName = (location.state as DeckType).name;
-    // const deckCards = (location.state as DeckType).cards;
-    // const deckId = (location.state as DeckType).id;
+    const deckId = (location.state as DeckType).id;
+    const deckCards = (location.state as DeckType).cards;
     const navigate = useNavigate();
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -40,12 +41,8 @@ function DeckManager(): ReactElement {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     useEffect(() => {
-        // TODO API: To get from deck id instead
-        getUser()
-            .then(user => getDeck(user.cards)
-                .then(cards => {
-                    setCards(cards)
-                }));
+        getDeckFromArrayApi(deckCards)
+            .then(cards => setCards(cards));
     }, []);
     
     // To open the dialog when adding card
@@ -59,7 +56,7 @@ function DeckManager(): ReactElement {
     // If cancel the adding, toAdd will be null and the dialog will close
     const handleClickClose = (toAdd: CardType | null) => {
         if (toAdd) {
-            createAndAddCardToDeck(toAdd)
+            createCardToDeckApi(toAdd, deckId)
                 .then(result => {
                     setCards([...cards, result]);
                     const action = (key: any) => (
@@ -86,7 +83,7 @@ function DeckManager(): ReactElement {
 
     // Remove card, also functions as undo add
     const removeCard = (cardToRemove : CardType) => {
-        removeCardFromDeck(cardToRemove).then(() => {
+        removeCardFromDeckApi(cardToRemove, deckId).then(() => {
             setCards(cards.filter(card => {
                 return card.id !== cardToRemove.id
             }));
@@ -118,7 +115,7 @@ function DeckManager(): ReactElement {
     // To close dialog after editing card
     const handleEditClickClose = (toEdit: CardType | null) => {
         if (toEdit) {
-            editCardInDB(toEdit)
+            editCardApi(toEdit)
                 .then(result => {
                     setCards(cards.map(card => card.id === result.id ? result : card));
                     const action = (key: any) => (
@@ -203,9 +200,6 @@ function DeckManager(): ReactElement {
                 </div>
                 <div className={styles.sidebar}>
                     <Button 
-                        onClick={ async () => {
-                            console.log(await(getDeck((await getUser()).cards)));
-                        }}
                         variant="contained"
                         color="primary"
                         size="large"

@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { CardType } from '../Card/CardFactory';
 import AddDeckDialog from './AddDeckDialog';
 
 import styles from './MyDecks.module.css';
@@ -19,7 +18,7 @@ export type DeckType = {
     id: string;
     name: string;
     // picture: ???;
-    cards: CardType[];
+    cards: string[];
 }
   
 function MyDecks(): ReactElement {
