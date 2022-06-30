@@ -14,12 +14,12 @@ import AddCardDialog from './AddCardDialog';
 
 import styles from './DeckManager.module.css';
 import { 
-    getDeckFromArrayApi, 
     editCardApi, 
 } from '../../lib/api/cardFunctions';
 import { 
     createCardToDeckApi,
     removeCardFromDeckApi,
+    getCardsFromDeckIdApi,
 } from '../../lib/api/deckFunctions';
 import { Button } from '@mui/material';
   
@@ -28,7 +28,7 @@ function DeckManager(): ReactElement {
     const location = useLocation();
     const deckName = (location.state as DeckType).name;
     const deckId = (location.state as DeckType).id;
-    const deckCards = (location.state as DeckType).cards;
+    // const deckCards = (location.state as DeckType).cards;
     const navigate = useNavigate();
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -41,8 +41,10 @@ function DeckManager(): ReactElement {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     useEffect(() => {
-        getDeckFromArrayApi(deckCards)
-            .then(cards => setCards(cards));
+        getCardsFromDeckIdApi(deckId)
+            .then(cards => {
+                setCards(cards)
+            });
     }, []);
     
     // To open the dialog when adding card

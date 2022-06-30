@@ -116,3 +116,19 @@ export const deleteDeckApi = async (deck: DeckType): Promise<DeckType> => {
     }
     );
 }
+
+// Delete deck
+export const getCardsFromDeckIdApi = async (deckId: string): Promise<CardType[]> => {
+    return new Promise((resolve, reject) => {
+        getAnkaApi()
+            .get('/deck/cards?id=' + deckId)
+            .then(({ data }) => {
+                console.log(data);
+                resolve(data);
+            })
+            .catch(() => {
+                reject();
+            });
+    }
+    );
+}
