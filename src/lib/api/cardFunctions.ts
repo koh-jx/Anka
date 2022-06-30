@@ -10,6 +10,7 @@ export const getUserApi = async (): Promise<{
     id: string;
     username: string;
     cards: string[];
+    decks: string[];
 }> =>
   new Promise((resolve, reject) => {
     getAnkaApi()

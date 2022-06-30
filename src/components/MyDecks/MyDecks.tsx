@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, Fragment } from 'react'
+import React, { ReactElement, useState,  useEffect, Fragment } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,6 +9,7 @@ import {
 import { useSnackbar } from 'notistack';
 
 import AddDeckDialog from './AddDeckDialog';
+import { createDeckApi, getUserDecksApi } from '../../lib/api/deckFunctions';
 
 import styles from './MyDecks.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -37,27 +38,37 @@ function MyDecks(): ReactElement {
         setDialogOpen(true);
     }
 
+    useEffect(() => {
+        getUserDecksApi()
+            .then(decks => {
+                setDecks(decks);
+            })
+    }, [])
+
     // Close the dialog and add the deck
     const handleClickClose = (deckToAdd : DeckType | null) => {
         if (deckToAdd) {
-            setDecks([...decks, deckToAdd]);
+            createDeckApi(deckToAdd)
+                .then((deck) => {
+                    setDecks([...decks, deck]);
             
-            const action = (key: any) => (
-                <Fragment>
-                    <Button 
-                    sx={{color: "white"}}
-                    onClick={() => { closeSnackbar(key) }}
-                    >
-                        Dismiss
-                    </Button>
-                </Fragment>
-            );
-        
-            enqueueSnackbar('Deck created!', { 
-                variant: 'success',
-                autoHideDuration: 1500,
-                action
-            });
+                    const action = (key: any) => (
+                        <Fragment>
+                            <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                            >
+                                Dismiss
+                            </Button>
+                        </Fragment>
+                    );
+                
+                    enqueueSnackbar('Deck created!', { 
+                        variant: 'success',
+                        autoHideDuration: 1500,
+                        action
+                    });
+                })
         }
 
         setDialogOpen(false);

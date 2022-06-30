@@ -1,5 +1,6 @@
 import { getAnkaApi } from "./axios";
 import {
+    getUserApi,
     createCardApi
 } from './cardFunctions';
 import { CardType } from '../../components/Card/CardFactory';
@@ -43,3 +44,46 @@ export const removeCardFromDeckApi = async (toRemove: CardType, deckId: string) 
             })
     });
 }
+
+export const getUserDecksApi = async() : Promise<DeckType[]> => {
+    return new Promise((resolve, reject) => {
+        getUserApi()
+            .then(user => {
+                const deckStrings = user.decks;
+                Promise.all(deckStrings.map(async (deckString) => {
+                    return getAnkaApi().get('/deck?id=' + deckString)
+                        .then(({ data }) => {
+                            return data;
+                        });
+                }))
+                .then((decks) => {
+                    resolve(decks);
+                })
+            })
+            .catch(() => {
+                reject();
+            })
+    })
+}
+
+// Create deck
+// Create new card
+export const createDeckApi = async (deck: DeckType): Promise<DeckType> => {
+    return new Promise((resolve, reject) => {
+        getAnkaApi()
+            .post('/deck', {
+                name: deck.name,
+            })
+            .then(({ data }) => {
+                resolve(data);
+            })
+            .catch(() => {
+                reject();
+            });
+    }
+    );
+}
+
+// Edit deck
+
+// Delete deck
