@@ -53,9 +53,9 @@ export default function AddDeckDialog(
 
   const createDeckInfo = () : DeckType => {
     return {
-      id: '',
+      id: editObject?.id || '',
       name,
-      cards: []
+      cards: editObject?.cards || [],
     }
   }
 

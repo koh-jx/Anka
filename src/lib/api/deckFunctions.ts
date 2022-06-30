@@ -67,7 +67,6 @@ export const getUserDecksApi = async() : Promise<DeckType[]> => {
 }
 
 // Create deck
-// Create new card
 export const createDeckApi = async (deck: DeckType): Promise<DeckType> => {
     return new Promise((resolve, reject) => {
         getAnkaApi()
@@ -85,5 +84,35 @@ export const createDeckApi = async (deck: DeckType): Promise<DeckType> => {
 }
 
 // Edit deck
+export const editDeckApi = async (deck: DeckType): Promise<DeckType> => {
+    console.log(deck.name);
+    return new Promise((resolve, reject) => {
+        getAnkaApi()
+            .patch('/deck', {
+                id: deck.id,
+                name: deck.name,
+            })
+            .then(({ data }) => {
+                resolve(data);
+            })
+            .catch(() => {
+                reject();
+            });
+    }
+    );
+}
 
 // Delete deck
+export const deleteDeckApi = async (deck: DeckType): Promise<DeckType> => {
+    return new Promise((resolve, reject) => {
+        getAnkaApi()
+            .delete('/deck?id=' + deck.id)
+            .then(({ data }) => {
+                resolve(data);
+            })
+            .catch(() => {
+                reject();
+            });
+    }
+    );
+}

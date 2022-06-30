@@ -9,7 +9,12 @@ import {
 import { useSnackbar } from 'notistack';
 
 import AddDeckDialog from './AddDeckDialog';
-import { createDeckApi, getUserDecksApi } from '../../lib/api/deckFunctions';
+import { 
+    createDeckApi, 
+    getUserDecksApi, 
+    editDeckApi, 
+    deleteDeckApi 
+} from '../../lib/api/deckFunctions';
 
 import styles from './MyDecks.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -76,23 +81,26 @@ function MyDecks(): ReactElement {
 
     // Remove a deck
     const removeDeck = (deck: DeckType) => {
-        setDecks(decks.filter(d => d.id !== deck.id));
-        const action = (key: any) => (
-            <Fragment>
-                <Button 
-                sx={{color: "white"}}
-                onClick={() => { closeSnackbar(key) }}
-                >
-                    Dismiss
-                </Button>
-            </Fragment>
-        );
-        
-        enqueueSnackbar('Deck deleted!', { 
-            variant: 'error',
-            autoHideDuration: 1500,
-            action
-        });
+        deleteDeckApi(deck)
+            .then(() => {
+                setDecks(decks.filter(d => d.id !== deck.id));
+                const action = (key: any) => (
+                    <Fragment>
+                        <Button 
+                        sx={{color: "white"}}
+                        onClick={() => { closeSnackbar(key) }}
+                        >
+                            Dismiss
+                        </Button>
+                    </Fragment>
+                );
+                
+                enqueueSnackbar('Deck deleted!', { 
+                    variant: 'error',
+                    autoHideDuration: 1500,
+                    action
+                });
+            })
     }
 
     // Edit deck dialog
@@ -104,24 +112,26 @@ function MyDecks(): ReactElement {
     // Close the edit deck dialog and edits the deck
     const handleEditClickClose = (toEdit: DeckType | null) => {
         if (toEdit) {
-            setDecks(decks.map(deck => deck.id === toEdit.id ? toEdit : deck));
-            // editDeckInDB(toEdit); just change the title
-            const action = (key: any) => (
-                <Fragment>
-                    <Button 
-                    sx={{color: "white"}}
-                    onClick={() => { closeSnackbar(key) }}
-                    >
-                        Dismiss
-                    </Button>
-                </Fragment>
-            );
-            
-            enqueueSnackbar('Deck edited!', { 
-                variant: 'info',
-                autoHideDuration: 1500,
-                action
-            });
+            editDeckApi(toEdit)
+                .then(() => {
+                    setDecks(decks.map(deck => deck.id === toEdit.id ? toEdit : deck));
+                    const action = (key: any) => (
+                        <Fragment>
+                            <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                            >
+                                Dismiss
+                            </Button>
+                        </Fragment>
+                    );
+                    
+                    enqueueSnackbar('Deck edited!', { 
+                        variant: 'info',
+                        autoHideDuration: 1500,
+                        action
+                    });
+                })
         }
         setEditObject(null);
         setDialogOpen(false);
