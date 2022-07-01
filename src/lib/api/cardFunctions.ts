@@ -81,7 +81,6 @@ export const editCardApi = async (card: CardType): Promise<CardType> => {
                 backDescription: card.backCardFaceProps.backDescription,
             })
             .then(({ data }) => {
-                console.log(data);
                 resolve(data);
             })
             .catch(() => {

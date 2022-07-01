@@ -85,7 +85,6 @@ export const createDeckApi = async (deck: DeckType): Promise<DeckType> => {
 
 // Edit deck
 export const editDeckApi = async (deck: DeckType): Promise<DeckType> => {
-    console.log(deck.name);
     return new Promise((resolve, reject) => {
         getAnkaApi()
             .patch('/deck', {
@@ -123,7 +122,6 @@ export const getCardsFromDeckIdApi = async (deckId: string): Promise<CardType[]>
         getAnkaApi()
             .get('/deck/cards?id=' + deckId)
             .then(({ data }) => {
-                console.log(data);
                 resolve(data);
             })
             .catch(() => {

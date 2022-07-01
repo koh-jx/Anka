@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, forwardRef, Ref, ReactElement, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,11 +13,11 @@ import Textfield from '../../Textfield';
 import styles from './AddCardDialog.module.css';
 
 
-const Transition = React.forwardRef(function Transition(
+const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>;
+    children: ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>,
+  ref: Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -40,11 +40,11 @@ export default function AddCardDialog(
   }
 ) {
 
-  const [frontTitle, setFrontTitle] = React.useState('Front');
-  const [frontDescription, setFrontDescription] = React.useState('');
-  const [backTitle, setBackTitle] = React.useState('Back');
-  const [backDescription, setBackDescription] = React.useState('');
-  const [tags, setTags] = React.useState<string[]>([]);
+  const [frontTitle, setFrontTitle] = useState('Front');
+  const [frontDescription, setFrontDescription] = useState('');
+  const [backTitle, setBackTitle] = useState('Back');
+  const [backDescription, setBackDescription] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     if (editObject) {

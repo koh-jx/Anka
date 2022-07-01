@@ -1,10 +1,11 @@
-import { ReactElement, useState, useEffect, Fragment } from 'react'
+import { ReactElement, useState, useEffect, Fragment, forwardRef, Ref } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Typography } from '@mui/material';
+import { Typography, Dialog, DialogActions, DialogTitle, Slide } from '@mui/material';
+import { TransitionProps } from '@mui/material/transitions';
 import { useSnackbar } from 'notistack';
 
 import { createCard, CardType } from '../Card/CardFactory';
@@ -14,7 +15,8 @@ import AddCardDialog from './AddCardDialog';
 
 import styles from './DeckManager.module.css';
 import { 
-    editCardApi, 
+    editCardApi,
+    removeCardApi, 
 } from '../../lib/api/cardFunctions';
 import { 
     createCardToDeckApi,
@@ -23,6 +25,16 @@ import {
 } from '../../lib/api/deckFunctions';
 import { Button } from '@mui/material';
   
+
+const Transition = forwardRef(function Transition(
+    props: TransitionProps & {
+      children: ReactElement<any, any>;
+    },
+    ref: Ref<unknown>,
+  ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
 function DeckManager(): ReactElement {
     // Get deck information
     const location = useLocation();
@@ -35,7 +47,11 @@ function DeckManager(): ReactElement {
     const [cards, setCards] = useState<CardType[]>([]);
 
     // To edit a card
-    const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)        
+    const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
+    
+    // To choose to delete from deck, or delete card totally
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deleteObject, setDeleteObject] = useState<CardType | null>(null);       // The original card before delete (for dialog)
     
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -45,6 +61,7 @@ function DeckManager(): ReactElement {
             .then(cards => {
                 setCards(cards)
             });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
     // To open the dialog when adding card
@@ -84,28 +101,59 @@ function DeckManager(): ReactElement {
     }
 
     // Remove card, also functions as undo add
-    const removeCard = (cardToRemove : CardType) => {
-        removeCardFromDeckApi(cardToRemove, deckId).then(() => {
-            setCards(cards.filter(card => {
-                return card.id !== cardToRemove.id
-            }));
-            const action = (key: any) => (
-                <Fragment>
-                    <Button 
-                        sx={{color: "white"}}
-                        onClick={() => { closeSnackbar(key) }}
-                    >
-                        Dismiss
-                    </Button>
-                </Fragment>
-            );
-            
-            enqueueSnackbar('Flashcard deleted!', { 
-                variant: 'error',
-                autoHideDuration: 1500,
-                action
+    const removeCard = () => {
+        if (deleteObject) {
+            removeCardFromDeckApi(deleteObject, deckId).then(() => {
+                setCards(cards.filter(card => {
+                    return card.id !== deleteObject.id
+                }));
+                const action = (key: any) => (
+                    <Fragment>
+                        <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                        >
+                            Dismiss
+                        </Button>
+                    </Fragment>
+                );
+                
+                enqueueSnackbar('Flashcard deleted!', { 
+                    variant: 'error',
+                    autoHideDuration: 1500,
+                    action
+                });
             });
-        });
+        }
+        setDeleteDialogOpen(false);
+    }
+
+    // Delete card
+    const deleteCard = () => {
+        if (deleteObject) {
+            removeCardApi(deleteObject).then(() => {
+                setCards(cards.filter(card => {
+                    return card.id !== deleteObject.id
+                }));
+                const action = (key: any) => (
+                    <Fragment>
+                        <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                        >
+                            Dismiss
+                        </Button>
+                    </Fragment>
+                );
+                
+                enqueueSnackbar('Flashcard deleted!', { 
+                    variant: 'error',
+                    autoHideDuration: 1500,
+                    action
+                });
+            });
+        }
+        setDeleteDialogOpen(false);
     }
 
     // To open the dialog to edit a card
@@ -143,6 +191,11 @@ function DeckManager(): ReactElement {
         setDialogOpen(false);
     }
 
+    const handleDeleteDialogOpen = (card : CardType) => {
+        setDeleteDialogOpen(true);
+        setDeleteObject(card);
+    }
+
     return (    
         <>
             <div className={styles.topBar}>
@@ -176,8 +229,54 @@ function DeckManager(): ReactElement {
                                 <DeleteIcon 
                                     className={styles.cardSettingsIcon} 
                                     sx={{color: "text.secondary"}} 
-                                    onClick={() => removeCard(card)}        
-                                />
+                                    onClick={() => handleDeleteDialogOpen(card)}        
+                                />           
+                                    <Dialog 
+                                        TransitionComponent={Transition}
+                                        keepMounted
+                                        open={deleteDialogOpen} 
+                                        onClose={() => setDeleteDialogOpen(false)}  // Prevent closing on clicking outside dialog
+                                        PaperProps={{
+                                            style: {
+                                            // Cant use primary theme here for some reason
+                                            backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
+                                            borderRadius: '10px',
+                                            },
+                                        }}
+                                    >
+                                        <DialogTitle
+                                            sx={{ 
+                                            fontFamily: 'Staatliches',
+                                            color: 'text.secondary',
+                                            }}
+                                        >
+                                            u sure u wan delete ah
+                                        </DialogTitle>
+                                        <DialogActions>
+                                            <Button 
+                                                color="secondary"
+                                                variant="contained"
+                                                onClick={() => setDeleteDialogOpen(false)}
+                                            >
+                                                Cancel
+                                            </Button>
+
+                                            <Button 
+                                                color="primary"
+                                                variant="contained"
+                                                onClick={removeCard}
+                                            >
+                                                Delete from Deck
+                                            </Button>
+                                            <Button 
+                                                color="primary"
+                                                variant="contained"
+                                                onClick={deleteCard}
+                                            >
+                                                Wipe Card from Existence
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>                     
                             </div>
                         </div>
                     )) }
