@@ -6,7 +6,7 @@ type UserLogin = {
 };
 
 // API call to check if a user exists, to aid in registering new users
-const checkUserExists = async (username: string): Promise<boolean> => {
+const checkUserExists = async (username: string): Promise<any> => {
     return getAnkaApi().get(`/users/exists/${username}`);
 }
 
@@ -15,7 +15,7 @@ export const registerNewUser = async (username: string, password: string): Promi
     if (!username || !password)
         return Promise.reject(new Error('Enter both email and password'));
 
-    if (await checkUserExists(username)) {
+    if ((await checkUserExists(username)).data) {
         return Promise.reject(new Error('User already exists'));
     }
     

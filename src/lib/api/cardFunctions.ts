@@ -5,10 +5,12 @@ import { CardType } from "../../components/Card/CardFactory";
 // - user.id        : string
 // - user.username  : string
 // - user.cards     : string[]
-export const getUser = async (): Promise<{
+// - user.decks     : string[]
+export const getUserApi = async (): Promise<{
     id: string;
     username: string;
     cards: string[];
+    decks: string[];
 }> =>
   new Promise((resolve, reject) => {
     getAnkaApi()
@@ -22,7 +24,8 @@ export const getUser = async (): Promise<{
   }
 );
 
-export const getCard = async (id: string): Promise<CardType> =>
+// Gets 1 card from the database
+export const getCardApi = async (id: string): Promise<CardType> =>
   new Promise((resolve, reject) => {
     getAnkaApi()
       .get('/card?id=' + id)
@@ -35,15 +38,15 @@ export const getCard = async (id: string): Promise<CardType> =>
   }
 );
 
-// Get deck from user's array
-export const getDeck = async (cards: string[]): Promise<CardType[]> => {
+// Get deck from a given array of ids
+export const getDeckFromArrayApi = async (cards: string[]): Promise<CardType[]> => {
     return await Promise.all(
-        cards.map(async (card) => getCard(card))
+        cards.map(async (card) => getCardApi(card))
     );
 };
 
 // Create new card
-const createCard = async (card: CardType): Promise<CardType> => {
+export const createCardApi = async (card: CardType): Promise<CardType> => {
     return new Promise((resolve, reject) => {
         getAnkaApi()
             .post('/card', {
@@ -64,25 +67,8 @@ const createCard = async (card: CardType): Promise<CardType> => {
     );
 }
 
-export const createAndAddCardToDeck = async (card: CardType): Promise<CardType[]> => {
-    return new Promise((resolve, reject) => {
-        createCard(card).then((result) => {
-            getAnkaApi()
-                .patch('users/deck', {
-                    id: result.id,
-                })
-                .then(({ data }) => {
-                    resolve(data);
-                })
-                .catch(() => {
-                    reject();
-                });
-        });
-    });
-}
-
 // Edit card
-export const editCardInDB = async (card: CardType): Promise<CardType> => {
+export const editCardApi = async (card: CardType): Promise<CardType> => {
     return new Promise((resolve, reject) => {
         getAnkaApi()
             .patch('/card', {
@@ -95,7 +81,6 @@ export const editCardInDB = async (card: CardType): Promise<CardType> => {
                 backDescription: card.backCardFaceProps.backDescription,
             })
             .then(({ data }) => {
-                console.log(data);
                 resolve(data);
             })
             .catch(() => {
@@ -107,19 +92,15 @@ export const editCardInDB = async (card: CardType): Promise<CardType> => {
 
 // Delete card
 
-export const removeCardFromDeck = async (card: CardType): Promise<CardType[]> => {
+export const removeCardApi = async (card: CardType): Promise<CardType[]> => {
     return new Promise((resolve, reject) => {
         getAnkaApi()
             .delete('card?id=' + card.id)
-                .then(() => {
-                    getAnkaApi()
-                        .delete('users/deck?id=' + card.id)
-                        .then(({ data }) => {
-                            resolve(data);
-                        })
-                        .catch(() => {
-                            reject();
-                        });
+                .then(({ data }) => {
+                    resolve(data);
+                })
+                .catch(() => {
+                    reject();
                 });
     });
 }

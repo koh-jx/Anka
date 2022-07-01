@@ -4,7 +4,8 @@ import Box from '@mui/material/Box';
 import './AppRoutes.css';
 
 import Header from './components/Header';
-import Dashboard from './components/Dashboard';
+import MyDecks from './components/MyDecks';
+import DeckManager from './components/DeckManager';
 import Login from './components/Login';
 
 function AppRoutes(
@@ -40,26 +41,27 @@ function AppRoutes(
       </div>
       <div className="wrapper">  
         { !isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
-        <div className={[isLoggedIn && 'fadeIn'].join(' ')}>
-          <Box
-              sx={{
-                  width: "100%",
-                  marginY: "2vh",
-                  minHeight: "75vh",
-                  backgroundColor: 'primary.light',
-                  borderRadius: '20px',
-                  boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.25)',
-                  padding: '4vh',
-                  overflow: 'hidden',
-              }}
-          >
-            { isLoggedIn && 
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-              </Routes>
-            }
-          </Box>
-        </div>
+          { isLoggedIn && 
+            <div className={[isLoggedIn && 'fadeIn'].join(' ')}>
+              <Box
+                  sx={{
+                      width: "100%",
+                      marginY: "2vh",
+                      minHeight: "75vh",
+                      backgroundColor: 'primary.light',
+                      borderRadius: '20px',
+                      boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.25)',
+                      padding: '4vh',
+                      overflow: 'hidden',
+                  }}
+              >
+                <Routes>
+                  <Route path="/" element={<MyDecks />} />
+                  <Route path="/deck" element={<DeckManager />} />
+                </Routes>
+              </Box>
+            </div>
+          }
       </div>
     </BrowserRouter>
   );
