@@ -1,6 +1,5 @@
 import { getAnkaApi } from "./axios";
 import {
-    getUserApi,
     createCardApi
 } from './cardFunctions';
 import { CardType } from '../../components/Card/CardFactory';
@@ -45,25 +44,18 @@ export const removeCardFromDeckApi = async (toRemove: CardType, deckId: string) 
     });
 }
 
-export const getUserDecksApi = async() : Promise<DeckType[]> => {
+// Todo: implement pagination here, pass in a page number
+export const getUserDecksApi = async(pageNumber: number) : Promise<DeckType[]> => {
     return new Promise((resolve, reject) => {
-        getUserApi()
-            .then(user => {
-                const deckStrings = user.decks;
-                Promise.all(deckStrings.map(async (deckString) => {
-                    return getAnkaApi().get('/deck?id=' + deckString)
-                        .then(({ data }) => {
-                            return data;
-                        });
-                }))
-                .then((decks) => {
-                    resolve(decks);
-                })
+        getAnkaApi()
+            .get('/users/decks?page=' + pageNumber)
+            .then(({ data }) => {
+                resolve(data);
             })
             .catch(() => {
                 reject();
             })
-    })
+    });
 }
 
 // Create deck
@@ -116,11 +108,11 @@ export const deleteDeckApi = async (deck: DeckType): Promise<DeckType> => {
     );
 }
 
-// Delete deck
-export const getCardsFromDeckIdApi = async (deckId: string): Promise<CardType[]> => {
+// TODO: Implement pagination here, pass in page num
+export const getCardsFromDeckIdApi = async (deckId: string, pageNumber: number): Promise<CardType[]> => {
     return new Promise((resolve, reject) => {
         getAnkaApi()
-            .get('/deck/cards?id=' + deckId)
+            .get('/deck/cards?id=' + deckId + '&page=' + pageNumber)
             .then(({ data }) => {
                 resolve(data);
             })

@@ -40,11 +40,13 @@ function DeckManager(): ReactElement {
     const location = useLocation();
     const deckName = (location.state as DeckType).name;
     const deckId = (location.state as DeckType).id;
-    // const deckCards = (location.state as DeckType).cards;
+    const deckCards = (location.state as DeckType).cards;
     const navigate = useNavigate();
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardType[]>([]);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     // To edit a card
     const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
@@ -57,8 +59,11 @@ function DeckManager(): ReactElement {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     useEffect(() => {
-        getCardsFromDeckIdApi(deckId)
+        setTotalPages(Math.ceil(deckCards.length / 12));
+        getCardsFromDeckIdApi(deckId, 1)
             .then(cards => {
+                console.log(cards);
+                setPageNumber(1);
                 setCards(cards)
             });
     // eslint-disable-next-line react-hooks/exhaustive-deps

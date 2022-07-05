@@ -18,6 +18,7 @@ import {
 
 import styles from './MyDecks.module.css';
 import { useNavigate } from 'react-router-dom';
+import { getUserApi } from '../../lib/api/cardFunctions';
 
 
 export type DeckType = {
@@ -29,10 +30,11 @@ export type DeckType = {
   
 function MyDecks(): ReactElement {
     const navigate = useNavigate();
-    // Currently is an array of array of cards
-    // Change to array of decks ids, then when enter DeckManager then call the getDeck api
+
     const [decks, setDecks] = useState<DeckType[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     // To edit a deck
     const [editObject, setEditObject] = useState<DeckType | null>(null); 
     // Snackbar
@@ -44,10 +46,18 @@ function MyDecks(): ReactElement {
     }
 
     useEffect(() => {
-        getUserDecksApi()
-            .then(decks => {
-                setDecks(decks);
-            })
+        getUserApi().then(user => {
+            if (user) {
+                const totalDecks = user.decks.length;
+                const totalPages = Math.ceil(totalDecks / 12);
+                setTotalPages(totalPages);
+                setPageNumber(1);
+                getUserDecksApi(1).then(decks => {
+                    setDecks(decks);
+                }
+                );
+            }
+        });
     }, [])
 
     // Close the dialog and add the deck
