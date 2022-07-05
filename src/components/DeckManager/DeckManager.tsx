@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Typography, Dialog, DialogActions, DialogTitle, Slide } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
@@ -47,6 +49,7 @@ function DeckManager(): ReactElement {
     const [cards, setCards] = useState<CardType[]>([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [numCards, setNumCards] = useState(deckCards.length);
 
     // To edit a card
     const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
@@ -58,16 +61,26 @@ function DeckManager(): ReactElement {
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+    // Initialise the number of cards (and total pages) and card data for the first page
     useEffect(() => {
-        setTotalPages(Math.ceil(deckCards.length / 12));
-        getCardsFromDeckIdApi(deckId, 1)
+        setNumCards(deckCards.length);
+        setPageNumber(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // API call whenever page number is changed
+    useEffect(() => {
+        getCardsFromDeckIdApi(deckId, pageNumber)
             .then(cards => {
-                console.log(cards);
-                setPageNumber(1);
+                // console.log(cards);
                 setCards(cards)
             });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [pageNumber, deckId]);
+
+    // Update the total number of pages when the total number of cards change
+    useEffect(() => {
+        setTotalPages(Math.ceil(numCards / 12));
+    }, [numCards]);
     
     // To open the dialog when adding card
     const handleClickOpen = () => {
@@ -93,6 +106,9 @@ function DeckManager(): ReactElement {
                             </Button>
                         </Fragment>
                     );
+                    
+                    // Set number of cards, updating totalNum in the useEffect
+                    setNumCards(numCards + 1);
                     
                     enqueueSnackbar('Flashcard created!', { 
                         variant: 'success',
@@ -219,6 +235,41 @@ function DeckManager(): ReactElement {
                 >
                     {deckName}
                 </Typography> 
+
+                {pageNumber !== 1 && <NavigateBeforeIcon 
+                    className={styles.cardSettingsIcon}
+                    sx={{
+                        marginLeft: '10rem',
+                        color: "text.secondary",
+                        width: '2rem',
+                        height: '2rem',
+                    }} 
+                    onClick={() => {
+                        setPageNumber(pageNumber - 1);
+                    }}
+                />}
+
+                <Typography
+                    color="text.secondary"
+                    variant="h5"
+                    sx={{
+                        paddingBottom: '1rem',
+                    }}
+                >
+                    Page {pageNumber} of {totalPages}
+                </Typography> 
+                
+                {pageNumber !== totalPages && <NavigateNextIcon 
+                    className={styles.cardSettingsIcon}
+                    sx={{
+                        color: "text.secondary",
+                        width: '2rem',
+                        height: '2rem',
+                    }} 
+                    onClick={() => {
+                        setPageNumber(pageNumber + 1);
+                    }}
+                />}
             </div>
             <div className={styles.deckManager}>
                 <div className={styles.gridContainer}>
