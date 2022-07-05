@@ -5,6 +5,8 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Typography, Dialog, DialogActions, DialogTitle, Slide } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
@@ -24,6 +26,7 @@ import {
     createCardToDeckApi,
     removeCardFromDeckApi,
     getCardsFromDeckIdApi,
+    getDeckApi,
 } from '../../lib/api/deckFunctions';
 import { Button } from '@mui/material';
   
@@ -38,33 +41,28 @@ const Transition = forwardRef(function Transition(
   });
 
 function DeckManager(): ReactElement {
-    // Get deck information
+    // React Router
     const location = useLocation();
     const deckName = (location.state as DeckType).name;
     const deckId = (location.state as DeckType).id;
-    const deckCards = (location.state as DeckType).cards;
     const navigate = useNavigate();
-
+    // UseStates
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardType[]>([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [numCards, setNumCards] = useState(deckCards.length);
-
-    // To edit a card
+    const [numCards, setNumCards] = useState(1);
     const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
-    
-    // To choose to delete from deck, or delete card totally
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteObject, setDeleteObject] = useState<CardType | null>(null);       // The original card before delete (for dialog)
-    
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     // Initialise the number of cards (and total pages) and card data for the first page
     useEffect(() => {
-        setNumCards(deckCards.length);
-        setPageNumber(1);
+        getDeckApi(deckId).then(deck => {
+            setNumCards(deck.cards.length)
+        })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -72,14 +70,15 @@ function DeckManager(): ReactElement {
     useEffect(() => {
         getCardsFromDeckIdApi(deckId, pageNumber)
             .then(cards => {
-                // console.log(cards);
                 setCards(cards)
             });
     }, [pageNumber, deckId]);
 
     // Update the total number of pages when the total number of cards change
+    // If just nice number of cards is divisible by 12, then add extra page for add card button
     useEffect(() => {
-        setTotalPages(Math.ceil(numCards / 12));
+        console.log(numCards);
+        setTotalPages(numCards % 12 === 0 ? Math.ceil(numCards / 12) + 1 : Math.ceil(numCards / 12));
     }, [numCards]);
     
     // To open the dialog when adding card
@@ -88,8 +87,6 @@ function DeckManager(): ReactElement {
     }
 
     // To close dialog after adding card
-    // Card will be processed using the api, the resultant card data along with the id will
-    // then be added to the cards array, and the snackbar to undo will be displayed
     // If cancel the adding, toAdd will be null and the dialog will close
     const handleClickClose = (toAdd: CardType | null) => {
         if (toAdd) {
@@ -107,7 +104,7 @@ function DeckManager(): ReactElement {
                         </Fragment>
                     );
                     
-                    // Set number of cards, updating totalNum in the useEffect
+                    // Set number of cards, updating totalPages in the useEffect
                     setNumCards(numCards + 1);
                     
                     enqueueSnackbar('Flashcard created!', { 
@@ -121,69 +118,54 @@ function DeckManager(): ReactElement {
         setDialogOpen(false);
     }
 
-    // Remove card, also functions as undo add
-    const removeCard = () => {
-        if (deleteObject) {
-            removeCardFromDeckApi(deleteObject, deckId).then(() => {
-                setCards(cards.filter(card => {
-                    return card.id !== deleteObject.id
-                }));
-                const action = (key: any) => (
-                    <Fragment>
-                        <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                        >
-                            Dismiss
-                        </Button>
-                    </Fragment>
-                );
-                
-                enqueueSnackbar('Flashcard deleted!', { 
-                    variant: 'error',
-                    autoHideDuration: 1500,
-                    action
-                });
-            });
+
+    // Delete card
+    const deleteCard = (isHardDelete: boolean) => {
+        if (deleteObject && isHardDelete) {
+            removeCardApi(deleteObject).then(settleDelete);
+        } else if (deleteObject && !isHardDelete) {
+            removeCardFromDeckApi(deleteObject, deckId).then(settleDelete);
         }
         setDeleteDialogOpen(false);
     }
 
-    // Delete card
-    const deleteCard = () => {
-        if (deleteObject) {
-            removeCardApi(deleteObject).then(() => {
-                setCards(cards.filter(card => {
-                    return card.id !== deleteObject.id
-                }));
-                const action = (key: any) => (
-                    <Fragment>
-                        <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                        >
-                            Dismiss
-                        </Button>
-                    </Fragment>
-                );
-                
-                enqueueSnackbar('Flashcard deleted!', { 
-                    variant: 'error',
-                    autoHideDuration: 1500,
-                    action
-                });
+    // Called by delete functions to handle data after different types of deletion as seen above
+    const settleDelete = () => {
+        setCards(cards.filter(card => {
+            return card.id !== (deleteObject as CardType).id
+        }));
+        const action = (key: any) => (
+            <Fragment>
+                <Button 
+                    sx={{color: "white"}}
+                    onClick={() => { closeSnackbar(key) }}
+                >
+                    Dismiss
+                </Button>
+            </Fragment>
+        );
+
+        // Set number of cards, updating totalPages in the useEffect
+        setNumCards(numCards - 1);
+
+        getCardsFromDeckIdApi(deckId, pageNumber)
+            .then(cards => {
+                setCards(cards)
             });
-        }
-        setDeleteDialogOpen(false);
+        
+        enqueueSnackbar('Flashcard deleted!', { 
+            variant: 'error',
+            autoHideDuration: 1500,
+            action
+        });
     }
 
     // To open the dialog to edit a card
-    const editCard = (cardToEdit : CardType) => {
+    const handleEditCardClickOpen = (cardToEdit : CardType) => {
         setEditObject(cardToEdit);
         setDialogOpen(true);
     }
 
-    // To close dialog after editing card
     const handleEditClickClose = (toEdit: CardType | null) => {
         if (toEdit) {
             editCardApi(toEdit)
@@ -222,7 +204,11 @@ function DeckManager(): ReactElement {
             <div className={styles.topBar}>
                 <ArrowBackIosNewIcon 
                     className={styles.cardSettingsIcon}
-                    sx={{color: "text.secondary"}} 
+                    sx={{
+                        color: "text.secondary",
+                        width: '2rem',
+                        height: '2rem',
+                    }} 
                     onClick={() => navigate(-1)}
                 />
                 <Typography
@@ -236,40 +222,67 @@ function DeckManager(): ReactElement {
                     {deckName}
                 </Typography> 
 
-                {pageNumber !== 1 && <NavigateBeforeIcon 
-                    className={styles.cardSettingsIcon}
-                    sx={{
-                        marginLeft: '10rem',
-                        color: "text.secondary",
-                        width: '2rem',
-                        height: '2rem',
-                    }} 
-                    onClick={() => {
-                        setPageNumber(pageNumber - 1);
-                    }}
-                />}
+                {/* Page Navigation */}
+                <div className={styles.pageNavigation}>
+                    { pageNumber !== 1 && <>
+                        <KeyboardDoubleArrowLeftIcon 
+                            className={styles.cardSettingsIcon}
+                            sx={{
+                                color: "text.secondary",
+                                width: '2rem',
+                                height: '2rem',
+                            }} 
+                            onClick={() => {
+                                setPageNumber(1);
+                            }}
+                        />
+                        <NavigateBeforeIcon 
+                            className={styles.cardSettingsIcon}
+                            sx={{
+                                color: "text.secondary",
+                                width: '2rem',
+                                height: '2rem',
+                            }} 
+                            onClick={() => {
+                                setPageNumber(pageNumber - 1);
+                            }}
+                        />
+                    </> }
+                    { pageNumber === 1 && <div className={styles.emptyNavigationSide}></div> }
 
-                <Typography
-                    color="text.secondary"
-                    variant="h5"
-                    sx={{
-                        paddingBottom: '1rem',
-                    }}
-                >
-                    Page {pageNumber} of {totalPages}
-                </Typography> 
-                
-                {pageNumber !== totalPages && <NavigateNextIcon 
-                    className={styles.cardSettingsIcon}
-                    sx={{
-                        color: "text.secondary",
-                        width: '2rem',
-                        height: '2rem',
-                    }} 
-                    onClick={() => {
-                        setPageNumber(pageNumber + 1);
-                    }}
-                />}
+                    <Typography
+                        color="text.secondary"
+                        variant="h5"
+                    >
+                        Page {pageNumber} of {totalPages}
+                    </Typography> 
+                    
+                    {pageNumber !== totalPages && <>
+                        <NavigateNextIcon 
+                            className={styles.cardSettingsIcon}
+                            sx={{
+                                color: "text.secondary",
+                                width: '2rem',
+                                height: '2rem',
+                            }} 
+                            onClick={() => {
+                                setPageNumber(pageNumber + 1);
+                            }}
+                        />
+                        <KeyboardDoubleArrowRightIcon 
+                            className={styles.cardSettingsIcon}
+                            sx={{
+                                color: "text.secondary",
+                                width: '2rem',
+                                height: '2rem',
+                            }} 
+                            onClick={() => {
+                                setPageNumber(totalPages);
+                            }}
+                        />
+                    </> }
+                    { pageNumber === totalPages && <div className={styles.emptyNavigationSide}></div> }
+                </div>
             </div>
             <div className={styles.deckManager}>
                 <div className={styles.gridContainer}>
@@ -280,63 +293,17 @@ function DeckManager(): ReactElement {
                                 <ModeEditIcon 
                                     className={styles.cardSettingsIcon}
                                     sx={{color: "text.secondary"}} 
-                                    onClick={() => editCard(card)}
+                                    onClick={() => handleEditCardClickOpen(card)}
                                 />
                                 <DeleteIcon 
                                     className={styles.cardSettingsIcon} 
                                     sx={{color: "text.secondary"}} 
                                     onClick={() => handleDeleteDialogOpen(card)}        
-                                />           
-                                    <Dialog 
-                                        TransitionComponent={Transition}
-                                        keepMounted
-                                        open={deleteDialogOpen} 
-                                        onClose={() => setDeleteDialogOpen(false)}  // Prevent closing on clicking outside dialog
-                                        PaperProps={{
-                                            style: {
-                                            // Cant use primary theme here for some reason
-                                            backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
-                                            borderRadius: '10px',
-                                            },
-                                        }}
-                                    >
-                                        <DialogTitle
-                                            sx={{ 
-                                            fontFamily: 'Staatliches',
-                                            color: 'text.secondary',
-                                            }}
-                                        >
-                                            u sure u wan delete ah
-                                        </DialogTitle>
-                                        <DialogActions>
-                                            <Button 
-                                                color="secondary"
-                                                variant="contained"
-                                                onClick={() => setDeleteDialogOpen(false)}
-                                            >
-                                                Cancel
-                                            </Button>
-
-                                            <Button 
-                                                color="primary"
-                                                variant="contained"
-                                                onClick={removeCard}
-                                            >
-                                                Delete from Deck
-                                            </Button>
-                                            <Button 
-                                                color="primary"
-                                                variant="contained"
-                                                onClick={deleteCard}
-                                            >
-                                                Wipe Card from Existence
-                                            </Button>
-                                        </DialogActions>
-                                    </Dialog>                     
+                                />                           
                             </div>
                         </div>
                     )) }
-                    <div className={styles.gridItem}>
+                    { cards.length < 12 && <div className={styles.gridItem}>
                         <div 
                             className={styles.card}
                             onClick={handleClickOpen}
@@ -345,15 +312,63 @@ function DeckManager(): ReactElement {
                                 fontSize: '6rem',
                                 color: 'rgb(0,0,0,0.3)'
                             }}/>
-                        </div>
-                        <AddCardDialog 
+                        </div>  
+                    </div> }
+                    {/* Add Card Dialog */}
+                    <AddCardDialog 
                             dialogOpen={dialogOpen} 
                             handleClose={handleClickClose} 
                             editObject={editObject}
                             setEditObject={setEditObject}
                             editHandleClose={handleEditClickClose}
-                        />
-                    </div>
+                    />  
+                    {/* Delete Dialog */}
+                    <Dialog 
+                        TransitionComponent={Transition}
+                        keepMounted
+                        open={deleteDialogOpen} 
+                        onClose={() => setDeleteDialogOpen(false)}  // Prevent closing on clicking outside dialog
+                        PaperProps={{
+                            style: {
+                            // Cant use primary theme here for some reason
+                            backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
+                            borderRadius: '10px',
+                            },
+                        }}
+                    >
+                        <DialogTitle
+                            sx={{ 
+                            fontFamily: 'Staatliches',
+                            color: 'text.secondary',
+                            }}
+                        >
+                            u sure u wan delete ah
+                        </DialogTitle>
+                        <DialogActions>
+                            <Button 
+                                color="secondary"
+                                variant="contained"
+                                onClick={() => setDeleteDialogOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+
+                            <Button 
+                                color="primary"
+                                variant="contained"
+                                onClick={() => deleteCard(false)}
+                            >
+                                Delete from Deck
+                            </Button>
+                            <Button 
+                                color="primary"
+                                variant="contained"
+                                onClick={() => deleteCard(true)}
+                            >
+                                Wipe Card from Existence
+                            </Button>
+                        </DialogActions>
+                    </Dialog> 
                 </div>
                 <div className={styles.sidebar}>
                     <Button 

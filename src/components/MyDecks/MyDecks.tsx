@@ -153,7 +153,6 @@ function MyDecks(): ReactElement {
             state: {
                 id: deck.id,
                 name: deck.name,
-                cards: deck.cards,
             }
         });
     }

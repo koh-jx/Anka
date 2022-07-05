@@ -6,6 +6,19 @@ import { CardType } from '../../components/Card/CardFactory';
 import { DeckType } from "../../components/MyDecks/MyDecks";
 
 
+export const getDeckApi = async(id: string) : Promise<DeckType> => {
+    return new Promise((resolve, reject) => {
+        getAnkaApi()
+            .get('/deck?id=' + id)
+            .then(({ data }) => {
+                resolve(data);
+            })
+            .catch(() => {
+                reject();
+            })
+    });
+}
+
 // Creates a new card, adds the card to the deck
 // Returns the new card
 export const createCardToDeckApi = async (toAdd: CardType, deckId: string) : Promise<CardType> => {
@@ -44,7 +57,6 @@ export const removeCardFromDeckApi = async (toRemove: CardType, deckId: string) 
     });
 }
 
-// Todo: implement pagination here, pass in a page number
 export const getUserDecksApi = async(pageNumber: number) : Promise<DeckType[]> => {
     return new Promise((resolve, reject) => {
         getAnkaApi()
@@ -108,7 +120,6 @@ export const deleteDeckApi = async (deck: DeckType): Promise<DeckType> => {
     );
 }
 
-// TODO: Implement pagination here, pass in page num
 export const getCardsFromDeckIdApi = async (deckId: string, pageNumber: number): Promise<CardType[]> => {
     return new Promise((resolve, reject) => {
         getAnkaApi()
