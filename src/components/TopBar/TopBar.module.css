@@ -1,0 +1,14 @@
+.topBar {
+    display: flex;
+    flex-direction: row;
+}
+
+.cardSettingsIcon {
+    opacity: 0.4;
+    transition: 0.4s;
+}
+
+.cardSettingsIcon:hover {
+    opacity: 1.0;
+    cursor: pointer;
+}

@@ -1,0 +1,20 @@
+.pageNavigation {
+    display: flex;
+    flex-direction: row;
+    margin-left: 25%;
+}
+
+.emptyNavigationSide {
+    height: 2rem;
+    width: 4rem;
+}
+
+.cardSettingsIcon {
+    opacity: 0.4;
+    transition: 0.4s;
+}
+
+.cardSettingsIcon:hover {
+    opacity: 0.6;
+    cursor: pointer;
+}
