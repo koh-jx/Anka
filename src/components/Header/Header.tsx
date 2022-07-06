@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Box } from '@mui/material';
 
 import { logout } from '../../lib/api/login';
@@ -22,7 +22,7 @@ function Header(
     }
 ): ReactElement {
 
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     
     const logoutUser = async () => {
         await logout()
@@ -57,6 +57,7 @@ function Header(
                             color: 'white',
                             whiteSpace: 'nowrap'
                         }}
+                        onClick={() => navigate('my-decks')}
                     >
                         Your decks
                     </Button>
@@ -68,9 +69,9 @@ function Header(
                             top: '5%',
                             width: '10%',
                             color: 'white',
-                            whiteSpace: 'nowrap'
-                            // onClick={() => navigate('somewhere')}
+                            whiteSpace: 'nowrap',
                         }}
+                        onClick={() => navigate('my-notes')}
                     >
                         Your notes
                     </Button>
@@ -83,8 +84,8 @@ function Header(
                             width: '10%',
                             color: 'white',
                             whiteSpace: 'nowrap'
-                            // onClick={() => navigate('somewhere')}
                         }}
+                        onClick={() => navigate('my-cards')}
                     >
                         Your cards
                     </Button>

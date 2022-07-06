@@ -41,6 +41,10 @@ export default function TopBar(
                 variant="h5"
                 sx={{
                     paddingLeft: '1rem',
+                    width: '20%',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
                 }}
             >
                 {title}
