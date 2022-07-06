@@ -35,6 +35,7 @@ export default function TopBar(
                 }} 
                 onClick={() => navigate(-1)}
             /> }
+            { !showBackArrow && <div className={styles.emptyBackArrow}></div> }
             <Typography
                 color="text.secondary"
                 variant="h5"
@@ -45,11 +46,14 @@ export default function TopBar(
                 {title}
             </Typography> 
             {/* Page Navigation */}
-            <PageNavigation
-                pageNumber={pageNumber}
-                totalPages={totalPages}
-                setPageNumber={setPageNumber}
-            />
+            <div className={styles.navigation}>
+                <PageNavigation
+                    pageNumber={pageNumber}
+                    totalPages={totalPages}
+                    setPageNumber={setPageNumber}
+                />
+            </div>
+            
         </div>
     );
 }

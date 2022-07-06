@@ -1,5 +1,5 @@
 import { getAnkaApi } from "./axios";
-import { CardType } from "../../components/Card/CardFactory";
+import { CardType } from "../../common/types";
 
 // Get the following data:
 // - user.id        : string

@@ -18,16 +18,11 @@ import {
     deleteDeckApi 
 } from '../../lib/api/deckFunctions';
 import { getUserApi } from '../../lib/api/cardFunctions';
+import { NUM_DECKS_PER_PAGE } from '../../common/constants';
+import { DeckType } from '../../common/types';
 
 import styles from './MyDecks.module.css';
 
-export type DeckType = {
-    id: string;
-    name: string;
-    // picture: ???;
-    cards: string[];
-}
-  
 function MyDecks(): ReactElement {
     const navigate = useNavigate();
     // UseStates
@@ -58,9 +53,12 @@ function MyDecks(): ReactElement {
     }, [pageNumber]);
 
     // Update the total number of pages when the total number of decks change
-    // If just nice number of cards is divisible by 12, then add extra page for add deck button
+    // If just nice number of cards is divisible by num_decks_per_page, then add extra page for add deck button
     useEffect(() => {
-        setTotalPages(numDecks % 12 === 0 ? Math.ceil(numDecks / 12) + 1 : Math.ceil(numDecks / 12));
+        setTotalPages(numDecks % NUM_DECKS_PER_PAGE === 0 
+            ? Math.ceil(numDecks / NUM_DECKS_PER_PAGE) + 1 
+            : Math.ceil(numDecks / NUM_DECKS_PER_PAGE)
+        );
     }, [numDecks]);
 
     // Dialog that opens when you click on the add deck button
@@ -225,7 +223,7 @@ function MyDecks(): ReactElement {
                             </div>
                         </div>
                     )) }
-                    { decks.length < 12 && <div className={styles.gridItem}>
+                    { decks.length < NUM_DECKS_PER_PAGE && <div className={styles.gridItem}>
                         <div 
                             className={styles.card}
                             onClick={handleClickOpen}

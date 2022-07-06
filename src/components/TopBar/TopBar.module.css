@@ -12,3 +12,13 @@
     opacity: 1.0;
     cursor: pointer;
 }
+
+.emptyBackArrow {
+    width: 1.25rem;
+    height: 2rem;
+}
+
+.navigation {
+    position:absolute;
+    left: 20%;
+}

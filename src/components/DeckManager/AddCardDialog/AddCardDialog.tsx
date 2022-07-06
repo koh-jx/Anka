@@ -1,27 +1,16 @@
-import { useEffect, forwardRef, Ref, ReactElement, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
 
-import { CardType, CardFace, createCard } from '../../Card/CardFactory';
+import { DialogTransition } from '../../../common/transitions';
+import { createCard } from '../../Card/CardFactory';
+import { CardType, CardFace } from '../../../common/types';
 import Textfield from '../../Textfield';
 
 import styles from './AddCardDialog.module.css';
-
-
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & {
-    children: ReactElement<any, any>;
-  },
-  ref: Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 
 export default function AddCardDialog(
   {
@@ -102,7 +91,7 @@ export default function AddCardDialog(
 
   return (
     <Dialog 
-      TransitionComponent={Transition}
+      TransitionComponent={DialogTransition}
       keepMounted
       open={dialogOpen} 
       onClose={() => null}  // Prevent closing on clicking outside dialog

@@ -6,10 +6,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { createCard, CardType } from '../Card/CardFactory';
-import { DeckType } from '../MyDecks/MyDecks';
+import { createCard } from '../Card/CardFactory';
 import AddCardDialog from './AddCardDialog';
 import DeleteCardDialog from './DeleteCardDialog';
+import { CardType, DeckType } from '../../common/types';
 
 import { 
     editCardApi,
@@ -24,6 +24,7 @@ import {
 
 import styles from './DeckManager.module.css';
 import TopBar from '../TopBar';
+import { NUM_CARDS_PER_PAGE } from '../../common/constants';
   
 function DeckManager(): ReactElement {
     // React Router
@@ -59,9 +60,12 @@ function DeckManager(): ReactElement {
     }, [pageNumber, deckId]);
 
     // Update the total number of pages when the total number of cards change
-    // If just nice number of cards is divisible by 12, then add extra page for add card button
+    // If just nice number of cards is divisible by num_cards_per_page, then add extra page for add card button
     useEffect(() => {
-        setTotalPages(numCards % 12 === 0 ? Math.ceil(numCards / 12) + 1 : Math.ceil(numCards / 12));
+        setTotalPages(numCards % NUM_CARDS_PER_PAGE === 0 
+            ? Math.ceil(numCards / NUM_CARDS_PER_PAGE) + 1 
+            : Math.ceil(numCards / NUM_CARDS_PER_PAGE)
+        );
     }, [numCards]);
     
     // To open the dialog when adding card
@@ -212,7 +216,7 @@ function DeckManager(): ReactElement {
                         </div>
                     )) }
                     {/* Add Card button  */}
-                    { cards.length < 12 && <div className={styles.gridItem}>
+                    { cards.length < NUM_CARDS_PER_PAGE && <div className={styles.gridItem}>
                         <div 
                             className={styles.card}
                             onClick={handleClickOpen}

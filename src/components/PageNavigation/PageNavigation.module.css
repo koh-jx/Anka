@@ -1,7 +1,6 @@
 .pageNavigation {
     display: flex;
     flex-direction: row;
-    margin-left: 25%;
 }
 
 .emptyNavigationSide {

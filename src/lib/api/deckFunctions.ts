@@ -2,8 +2,7 @@ import { getAnkaApi } from "./axios";
 import {
     createCardApi
 } from './cardFunctions';
-import { CardType } from '../../components/Card/CardFactory';
-import { DeckType } from "../../components/MyDecks/MyDecks";
+import { CardType, DeckType } from "../../common/types";
 
 
 export const getDeckApi = async(id: string) : Promise<DeckType> => {

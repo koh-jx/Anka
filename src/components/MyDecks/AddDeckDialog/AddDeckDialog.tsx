@@ -6,22 +6,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Slide,
 } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
-import { Fragment } from 'react';
 
-import { DeckType } from '../MyDecks';
+import { DialogTransition } from '../../../common/transitions';
+import { DeckType } from '../../../common/types';
 import Textfield from '../../Textfield';
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 
 export default function AddDeckDialog(
@@ -99,7 +88,7 @@ export default function AddDeckDialog(
   return (
     <>
       <Dialog 
-        TransitionComponent={Transition}
+        TransitionComponent={DialogTransition}
         keepMounted
         open={dialogOpen} 
         onClose={() => null}  // Prevent closing on clicking outside dialog
