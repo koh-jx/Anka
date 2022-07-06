@@ -7,6 +7,7 @@ import Header from './components/Header';
 import MyDecks from './components/MyDecks';
 import DeckManager from './components/DeckManager';
 import Login from './components/Login';
+import MyCards from './components/MyCards';
 
 function AppRoutes(
   { 
@@ -58,6 +59,8 @@ function AppRoutes(
                 <Routes>
                   <Route path="/" element={<MyDecks />} />
                   <Route path="/deck" element={<DeckManager />} />
+                  <Route path="/my-decks" element={<MyDecks />} />
+                  <Route path="/my-cards" element={<MyCards />} />
                 </Routes>
               </Box>
             </div>

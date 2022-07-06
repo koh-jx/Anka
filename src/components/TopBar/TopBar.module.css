@@ -1,6 +1,7 @@
 .topBar {
     display: flex;
     flex-direction: row;
+    padding-bottom: 20px;
 }
 
 .cardSettingsIcon {
@@ -19,6 +20,5 @@
 }
 
 .navigation {
-    position:absolute;
-    left: 20%;
+    padding-left: 4%;
 }

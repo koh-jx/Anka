@@ -38,6 +38,21 @@ export const getCardApi = async (id: string): Promise<CardType> =>
   }
 );
 
+// Get a page of cards from the database
+export const getUserCardsApi = async (page: number): Promise<CardType[]> =>
+  new Promise((resolve, reject) => {
+    getAnkaApi()
+      .get('/users/cards?page=' + page)
+      .then(({ data }) => {
+        resolve(data);
+      })
+      .catch(() => {
+          reject();
+      });
+  }  
+);
+
+
 // Get deck from a given array of ids
 export const getDeckFromArrayApi = async (cards: string[]): Promise<CardType[]> => {
     return await Promise.all(
