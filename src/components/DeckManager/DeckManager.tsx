@@ -1,17 +1,15 @@
 import { ReactElement, useState, useEffect, Fragment } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Typography, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { createCard, CardType } from '../Card/CardFactory';
 import { DeckType } from '../MyDecks/MyDecks';
 import AddCardDialog from './AddCardDialog';
 import DeleteCardDialog from './DeleteCardDialog';
-import PageNavigation from './PageNavigation';
 
 import { 
     editCardApi,
@@ -25,13 +23,13 @@ import {
 } from '../../lib/api/deckFunctions';
 
 import styles from './DeckManager.module.css';
+import TopBar from '../TopBar';
   
 function DeckManager(): ReactElement {
     // React Router
     const location = useLocation();
     const deckName = (location.state as DeckType).name;
     const deckId = (location.state as DeckType).id;
-    const navigate = useNavigate();
     // UseStates
     const [dialogOpen, setDialogOpen] = useState(false);
     const [cards, setCards] = useState<CardType[]>([]);
@@ -63,7 +61,6 @@ function DeckManager(): ReactElement {
     // Update the total number of pages when the total number of cards change
     // If just nice number of cards is divisible by 12, then add extra page for add card button
     useEffect(() => {
-        console.log(numCards);
         setTotalPages(numCards % 12 === 0 ? Math.ceil(numCards / 12) + 1 : Math.ceil(numCards / 12));
     }, [numCards]);
     
@@ -187,34 +184,13 @@ function DeckManager(): ReactElement {
 
     return (    
         <>
-            <div className={styles.topBar}>
-                <ArrowBackIosNewIcon 
-                    className={styles.cardSettingsIcon}
-                    sx={{
-                        color: "text.secondary",
-                        width: '2rem',
-                        height: '2rem',
-                    }} 
-                    onClick={() => navigate(-1)}
-                />
-                <Typography
-                    color="text.secondary"
-                    variant="h5"
-                    sx={{
-                        paddingLeft: '1rem',
-                        paddingBottom: '1rem',
-                    }}
-                >
-                    {deckName}
-                </Typography> 
-
-                {/* Page Navigation */}
-                <PageNavigation
-                    pageNumber={pageNumber}
-                    totalPages={totalPages}
-                    setPageNumber={setPageNumber}
-                />
-            </div>
+            <TopBar
+                title={deckName}
+                showBackArrow={true}
+                pageNumber={pageNumber}
+                setPageNumber={setPageNumber}
+                totalPages={totalPages}
+            />
             <div className={styles.deckManager}>
                 <div className={styles.gridContainer}>
                     {/* Card displays  */}

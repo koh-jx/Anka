@@ -1,4 +1,5 @@
-import React, { ReactElement, useState,  useEffect, Fragment } from 'react'
+import { ReactElement, useState,  useEffect, Fragment } from 'react'
+import { useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,6 +9,7 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
+import TopBar from '../TopBar';
 import AddDeckDialog from './AddDeckDialog';
 import { 
     createDeckApi, 
@@ -15,11 +17,9 @@ import {
     editDeckApi, 
     deleteDeckApi 
 } from '../../lib/api/deckFunctions';
-
-import styles from './MyDecks.module.css';
-import { useNavigate } from 'react-router-dom';
 import { getUserApi } from '../../lib/api/cardFunctions';
 
+import styles from './MyDecks.module.css';
 
 export type DeckType = {
     id: string;
@@ -30,35 +30,43 @@ export type DeckType = {
   
 function MyDecks(): ReactElement {
     const navigate = useNavigate();
-
+    // UseStates
     const [decks, setDecks] = useState<DeckType[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    // To edit a deck
+    const [numDecks, setNumDecks] = useState(0);
     const [editObject, setEditObject] = useState<DeckType | null>(null); 
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+    // Initialise total decks, useEffect to set totalPages will be triggered
+    useEffect(() => {
+        getUserApi().then(user => {
+            if (user) {
+                setNumDecks(user.decks.length);
+            }
+        });
+    }, [])
+
+    // API call whenever page number is changed
+    useEffect(() => {
+        getUserDecksApi(pageNumber).then(decks => {
+            console.log(decks)
+            setDecks(decks);
+        });
+    }, [pageNumber]);
+
+    // Update the total number of pages when the total number of decks change
+    // If just nice number of cards is divisible by 12, then add extra page for add deck button
+    useEffect(() => {
+        setTotalPages(numDecks % 12 === 0 ? Math.ceil(numDecks / 12) + 1 : Math.ceil(numDecks / 12));
+    }, [numDecks]);
 
     // Dialog that opens when you click on the add deck button
     const handleClickOpen = () => {
         setDialogOpen(true);
     }
-
-    useEffect(() => {
-        getUserApi().then(user => {
-            if (user) {
-                const totalDecks = user.decks.length;
-                const totalPages = Math.ceil(totalDecks / 12);
-                setTotalPages(totalPages);
-                setPageNumber(1);
-                getUserDecksApi(1).then(decks => {
-                    setDecks(decks);
-                }
-                );
-            }
-        });
-    }, [])
 
     // Close the dialog and add the deck
     const handleClickClose = (deckToAdd : DeckType | null) => {
@@ -77,6 +85,9 @@ function MyDecks(): ReactElement {
                             </Button>
                         </Fragment>
                     );
+
+                    // Set number of cards, updating totalPages in the useEffect
+                    setNumDecks(numDecks + 1);
                 
                     enqueueSnackbar('Deck created!', { 
                         variant: 'success',
@@ -90,7 +101,7 @@ function MyDecks(): ReactElement {
     }
 
     // Remove a deck
-    const removeDeck = (deck: DeckType) => {
+    const handleDelete = (deck: DeckType) => {
         deleteDeckApi(deck)
             .then(() => {
                 setDecks(decks.filter(d => d.id !== deck.id));
@@ -104,6 +115,9 @@ function MyDecks(): ReactElement {
                         </Button>
                     </Fragment>
                 );
+
+                // Set number of cards, updating totalPages in the useEffect
+                setNumDecks(numDecks - 1);
                 
                 enqueueSnackbar('Deck deleted!', { 
                     variant: 'error',
@@ -159,15 +173,13 @@ function MyDecks(): ReactElement {
 
     return ( 
         <>
-            <Typography
-                color="text.secondary"
-                variant="h5"
-                sx={{
-                    paddingLeft: '1rem',
-                }}
-            >
-                Your Decks
-            </Typography> 
+            <TopBar 
+                title="Your Decks"
+                showBackArrow={false} 
+                pageNumber={pageNumber}
+                setPageNumber={setPageNumber}
+                totalPages={totalPages}
+            />
             <div className={styles.deckManager}>
                 <div className={styles.gridContainer}>
                     { decks.map((deck, index) => (
@@ -206,14 +218,14 @@ function MyDecks(): ReactElement {
                                         sx={{color: "text.secondary"}} 
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            removeDeck(deck);
+                                            handleDelete(deck);
                                         }}   
                                     />
                                 </div>
                             </div>
                         </div>
                     )) }
-                    <div className={styles.gridItem}>
+                    { decks.length < 12 && <div className={styles.gridItem}>
                         <div 
                             className={styles.card}
                             onClick={handleClickOpen}
@@ -230,7 +242,7 @@ function MyDecks(): ReactElement {
                             setEditObject={setEditObject}
                             editHandleClose={handleEditClickClose}
                         />
-                    </div>
+                    </div> }
                 </div>
             </div>
         </>
