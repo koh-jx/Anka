@@ -23,7 +23,7 @@ import { NUM_DECKS_PER_PAGE } from '../../common/constants';
 import { DeckType } from '../../common/types';
 
 import styles from './MyDecks.module.css';
-import DeleteDeckDialog from './DeleteDeckDialog';
+import DeleteDialog from '../DeleteDialog';
 
 function MyDecks(): ReactElement {
     const navigate = useNavigate();
@@ -113,7 +113,7 @@ function MyDecks(): ReactElement {
 
         deleteDeckApi(deckToDelete)
             .then((deckDeleted) => {
-                
+
                 if (isDeleteAllCards) {
                     deckDeleted.cards.forEach(async (cardId) => {
                         removeCardByIdApi(cardId)
@@ -271,10 +271,13 @@ function MyDecks(): ReactElement {
                             editHandleClose={handleEditClickClose}
                         />
                     </div> }
-                    <DeleteDeckDialog
+                    <DeleteDialog
                         deleteDialogOpen={deleteDialogOpen}
                         setDeleteDialogOpen={setDeleteDialogOpen}
                         handleDeleteClickClose={handleDelete}
+                        title={"Are you sure?"}
+                        defaultDeleteCaption={"Delete Deck only"}
+                        hardDeleteCaption={"Delete Deck and all Cards in deck"}
                     />
                 </div>
             </div>

@@ -3,18 +3,24 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { DialogTransition } from '../../../common/transitions';
+import { DialogTransition } from '../../common/transitions';
 
-export default function DeleteCardDialog(
+export default function DeleteDialog(
   {
     deleteDialogOpen, 
     setDeleteDialogOpen,
     handleDeleteClickClose,
+    title,
+    defaultDeleteCaption,
+    hardDeleteCaption,        // Optional second possible delete button
   }
   : {
     deleteDialogOpen: boolean, 
     setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    handleDeleteClickClose: () => void,
+    handleDeleteClickClose: (isHardDelete: boolean) => void,
+    title: string
+    defaultDeleteCaption: string,
+    hardDeleteCaption?: string,
   }
 ) {
 
@@ -38,7 +44,7 @@ export default function DeleteCardDialog(
           color: 'text.secondary',
           }}
       >
-          Are you sure?
+          {title}
       </DialogTitle>
       <DialogActions>
           <Button 
@@ -48,13 +54,23 @@ export default function DeleteCardDialog(
           >
               Cancel
           </Button>
+
           <Button 
               color="primary"
               variant="contained"
-              onClick={() => handleDeleteClickClose()}
+              onClick={() => handleDeleteClickClose(false)}
           >
-              Wipe Card from Existence
+              {defaultDeleteCaption}
           </Button>
+          {
+            hardDeleteCaption && <Button 
+                color="primary"
+                variant="contained"
+                onClick={() => handleDeleteClickClose(true)}
+            >
+                {hardDeleteCaption}
+            </Button>
+          }
       </DialogActions>
     </Dialog> 
   );

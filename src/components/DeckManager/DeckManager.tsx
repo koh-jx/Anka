@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 
 import { createCard } from '../Card/CardFactory';
 import AddCardDialog from './AddCardDialog';
-import DeleteCardDialog from './DeleteCardDialog';
+import DeleteDialog from '../DeleteDialog';
 import { CardType, DeckType } from '../../common/types';
 
 import { 
@@ -231,10 +231,13 @@ function DeckManager(): ReactElement {
                             editHandleClose={handleEditClickClose}
                     />  
                     {/* Delete Dialog */}
-                    <DeleteCardDialog
+                    <DeleteDialog
                         deleteDialogOpen={deleteDialogOpen}
                         setDeleteDialogOpen={setDeleteDialogOpen}
                         handleDeleteClickClose={handleDeleteClickClose}
+                        title={"Are you sure?"}
+                        defaultDeleteCaption={"Delete from deck"}
+                        hardDeleteCaption={"Wipe card from existence"}
                     />
                 </div>
                 <div className={styles.sidebar}>
