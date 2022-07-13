@@ -1,7 +1,5 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
+import { useState } from 'react';
+import { FormControlLabel, Checkbox, Dialog, Button, DialogActions, DialogTitle, DialogContent } from '@mui/material';
 
 import { DialogTransition } from '../../../common/transitions';
 
@@ -14,9 +12,11 @@ export default function DeleteCardDialog(
   : {
     deleteDialogOpen: boolean, 
     setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    handleDeleteClickClose: (isHardDelete: boolean) => void,
+    handleDeleteClickClose: (isDeleteAllCards: boolean) => void,
   }
 ) {
+
+  const [isDeleteAllCards, setIsDeleteAllCards] = useState(false);
 
   return (
     <Dialog 
@@ -40,6 +40,22 @@ export default function DeleteCardDialog(
       >
           Are you sure?
       </DialogTitle>
+      <DialogContent>
+        <FormControlLabel
+          control={
+            <Checkbox 
+              checked={isDeleteAllCards} 
+              onChange={() => setIsDeleteAllCards(!isDeleteAllCards)} 
+              color="info"
+            />
+          }
+          sx={{ 
+            fontFamily: 'Staatliches',
+            color: 'text.secondary',
+          }}
+          label="Delete all cards in deck"
+        />
+      </DialogContent>
       <DialogActions>
           <Button 
               color="secondary"
@@ -49,20 +65,15 @@ export default function DeleteCardDialog(
               Cancel
           </Button>
 
+          
           <Button 
               color="primary"
               variant="contained"
-              onClick={() => handleDeleteClickClose(false)}
+              onClick={() => handleDeleteClickClose(isDeleteAllCards)}
           >
-              Delete from Deck
+              Delete Deck
           </Button>
-          <Button 
-              color="primary"
-              variant="contained"
-              onClick={() => handleDeleteClickClose(true)}
-          >
-              Wipe Card from Existence
-          </Button>
+          
       </DialogActions>
     </Dialog> 
   );

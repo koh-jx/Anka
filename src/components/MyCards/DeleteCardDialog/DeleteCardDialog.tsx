@@ -14,7 +14,7 @@ export default function DeleteCardDialog(
   : {
     deleteDialogOpen: boolean, 
     setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    handleDeleteClickClose: (isHardDelete: boolean) => void,
+    handleDeleteClickClose: () => void,
   }
 ) {
 
@@ -48,18 +48,10 @@ export default function DeleteCardDialog(
           >
               Cancel
           </Button>
-
           <Button 
               color="primary"
               variant="contained"
-              onClick={() => handleDeleteClickClose(false)}
-          >
-              Delete from Deck
-          </Button>
-          <Button 
-              color="primary"
-              variant="contained"
-              onClick={() => handleDeleteClickClose(true)}
+              onClick={() => handleDeleteClickClose()}
           >
               Wipe Card from Existence
           </Button>

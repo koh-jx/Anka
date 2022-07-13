@@ -7,6 +7,7 @@ import { useSnackbar } from 'notistack';
 
 import { createCard } from '../Card/CardFactory';
 import AddCardDialog from '../DeckManager/AddCardDialog';
+import DeleteCardDialog from './DeleteCardDialog';
 import { CardType } from '../../common/types';
 
 import { 
@@ -29,6 +30,8 @@ export default function MyCards(): ReactElement {
     const [totalPages, setTotalPages] = useState(1);
     const [numCards, setNumCards] = useState(1);
     const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [cardToDelete, setCardToDelete] = useState<CardType | null>(null);
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -65,38 +68,44 @@ export default function MyCards(): ReactElement {
     // To close dialog after adding card
     // If cancel the adding, toAdd will be null and the dialog will close
     const handleClickClose = (toAdd: CardType | null) => {
-        if (toAdd) {
-            createCardApi(toAdd)
-                .then(result => {
-                    setCards([...cards, result]);
-                    const action = (key: any) => (
-                        <Fragment>
-                            <Button 
-                                sx={{color: "white"}}
-                                onClick={() => { closeSnackbar(key) }}
-                            >
-                                Dismiss
-                            </Button>
-                        </Fragment>
-                    );
-                    
-                    // Set number of cards, updating totalPages in the useEffect
-                    setNumCards(numCards + 1);
-                    
-                    enqueueSnackbar('Flashcard created!', { 
-                        variant: 'success',
-                        autoHideDuration: 1500,
-                        action
-                    });
-                });            
-
-        }
         setDialogOpen(false);
+        if (!toAdd) return;
+
+        createCardApi(toAdd)
+            .then(result => {
+                setCards([...cards, result]);
+                const action = (key: any) => (
+                    <Fragment>
+                        <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                        >
+                            Dismiss
+                        </Button>
+                    </Fragment>
+                );
+                
+                // Set number of cards, updating totalPages in the useEffect
+                setNumCards(numCards + 1);
+                
+                enqueueSnackbar('Flashcard created!', { 
+                    variant: 'success',
+                    autoHideDuration: 1500,
+                    action
+                });
+            });                    
     }
 
+    const handleDeleteDialogOpen = (card: CardType) => {
+        setCardToDelete(card);
+        setDeleteDialogOpen(true);
+    }
 
     // Delete card
-    const handleDelete = (cardToDelete : CardType) => {
+    const handleDelete = (cardToDelete : CardType | null) => {
+        setDeleteDialogOpen(false);
+        if (!cardToDelete) return;
+
         removeCardApi(cardToDelete).then(() => {
             setCards(cards.filter(card => {
                 return cardToDelete.id !== card.id
@@ -114,7 +123,6 @@ export default function MyCards(): ReactElement {
     
             // Set number of cards, updating totalPages in the useEffect
             setNumCards(numCards - 1);
-    
             getUserCardsApi(pageNumber)
                 .then(cards => {
                     setCards(cards)
@@ -136,31 +144,31 @@ export default function MyCards(): ReactElement {
     }
 
     const handleEditClickClose = (toEdit: CardType | null) => {
-        if (toEdit) {
-            editCardApi(toEdit)
-                .then(result => {
-                    setCards(cards.map(card => card.id === result.id ? result : card));
-                    const action = (key: any) => (
-                        <Fragment>
-                            <Button 
-                              sx={{color: "white"}}
-                              onClick={() => { closeSnackbar(key) }}
-                            >
-                                Dismiss
-                            </Button>
-                        </Fragment>
-                      );
-                  
-                      
-                    enqueueSnackbar('Flashcard edited!', { 
-                        variant: 'info',
-                        autoHideDuration: 1500,
-                        action
-                    });
-                });
-        }
         setEditObject(null);
         setDialogOpen(false);
+        if (!toEdit) return;
+
+        editCardApi(toEdit)
+            .then(result => {
+                setCards(cards.map(card => card.id === result.id ? result : card));
+                const action = (key: any) => (
+                    <Fragment>
+                        <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                        >
+                            Dismiss
+                        </Button>
+                    </Fragment>
+                    );
+                
+                    
+                enqueueSnackbar('Flashcard edited!', { 
+                    variant: 'info',
+                    autoHideDuration: 1500,
+                    action
+                });
+            });
     }
 
     return (    
@@ -187,7 +195,7 @@ export default function MyCards(): ReactElement {
                                 <DeleteIcon 
                                     className={styles.cardSettingsIcon} 
                                     sx={{color: "text.secondary"}} 
-                                    onClick={() => handleDelete(card)}        
+                                    onClick={() => handleDeleteDialogOpen(card)}        
                                 />                           
                             </div>
                         </div>
@@ -213,11 +221,11 @@ export default function MyCards(): ReactElement {
                             editHandleClose={handleEditClickClose}
                     />  
                     {/* Delete Dialog */}
-                    {/* <DeleteCardDialog
+                    <DeleteCardDialog
                         deleteDialogOpen={deleteDialogOpen}
                         setDeleteDialogOpen={setDeleteDialogOpen}
-                        handleDeleteClickClose={handleDeleteClickClose}
-                    /> */}
+                        handleDeleteClickClose={() => handleDelete(cardToDelete)}
+                    />
                 </div>
             </div>
         </>

@@ -119,3 +119,16 @@ export const removeCardApi = async (card: CardType): Promise<CardType[]> => {
                 });
     });
 }
+
+export const removeCardByIdApi = async (cardId: string): Promise<CardType[]> => {
+  return new Promise((resolve, reject) => {
+      getAnkaApi()
+          .delete('card?id=' + cardId)
+              .then(({ data }) => {
+                  resolve(data);
+              })
+              .catch(() => {
+                  reject();
+              });
+  });
+}

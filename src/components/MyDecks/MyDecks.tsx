@@ -18,11 +18,12 @@ import {
     editDeckApi, 
     deleteDeckApi 
 } from '../../lib/api/deckFunctions';
-import { getUserApi } from '../../lib/api/cardFunctions';
+import { getUserApi, removeCardByIdApi } from '../../lib/api/cardFunctions';
 import { NUM_DECKS_PER_PAGE } from '../../common/constants';
 import { DeckType } from '../../common/types';
 
 import styles from './MyDecks.module.css';
+import DeleteDeckDialog from './DeleteDeckDialog';
 
 function MyDecks(): ReactElement {
     const navigate = useNavigate();
@@ -33,6 +34,8 @@ function MyDecks(): ReactElement {
     const [totalPages, setTotalPages] = useState(1);
     const [numDecks, setNumDecks] = useState(0);
     const [editObject, setEditObject] = useState<DeckType | null>(null); 
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deckToDelete, setDeckToDelete] = useState<DeckType | null>(null);
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -48,7 +51,6 @@ function MyDecks(): ReactElement {
     // API call whenever page number is changed
     useEffect(() => {
         getUserDecksApi(pageNumber).then(decks => {
-            console.log(decks)
             setDecks(decks);
         });
     }, [pageNumber]);
@@ -99,11 +101,25 @@ function MyDecks(): ReactElement {
         setDialogOpen(false);
     }
 
+    const handleDeleteDialogOpen = (deckToDelete : DeckType | null) => {
+        setDeckToDelete(deckToDelete);
+        setDeleteDialogOpen(true);
+    }
+
     // Remove a deck
-    const handleDelete = (deck: DeckType) => {
-        deleteDeckApi(deck)
-            .then(() => {
-                setDecks(decks.filter(d => d.id !== deck.id));
+    const handleDelete = (isDeleteAllCards: boolean) => {
+        setDeleteDialogOpen(false);
+        if (!deckToDelete) return;
+
+        deleteDeckApi(deckToDelete)
+            .then((deckDeleted) => {
+                
+                if (isDeleteAllCards) {
+                    deckDeleted.cards.forEach(async (cardId) => {
+                        removeCardByIdApi(cardId)
+                    })
+                }
+
                 const action = (key: any) => (
                     <Fragment>
                         <Button 
@@ -117,6 +133,9 @@ function MyDecks(): ReactElement {
 
                 // Set number of cards, updating totalPages in the useEffect
                 setNumDecks(numDecks - 1);
+                getUserDecksApi(pageNumber).then(decks => {
+                    setDecks(decks);
+                });
                 
                 enqueueSnackbar('Deck deleted!', { 
                     variant: 'error',
@@ -227,7 +246,7 @@ function MyDecks(): ReactElement {
                                         sx={{color: "text.secondary"}} 
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleDelete(deck);
+                                            handleDeleteDialogOpen(deck);
                                         }}   
                                     />
                                 </div>
@@ -252,6 +271,11 @@ function MyDecks(): ReactElement {
                             editHandleClose={handleEditClickClose}
                         />
                     </div> }
+                    <DeleteDeckDialog
+                        deleteDialogOpen={deleteDialogOpen}
+                        setDeleteDialogOpen={setDeleteDialogOpen}
+                        handleDeleteClickClose={handleDelete}
+                    />
                 </div>
             </div>
         </>

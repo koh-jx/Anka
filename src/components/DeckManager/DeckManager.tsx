@@ -76,44 +76,40 @@ function DeckManager(): ReactElement {
     // To close dialog after adding card
     // If cancel the adding, toAdd will be null and the dialog will close
     const handleClickClose = (toAdd: CardType | null) => {
-        if (toAdd) {
-            createCardToDeckApi(toAdd, deckId)
-                .then(result => {
-                    setCards([...cards, result]);
-                    const action = (key: any) => (
-                        <Fragment>
-                            <Button 
-                                sx={{color: "white"}}
-                                onClick={() => { closeSnackbar(key) }}
-                            >
-                                Dismiss
-                            </Button>
-                        </Fragment>
-                    );
-                    
-                    // Set number of cards, updating totalPages in the useEffect
-                    setNumCards(numCards + 1);
-                    
-                    enqueueSnackbar('Flashcard created!', { 
-                        variant: 'success',
-                        autoHideDuration: 1500,
-                        action
-                    });
-                });            
-
-        }
         setDialogOpen(false);
+        if (!toAdd) return;
+        createCardToDeckApi(toAdd, deckId)
+            .then(result => {
+                setCards([...cards, result]);
+                const action = (key: any) => (
+                    <Fragment>
+                        <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                        >
+                            Dismiss
+                        </Button>
+                    </Fragment>
+                );
+                
+                // Set number of cards, updating totalPages in the useEffect
+                setNumCards(numCards + 1);
+                
+                enqueueSnackbar('Flashcard created!', { 
+                    variant: 'success',
+                    autoHideDuration: 1500,
+                    action
+                });
+            });
     }
 
 
     // Delete card
     const handleDeleteClickClose = (isHardDelete: boolean) => {
-        if (deleteObject && isHardDelete) {
-            removeCardApi(deleteObject).then(deleteCard);
-        } else if (deleteObject && !isHardDelete) {
-            removeCardFromDeckApi(deleteObject, deckId).then(deleteCard);
-        }
         setDeleteDialogOpen(false);
+        if (!deleteObject) return;
+        else if (isHardDelete) removeCardApi(deleteObject).then(deleteCard);
+        else removeCardFromDeckApi(deleteObject, deckId).then(deleteCard);
     }
 
     // Called by delete functions to handle data after different types of deletion as seen above
@@ -154,31 +150,30 @@ function DeckManager(): ReactElement {
     }
 
     const handleEditClickClose = (toEdit: CardType | null) => {
-        if (toEdit) {
-            editCardApi(toEdit)
-                .then(result => {
-                    setCards(cards.map(card => card.id === result.id ? result : card));
-                    const action = (key: any) => (
-                        <Fragment>
-                            <Button 
-                              sx={{color: "white"}}
-                              onClick={() => { closeSnackbar(key) }}
-                            >
-                                Dismiss
-                            </Button>
-                        </Fragment>
-                      );
-                  
-                      
-                    enqueueSnackbar('Flashcard edited!', { 
-                        variant: 'info',
-                        autoHideDuration: 1500,
-                        action
-                    });
-                });
-        }
         setEditObject(null);
         setDialogOpen(false);
+        if (!toEdit) return;
+        editCardApi(toEdit)
+            .then(result => {
+                setCards(cards.map(card => card.id === result.id ? result : card));
+                const action = (key: any) => (
+                    <Fragment>
+                        <Button 
+                            sx={{color: "white"}}
+                            onClick={() => { closeSnackbar(key) }}
+                        >
+                            Dismiss
+                        </Button>
+                    </Fragment>
+                    );
+                
+                    
+                enqueueSnackbar('Flashcard edited!', { 
+                    variant: 'info',
+                    autoHideDuration: 1500,
+                    action
+                });
+            });        
     }
 
     const handleDeleteDialogOpen = (card : CardType) => {
