@@ -6,7 +6,7 @@ function Textfield(
     value, setValue, label, onKeyDown = (e) => {}
   } : {
     value     : string,
-    setValue  : React.Dispatch<React.SetStateAction<string>>,
+    setValue  : (value: string) => void,
     label     : string
     onKeyDown ?: (e: any) => void
   }

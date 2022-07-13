@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Alert,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
 } from '@mui/material';
 
@@ -30,13 +31,19 @@ export default function AddDeckDialog(
   }
 ) {
 
-  const [name, setName] = React.useState('');
-  const [showAlert, setShowAlert] = React.useState(false);
+  const MAX_CHARS = 16;
+  const [name, setName] =useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [numCharsLeft, setNumCharsLeft] = useState(MAX_CHARS);
   
   useEffect(() => {
     if (editObject) {
       setName(editObject.name);
+      setNumCharsLeft(MAX_CHARS - editObject.name.length);
+    } else {
+      setNumCharsLeft(MAX_CHARS);
     }
+    
   }
   , [editObject, dialogOpen]);
 
@@ -85,6 +92,13 @@ export default function AddDeckDialog(
     }
   }
 
+  const handleNameChange = (name: string) => {
+    if (name.length <= MAX_CHARS) {
+      setName(name);
+      setNumCharsLeft(MAX_CHARS - name.length);
+    }
+  }
+
   return (
     <>
       <Dialog 
@@ -110,7 +124,10 @@ export default function AddDeckDialog(
           {editObject ? "Edit Deck" : "Create new Deck"}
         </DialogTitle>
         <DialogContent>
-          <Textfield value={name} setValue={setName} label="Name" onKeyDown={keyPressSubmit}/>
+          <Textfield value={name} setValue={handleNameChange} label="Name" onKeyDown={keyPressSubmit}/>
+          <DialogContentText>
+            {numCharsLeft} {numCharsLeft === 1 ? "character" : "characters"} left
+          </DialogContentText>
           {showAlert && (
             <Alert severity="error">Title cannot be empty!</Alert>
           )}

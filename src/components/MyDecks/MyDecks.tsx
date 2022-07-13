@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
 import {
     Button,
     Typography
@@ -186,15 +187,25 @@ function MyDecks(): ReactElement {
                                 className={styles.deck}
                                 onClick={() => gotoDeck(deck)}
                             >
-                                <Typography
-                                    color="text.secondary"
-                                    variant="h4"
+                                <Box
                                     sx={{
-                                        textShadow: '3px 2px 2px rgba(0, 0, 0, 0.25)',
+                                        width: "100%",
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
                                     }}
                                 >
-                                    {deck.name}
-                                </Typography>
+                                    <Typography
+                                        color="text.secondary"
+                                        variant="h4"
+                                        sx={{
+                                            textShadow: '3px 2px 2px rgba(0, 0, 0, 0.25)',
+                                        }}
+                                    >
+                                        {deck.name}
+                                    </Typography>
+                                </Box>
+                                
                                 <Typography
                                     className={styles.subText}
                                     color="text.secondary"
