@@ -5,7 +5,6 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import {
-    Button,
     Typography
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -24,6 +23,7 @@ import { DeckType } from '../../common/types';
 
 import styles from './MyDecks.module.css';
 import DeleteDialog from '../DeleteDialog';
+import { getSnackbarActions } from '../../common/transitions';
 
 function MyDecks(): ReactElement {
     const navigate = useNavigate();
@@ -76,16 +76,7 @@ function MyDecks(): ReactElement {
                 .then((deck) => {
                     setDecks([...decks, deck]);
             
-                    const action = (key: any) => (
-                        <Fragment>
-                            <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                            >
-                                Dismiss
-                            </Button>
-                        </Fragment>
-                    );
+                    const action = getSnackbarActions(closeSnackbar);
 
                     // Set number of cards, updating totalPages in the useEffect
                     setNumDecks(numDecks + 1);
@@ -120,16 +111,7 @@ function MyDecks(): ReactElement {
                     })
                 }
 
-                const action = (key: any) => (
-                    <Fragment>
-                        <Button 
-                        sx={{color: "white"}}
-                        onClick={() => { closeSnackbar(key) }}
-                        >
-                            Dismiss
-                        </Button>
-                    </Fragment>
-                );
+                const action = getSnackbarActions(closeSnackbar);
 
                 // Set number of cards, updating totalPages in the useEffect
                 setNumDecks(numDecks - 1);
@@ -157,16 +139,7 @@ function MyDecks(): ReactElement {
             editDeckApi(toEdit)
                 .then(() => {
                     setDecks(decks.map(deck => deck.id === toEdit.id ? toEdit : deck));
-                    const action = (key: any) => (
-                        <Fragment>
-                            <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                            >
-                                Dismiss
-                            </Button>
-                        </Fragment>
-                    );
+                    const action = getSnackbarActions(closeSnackbar);
                     
                     enqueueSnackbar('Deck edited!', { 
                         variant: 'info',
@@ -276,8 +249,14 @@ function MyDecks(): ReactElement {
                         setDeleteDialogOpen={setDeleteDialogOpen}
                         handleDeleteClickClose={handleDelete}
                         title={"Are you sure?"}
-                        defaultDeleteCaption={"Delete Deck only"}
-                        hardDeleteCaption={"Delete Deck and all Cards in deck"}
+                        defaultDeleteCaption={deckToDelete && deckToDelete.cards.length > 0 
+                            ? "Delete Deck only" 
+                            : "Delete Deck"
+                        }
+                        hardDeleteCaption={deckToDelete && deckToDelete.cards.length > 0 
+                            ? "Delete Deck and all Cards in deck" 
+                            : undefined
+                        }
                     />
                 </div>
             </div>

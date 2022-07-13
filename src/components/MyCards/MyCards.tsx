@@ -2,7 +2,6 @@ import { ReactElement, useState, useEffect, Fragment } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { createCard } from '../Card/CardFactory';
@@ -21,6 +20,7 @@ import {
 import styles from './MyCards.module.css';
 import TopBar from '../TopBar';
 import { NUM_CARDS_PER_PAGE } from '../../common/constants';
+import { getSnackbarActions } from '../../common/transitions';
   
 export default function MyCards(): ReactElement {
     // UseStates
@@ -74,16 +74,7 @@ export default function MyCards(): ReactElement {
         createCardApi(toAdd)
             .then(result => {
                 setCards([...cards, result]);
-                const action = (key: any) => (
-                    <Fragment>
-                        <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                        >
-                            Dismiss
-                        </Button>
-                    </Fragment>
-                );
+                const action = getSnackbarActions(closeSnackbar);
                 
                 // Set number of cards, updating totalPages in the useEffect
                 setNumCards(numCards + 1);
@@ -110,16 +101,7 @@ export default function MyCards(): ReactElement {
             setCards(cards.filter(card => {
                 return cardToDelete.id !== card.id
             }));
-            const action = (key: any) => (
-                <Fragment>
-                    <Button 
-                        sx={{color: "white"}}
-                        onClick={() => { closeSnackbar(key) }}
-                    >
-                        Dismiss
-                    </Button>
-                </Fragment>
-            );
+            const action = getSnackbarActions(closeSnackbar);
     
             // Set number of cards, updating totalPages in the useEffect
             setNumCards(numCards - 1);
@@ -151,18 +133,7 @@ export default function MyCards(): ReactElement {
         editCardApi(toEdit)
             .then(result => {
                 setCards(cards.map(card => card.id === result.id ? result : card));
-                const action = (key: any) => (
-                    <Fragment>
-                        <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                        >
-                            Dismiss
-                        </Button>
-                    </Fragment>
-                    );
-                
-                    
+                const action = getSnackbarActions(closeSnackbar);
                 enqueueSnackbar('Flashcard edited!', { 
                     variant: 'info',
                     autoHideDuration: 1500,

@@ -25,6 +25,7 @@ import {
 import styles from './DeckManager.module.css';
 import TopBar from '../TopBar';
 import { NUM_CARDS_PER_PAGE } from '../../common/constants';
+import { getSnackbarActions } from '../../common/transitions';
   
 function DeckManager(): ReactElement {
     // React Router
@@ -81,20 +82,11 @@ function DeckManager(): ReactElement {
         createCardToDeckApi(toAdd, deckId)
             .then(result => {
                 setCards([...cards, result]);
-                const action = (key: any) => (
-                    <Fragment>
-                        <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                        >
-                            Dismiss
-                        </Button>
-                    </Fragment>
-                );
+                const action = getSnackbarActions(closeSnackbar);
                 
                 // Set number of cards, updating totalPages in the useEffect
                 setNumCards(numCards + 1);
-                
+
                 enqueueSnackbar('Flashcard created!', { 
                     variant: 'success',
                     autoHideDuration: 1500,
@@ -117,16 +109,7 @@ function DeckManager(): ReactElement {
         setCards(cards.filter(card => {
             return card.id !== (deleteObject as CardType).id
         }));
-        const action = (key: any) => (
-            <Fragment>
-                <Button 
-                    sx={{color: "white"}}
-                    onClick={() => { closeSnackbar(key) }}
-                >
-                    Dismiss
-                </Button>
-            </Fragment>
-        );
+        const action = getSnackbarActions(closeSnackbar);
 
         // Set number of cards, updating totalPages in the useEffect
         setNumCards(numCards - 1);
@@ -156,18 +139,7 @@ function DeckManager(): ReactElement {
         editCardApi(toEdit)
             .then(result => {
                 setCards(cards.map(card => card.id === result.id ? result : card));
-                const action = (key: any) => (
-                    <Fragment>
-                        <Button 
-                            sx={{color: "white"}}
-                            onClick={() => { closeSnackbar(key) }}
-                        >
-                            Dismiss
-                        </Button>
-                    </Fragment>
-                    );
-                
-                    
+                const action = getSnackbarActions(closeSnackbar);
                 enqueueSnackbar('Flashcard edited!', { 
                     variant: 'info',
                     autoHideDuration: 1500,
