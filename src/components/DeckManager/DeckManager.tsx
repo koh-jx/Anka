@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { createCard } from '../Card/CardFactory';
@@ -24,6 +23,7 @@ import {
 
 import styles from './DeckManager.module.css';
 import TopBar from '../TopBar';
+import SideBar from './SideBar';
 import { NUM_CARDS_PER_PAGE } from '../../common/constants';
 import { getSnackbarActions } from '../../common/transitions';
   
@@ -213,11 +213,7 @@ function DeckManager(): ReactElement {
                     />
                 </div>
                 <div className={styles.sidebar}>
-                    <Button 
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                    />
+                    <SideBar />
                 </div>
             </div>
         </>
