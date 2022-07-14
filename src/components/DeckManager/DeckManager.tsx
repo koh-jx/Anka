@@ -37,7 +37,7 @@ function DeckManager(): ReactElement {
     const [cards, setCards] = useState<CardType[]>([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [numCards, setNumCards] = useState(1);
+    const [numCards, setNumCards] = useState(0);
     const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteObject, setDeleteObject] = useState<CardType | null>(null);       // The original card before delete (for dialog)
@@ -167,7 +167,9 @@ function DeckManager(): ReactElement {
                     {/* Card displays  */}
                     { cards.map((card) => (
                         <div className={styles.gridItem} key={card.id}>
-                            {createCard(card)}
+                            <div className={styles.card}>
+                                {createCard(card)}
+                            </div>
                             <div className={styles.cardSettings}>
                                 <ModeEditIcon 
                                     className={styles.cardSettingsIcon}
@@ -185,7 +187,7 @@ function DeckManager(): ReactElement {
                     {/* Add Card button  */}
                     { cards.length < NUM_CARDS_PER_PAGE && <div className={styles.gridItem}>
                         <div 
-                            className={styles.card}
+                            className={styles.addCard}
                             onClick={handleClickOpen}
                         >
                             <AddCircleIcon sx={{ 
@@ -213,7 +215,7 @@ function DeckManager(): ReactElement {
                     />
                 </div>
                 <div className={styles.sidebar}>
-                    <SideBar />
+                    <SideBar deckId={deckId} numCards={numCards}/>
                 </div>
             </div>
         </>

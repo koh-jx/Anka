@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react'
 import Flippy, { FrontSide, BackSide } from 'react-flippy';
       
+// Gets the font size, height and width from the parent div container
 const FlippyStyle = {
-    width: '290px',
-    height: '190px',
+    width: '100%',
+    height: '100%',
     textAlign: 'center',
     color: '#FFF',
-    fontFamily: 'sans-serif',
-    fontSize: '30px',
+    fontFamily: 'roboto',
     justifyContent: 'center',
 }
 
@@ -51,17 +51,15 @@ function Card(
     );
 
     return (    
-        <div>
-            <Flippy
-                flipOnClick={true}
-                flipDirection={'horizontal'}
-                style={FlippyStyle}
-            >
-                <DefaultCardContents>
-                  Pack name
-                </DefaultCardContents>
-            </Flippy>
-        </div>
+      <Flippy
+          flipOnClick={true}
+          flipDirection={'horizontal'}
+          style={FlippyStyle}
+      >
+          <DefaultCardContents>
+            Placeholder content
+          </DefaultCardContents>
+      </Flippy>
     );
 }
 

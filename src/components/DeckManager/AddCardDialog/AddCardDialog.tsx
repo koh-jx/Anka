@@ -100,6 +100,7 @@ export default function AddCardDialog(
           // Cant use primary theme here for some reason
           backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
           borderRadius: '10px',
+          height: '90%',
         },
       }}
     >

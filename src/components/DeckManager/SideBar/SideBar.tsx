@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
@@ -10,11 +11,13 @@ import {
   MenuItem,
  } from '@mui/material';
  import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { getDeckApi } from '../../../lib/api/deckFunctions';
 
 // import styles from './SideBar.module.css';
 
-export default function SideBar() {
+export default function SideBar({ deckId, numCards } : { deckId: string, numCards: number }) {
 
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -41,8 +44,11 @@ export default function SideBar() {
     console.info("Test selected cards");
   }
 
-  const testAllCards = () => {
-    console.info("Test all cards");
+  const testAllCards = async () => {
+    const deck = await getDeckApi(deckId);
+    navigate(`/test`, {
+      state: { cardIds: deck.cards }
+    });
   }
 
   return (
@@ -50,8 +56,10 @@ export default function SideBar() {
       <ButtonGroup ref={anchorRef} 
         sx={{ 
           width: "100%", 
-          height: "10%",
+          height: "100%",
+          maxHeight: 50,
         }}
+        disabled={numCards === 0}  
       >
         <Button 
           variant="contained"

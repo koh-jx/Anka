@@ -14,13 +14,19 @@
 }
 
 .gridItem {
-    padding: 10px 20px 0px 20px;
+    margin: 10px 20px 0px 20px;
     text-align: center;
     display: flex;
     flex-direction: column;
 }
 
 .card {
+    width: 290px;
+    height: 190px;
+    font-size: 2rem;
+}
+
+.addCard {
     width: 290px;
     height: 190px;
     background-color: rgb(0, 0, 0, 0.2);
@@ -32,10 +38,9 @@
     cursor: pointer;
     border-radius: 15px;
     box-shadow: inset 0px 0px 20px rgb(0, 0, 0, 0.5);
-    
 }
 
-.card:hover {
+.addCard:hover {
     background-color: rgb(0, 0, 0, 0.3);
 }
 
