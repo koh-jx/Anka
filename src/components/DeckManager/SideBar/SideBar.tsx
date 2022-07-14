@@ -50,7 +50,7 @@ export default function SideBar() {
       <ButtonGroup ref={anchorRef} 
         sx={{ 
           width: "100%", 
-          height: "20%",
+          height: "10%",
         }}
       >
         <Button 
@@ -59,6 +59,7 @@ export default function SideBar() {
           sx={{
             width: "80%",
             fontSize: "2rem",
+            borderRadius: "30px",
           }}
           onClick={handleClick}
         >
@@ -71,6 +72,7 @@ export default function SideBar() {
             sx={{
               width: "20%",
               fontSize: "2rem",
+              borderRadius: "30px",
             }}
           >
             <ArrowDropDownIcon />

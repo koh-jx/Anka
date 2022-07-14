@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import PageNavigation from '../PageNavigation';
+import BackArrow from '../BackArrow';
 
 import styles from './TopBar.module.css';
+
 
 
 export default function TopBar(
@@ -22,20 +22,9 @@ export default function TopBar(
     totalPages: number,
   }
 ) {
-
-    const navigate = useNavigate();
     return (
         <div className={styles.topBar}>
-            { showBackArrow && <ArrowBackIosNewIcon 
-                className={styles.cardSettingsIcon}
-                sx={{
-                    color: "text.secondary",
-                    width: '1.25rem',
-                    height: '2rem',
-                }} 
-                onClick={() => navigate(-1)}
-            /> }
-            { !showBackArrow && <div className={styles.emptyBackArrow}></div> }
+            <BackArrow showBackArrow={showBackArrow}/>
             <Typography
                 color="text.secondary"
                 variant="h5"

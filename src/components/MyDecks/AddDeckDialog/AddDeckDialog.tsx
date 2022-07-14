@@ -12,6 +12,7 @@ import {
 import { DialogTransition } from '../../../common/transitions';
 import { DeckType } from '../../../common/types';
 import Textfield from '../../Textfield';
+import { isConstructorDeclaration } from 'typescript';
 
 
 export default function AddDeckDialog(
@@ -88,7 +89,8 @@ export default function AddDeckDialog(
 
   const keyPressSubmit = (e: any) => {
     if(e.keyCode === 13){
-      addDeck();
+      if (editObject) editDeck();
+      else addDeck();
     }
   }
 
