@@ -7,6 +7,7 @@ import { createCard } from '../Card/CardFactory';
 
 import styles from './TestingPage.module.css';
 import { Button } from '@mui/material';
+import LoadingScreen from '../LoadingScreen';
 
 type LocationInfo = {
     cardIds: string[];
@@ -29,7 +30,9 @@ function TestingPage(): ReactElement {
             .then(cards => {
                 shuffle(cards)
                 setCards(cards);
-                setIsLoading(false);
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 500);
             });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -59,7 +62,7 @@ function TestingPage(): ReactElement {
     return ( 
         <>  
             <BackArrow showBackArrow={true} />
-            {isLoading && <div>Loading...</div>}
+            {isLoading && <LoadingScreen />}
             {!isLoading && (
                 <div className={styles.testContainer}>
                     <div className={styles.testCard}>
