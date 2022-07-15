@@ -29,9 +29,9 @@ export default function AddCardDialog(
   }
 ) {
 
-  const [frontTitle, setFrontTitle] = useState('Front');
+  const [frontTitle, setFrontTitle] = useState('');
   const [frontDescription, setFrontDescription] = useState('');
-  const [backTitle, setBackTitle] = useState('Back');
+  const [backTitle, setBackTitle] = useState('');
   const [backDescription, setBackDescription] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 

@@ -71,7 +71,7 @@ export default function SideBar({ deckId, numCards } : { deckId: string, numCard
           }}
           onClick={handleClick}
         >
-          Start Test
+          Start Review
         </Button>
         <Button
             variant="contained"
@@ -104,12 +104,12 @@ export default function SideBar({ deckId, numCards } : { deckId: string, numCard
                     <MenuItem
                       onClick={testSelectedCards}
                     >
-                      Select Cards to Test
+                      Select Cards to Review
                     </MenuItem>
                     <MenuItem
                       onClick={testAllCards}
                     >
-                      Test using all cards
+                      Review all cards
                     </MenuItem>
                 </MenuList>
               </ClickAwayListener>

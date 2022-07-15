@@ -137,19 +137,31 @@ function TestingPage(): ReactElement {
                         
                     }
                     {hasAnswered &&
-                        <Button 
-                            variant="contained"
-                            color="primary"
-                            sx={{
-                                width: "10%",
-                                height: "10%",
-                                fontSize: "1rem",
-                                borderRadius: "30px",
-                            }}
-                            onClick={handleNext}
-                        >
-                            {(currentIndex < cards.length - 1) ? "Next" : "Finish Test"}
-                        </Button>
+                        <>
+                            <Typography
+                                color="text.secondary"
+                                variant="h5"
+                                sx={{
+                                    paddingBottom: "1rem",
+                                }}
+                            >
+                                Your answer was {answer}.
+                            </Typography>
+                            <div className={styles.bar}>
+                                <Button 
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{
+                                        width: "40%",
+                                        fontSize: "1rem",
+                                        borderRadius: "30px",
+                                    }}
+                                    onClick={handleNext}
+                                >
+                                    {(currentIndex < cards.length - 1) ? "Next" : "Finish Test"}
+                                </Button>
+                            </div>
+                        </>
                     }
                 </div>
                 
