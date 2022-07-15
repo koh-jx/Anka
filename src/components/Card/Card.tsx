@@ -14,11 +14,12 @@ const FlippyStyle = {
 // Card Factory uses this template to create a card
 function Card(
   { 
-    frontCardface, backCardface, tags
+    frontCardface, backCardface, tags, isFlipped,
   } : {
     frontCardface: ReactElement,
     backCardface: ReactElement,
     tags: string[],
+    isFlipped?: boolean,
   }
 ): ReactElement {
 
@@ -52,9 +53,10 @@ function Card(
 
     return (    
       <Flippy
-          flipOnClick={true}
+          flipOnClick={isFlipped !== undefined ? false : true}
           flipDirection={'horizontal'}
           style={FlippyStyle}
+          isFlipped={isFlipped}
       >
           <DefaultCardContents>
             Placeholder content

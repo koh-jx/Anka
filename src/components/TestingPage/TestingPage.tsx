@@ -4,12 +4,13 @@ import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { Button, Typography } from '@mui/material';
 import BackArrow from '../BackArrow';
 import LoadingScreen from '../LoadingScreen';
-import { createCard } from '../Card/CardFactory';
+import { createTestAnswerCard } from '../Card/CardFactory';
 import { CardType } from '../../common/types';
 import { getCardApi } from '../../lib/api/cardFunctions';
 
 import styles from './TestingPage.module.css';
 import "./styles.css";
+import Textfield from '../Textfield';
 
 type LocationInfo = {
     cardIds: string[];
@@ -23,12 +24,16 @@ function TestingPage(): ReactElement {
     const [cards, setCards] = useState<CardType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [answer, setAnswer] = useState("");
+    const [hasAnswered, setHasAnswered] = useState(false);
     const nodeRef = useRef<any>(null);
 
     // Load deck upon mounting
     useEffect(() => {
         setIsLoading(true);
         setCurrentIndex(0);
+        setHasAnswered(false);
+        setAnswer("");
         Promise.all(cardIds.map(cardId => getCardApi(cardId)))
             .then(cards => {
                 shuffle(cards)
@@ -58,8 +63,18 @@ function TestingPage(): ReactElement {
         return array;
     }
 
-    const handleClick = () => {
+    const handleSubmitAnswer = () => {
+        setHasAnswered(true);
+    }
+
+    const keyPressSubmit = (e: any) => {
+        if(e.keyCode === 13) handleSubmitAnswer();
+    }
+
+    const handleNext = () => {
         if (currentIndex < cards.length - 1) {
+            setHasAnswered(false);
+            setAnswer("");
             setCurrentIndex(currentIndex + 1);
         }
     }
@@ -81,7 +96,7 @@ function TestingPage(): ReactElement {
                         }}
                     >
                         {currentIndex + 1} of {cards.length} cards
-                    </Typography> 
+                    </Typography>
                 }
             </div>
             
@@ -98,24 +113,44 @@ function TestingPage(): ReactElement {
                             key={currentIndex}
                         >
                             <div className={styles.testCard} ref={nodeRef}>
-                                {createCard(cards[currentIndex])}
+                                {createTestAnswerCard(cards[currentIndex], hasAnswered, answer)}
                             </div>
                         </CSSTransition>
                     </SwitchTransition>
                     
-                    <Button 
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                            width: "10%",
-                            height: "10%",
-                            fontSize: "1rem",
-                            borderRadius: "30px",
-                        }}
-                        onClick={handleClick}
-                    >
-                        {(currentIndex < cards.length - 1) ? "Next" : "Finish Test"}
-                    </Button>
+                    {!hasAnswered &&
+                        <div className={styles.bar}>
+                            <Textfield value={answer} setValue={setAnswer} label="Your answer" onKeyDown={keyPressSubmit}/>
+                            <Button 
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    width: '40%',
+                                    fontSize: "1rem",
+                                    borderRadius: "30px",
+                                }}
+                                onClick={handleSubmitAnswer}
+                            >
+                                Submit
+                            </Button>
+                        </div>
+                        
+                    }
+                    {hasAnswered &&
+                        <Button 
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                width: "10%",
+                                height: "10%",
+                                fontSize: "1rem",
+                                borderRadius: "30px",
+                            }}
+                            onClick={handleNext}
+                        >
+                            {(currentIndex < cards.length - 1) ? "Next" : "Finish Test"}
+                        </Button>
+                    }
                 </div>
                 
             )}

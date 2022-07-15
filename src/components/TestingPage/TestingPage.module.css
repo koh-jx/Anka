@@ -20,9 +20,20 @@
   margin-bottom: 20px;
 }
 
+.bar {
+  display: flex;
+  flex-direction: row;
+  height: 10%;
+  width: 40%;
+  gap: 10px;
+  align-items: center;
+}
+
 .testTitle {
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);
   width: fit-content;
+  justify-content: center;
+  display: flex;
 }
