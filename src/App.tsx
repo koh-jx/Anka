@@ -12,7 +12,6 @@ import { checkIsLoggedIn } from './lib/api/login';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(checkIsLoggedIn());
 
-
   const setTheme = () => {
     const localMode = window.localStorage.getItem('mode');
     if (localMode) {

@@ -12,8 +12,6 @@ import {
 import { DialogTransition } from '../../../common/transitions';
 import { DeckType } from '../../../common/types';
 import Textfield from '../../Textfield';
-import { isConstructorDeclaration } from 'typescript';
-
 
 export default function AddDeckDialog(
   {

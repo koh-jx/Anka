@@ -13,3 +13,16 @@
     margin: 0px 0px 3% 0px;
     z-index: 1;
 }
+
+.testTopBar {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.testTitle {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: fit-content;
+}

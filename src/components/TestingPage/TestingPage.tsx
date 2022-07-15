@@ -1,13 +1,15 @@
-import { ReactElement, useState, useEffect } from 'react'
+import { ReactElement, useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom';
+import { SwitchTransition, CSSTransition } from "react-transition-group";
+import { Button, Typography } from '@mui/material';
 import BackArrow from '../BackArrow';
+import LoadingScreen from '../LoadingScreen';
+import { createCard } from '../Card/CardFactory';
 import { CardType } from '../../common/types';
 import { getCardApi } from '../../lib/api/cardFunctions';
-import { createCard } from '../Card/CardFactory';
 
 import styles from './TestingPage.module.css';
-import { Button } from '@mui/material';
-import LoadingScreen from '../LoadingScreen';
+import "./styles.css";
 
 type LocationInfo = {
     cardIds: string[];
@@ -21,6 +23,7 @@ function TestingPage(): ReactElement {
     const [cards, setCards] = useState<CardType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const nodeRef = useRef<any>(null);
 
     // Load deck upon mounting
     useEffect(() => {
@@ -56,18 +59,50 @@ function TestingPage(): ReactElement {
     }
 
     const handleClick = () => {
-        if (currentIndex < cards.length - 1) setCurrentIndex(currentIndex + 1);
+        if (currentIndex < cards.length - 1) {
+            setCurrentIndex(currentIndex + 1);
+        }
     }
 
     return ( 
         <>  
-            <BackArrow showBackArrow={true} />
+            <div className={styles.testTopBar}>
+                <BackArrow showBackArrow={true} />
+                {!isLoading && 
+                    <Typography
+                        color="text.secondary"
+                        className={styles.testTitle}
+                        variant="h5"
+                        sx={{
+                            width: '20%',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        {currentIndex + 1} of {cards.length} cards
+                    </Typography> 
+                }
+            </div>
+            
             {isLoading && <LoadingScreen />}
             {!isLoading && (
                 <div className={styles.testContainer}>
-                    <div className={styles.testCard}>
-                        {createCard(cards[currentIndex])}
-                    </div>
+                    <SwitchTransition mode="out-in">
+                        <CSSTransition
+                            nodeRef={nodeRef}
+                            addEndListener={(done: () => void) => {
+                            nodeRef.current?.addEventListener("transitionend", done, false);
+                            }}
+                            classNames="fade"
+                            key={currentIndex}
+                        >
+                            <div className={styles.testCard} ref={nodeRef}>
+                                {createCard(cards[currentIndex])}
+                            </div>
+                        </CSSTransition>
+                    </SwitchTransition>
+                    
                     <Button 
                         variant="contained"
                         color="primary"
