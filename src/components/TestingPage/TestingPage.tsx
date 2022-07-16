@@ -2,11 +2,13 @@ import { ReactElement, useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom';
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { Button, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import BackArrow from '../BackArrow';
 import LoadingScreen from '../LoadingScreen';
 import { createTestAnswerCard } from '../Card/CardFactory';
 import { CardType } from '../../common/types';
 import { getCardApi } from '../../lib/api/cardFunctions';
+import { getSnackbarActions } from '../../common/transitions';
 
 import styles from './TestingPage.module.css';
 import "./styles.css";
@@ -20,13 +22,17 @@ function TestingPage(): ReactElement {
     // React Router
     const location = useLocation();
     const cardIds = (location.state as LocationInfo).cardIds;
+
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     
     const [cards, setCards] = useState<CardType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answer, setAnswer] = useState("");
     const [hasAnswered, setHasAnswered] = useState(false);
+    const [isFlipped, setIsFlipped] = useState(false);
     const nodeRef = useRef<any>(null);
+    const firstErrorClickRef = useRef<boolean>(true);
 
     // Load deck upon mounting
     useEffect(() => {
@@ -65,6 +71,7 @@ function TestingPage(): ReactElement {
 
     const handleSubmitAnswer = () => {
         setHasAnswered(true);
+        setIsFlipped(true);
     }
 
     const keyPressSubmit = (e: any) => {
@@ -74,8 +81,23 @@ function TestingPage(): ReactElement {
     const handleNext = () => {
         if (currentIndex < cards.length - 1) {
             setHasAnswered(false);
+            setIsFlipped(false);    
             setAnswer("");
             setCurrentIndex(currentIndex + 1);
+        }
+    }
+
+    const handleClick = () => {
+        if (hasAnswered) {
+            setIsFlipped(!isFlipped);
+        } else if (firstErrorClickRef.current) {
+            const action = getSnackbarActions(closeSnackbar);
+            firstErrorClickRef.current = false;
+            enqueueSnackbar('Submit your answer first!', { 
+                variant: 'error',
+                autoHideDuration: 1500,
+                action
+            });
         }
     }
 
@@ -112,8 +134,16 @@ function TestingPage(): ReactElement {
                             classNames="fade"
                             key={currentIndex}
                         >
-                            <div className={styles.testCard} ref={nodeRef}>
-                                {createTestAnswerCard(cards[currentIndex], hasAnswered, answer)}
+                            <div 
+                                className={
+                                    hasAnswered
+                                        ? styles.testCard
+                                        : [styles.testCard, styles.testCardNotAnswered].join(' ')
+                                } 
+                                ref={nodeRef}
+                                onClick={handleClick}
+                            >
+                                {createTestAnswerCard(cards[currentIndex], isFlipped, answer)}
                             </div>
                         </CSSTransition>
                     </SwitchTransition>
