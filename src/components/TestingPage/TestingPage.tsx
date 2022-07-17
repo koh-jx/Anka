@@ -13,6 +13,7 @@ import { getSnackbarActions } from '../../common/transitions';
 import styles from './TestingPage.module.css';
 import "./styles.css";
 import Textfield from '../Textfield';
+import SelfEvaluationBar from './SelfEvaluationBar';
 
 type LocationInfo = {
     cardIds: string[];
@@ -31,6 +32,8 @@ function TestingPage(): ReactElement {
     const [answer, setAnswer] = useState("");
     const [hasAnswered, setHasAnswered] = useState(false);
     const [isFlipped, setIsFlipped] = useState(false);
+    const [selfEvaluation, setSelfEvaluation] = useState(-1);
+    const [hasEvaluated, setHasEvaluated] = useState(false);
     const nodeRef = useRef<any>(null);
     const firstErrorClickRef = useRef<boolean>(true);
 
@@ -84,10 +87,12 @@ function TestingPage(): ReactElement {
             setIsFlipped(false);    
             setAnswer("");
             setCurrentIndex(currentIndex + 1);
+            setSelfEvaluation(-1);
+            setHasEvaluated(false);
         }
     }
 
-    const handleClick = () => {
+    const handleClickCard = () => {
         if (hasAnswered) {
             setIsFlipped(!isFlipped);
         } else if (firstErrorClickRef.current) {
@@ -141,7 +146,7 @@ function TestingPage(): ReactElement {
                                         : [styles.testCard, styles.testCardNotAnswered].join(' ')
                                 } 
                                 ref={nodeRef}
-                                onClick={handleClick}
+                                onClick={handleClickCard}
                             >
                                 {createTestAnswerCard(cards[currentIndex], isFlipped, answer)}
                             </div>
@@ -178,6 +183,11 @@ function TestingPage(): ReactElement {
                                 Your answer was {answer}.
                             </Typography>
                             <div className={styles.bar}>
+                                <SelfEvaluationBar 
+                                    selfEvaluation={selfEvaluation} 
+                                    setSelfEvaluation={setSelfEvaluation} 
+                                    setHasEvaluated={setHasEvaluated} 
+                                />
                                 <Button 
                                     variant="contained"
                                     color="primary"
@@ -187,6 +197,7 @@ function TestingPage(): ReactElement {
                                         borderRadius: "30px",
                                     }}
                                     onClick={handleNext}
+                                    disabled={!hasEvaluated}
                                 >
                                     {(currentIndex < cards.length - 1) ? "Next" : "Finish Test"}
                                 </Button>

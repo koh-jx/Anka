@@ -1,0 +1,61 @@
+.evaluationBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.2);
+    border-radius: 30px;
+}
+
+.button {
+    background-color: rgb(0, 0, 0, 0.2);
+    border-radius: 30px;
+    transition: 0.25s;
+}
+
+.button:active{
+    transform: scale(1.2);
+}
+
+.failure:hover {
+    color: rgb(208, 67, 35);
+}
+
+.failureClicked {
+    color: rgb(208, 67, 35);
+}
+
+.midWarning:hover {
+    color: rgb(232,116,18);
+}
+
+.midWarningClicked {
+    color: rgb(232,116,18);
+}
+
+.warning:hover {
+    color: rgb(255, 165, 0);
+}
+
+.warningClicked {
+    color: rgb(255, 165, 0);
+}
+
+.midSuccess:hover {
+    color: rgb(165,200,51);
+}
+
+.midSuccessClicked {
+    color: rgb(165,200,51);
+}
+
+.success:hover {
+    color: rgb(101, 219, 101);
+}
+
+.successClicked {
+    color: rgb(101, 219, 101);
+}
+
