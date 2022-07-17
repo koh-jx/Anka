@@ -102,11 +102,13 @@ export default function SideBar({ deckId, numCards } : { deckId: string, numCard
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" autoFocusItem>
                     <MenuItem
+                      sx={{ color: "black" }}
                       onClick={testSelectedCards}
                     >
                       Select Cards to Review
                     </MenuItem>
                     <MenuItem
+                      sx={{ color: "black" }}
                       onClick={testAllCards}
                     >
                       Review all cards

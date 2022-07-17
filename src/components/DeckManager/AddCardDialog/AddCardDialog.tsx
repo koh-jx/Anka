@@ -76,9 +76,9 @@ export default function AddCardDialog(
   }
 
   const resetDialog = () => {
-    setFrontTitle('Front');
+    setFrontTitle('');
     setFrontDescription('');
-    setBackTitle('Back');
+    setBackTitle('');
     setBackDescription('');
     setTags([]);
   }
