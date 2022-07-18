@@ -19,8 +19,8 @@ export type CardType = {
         backDescription: string;
     };
     // Only not null if the card has already been created (ie retrieved from the database)
-    dateCreated?: Date;
-    lastReviewedDate?: Date;
+    dateCreated?: string;
+    lastReviewedDate?: string;
     
     // The SM2-related scores are handled by the backend and is thus not needed here
     // consecutiveRecallCount?: number;

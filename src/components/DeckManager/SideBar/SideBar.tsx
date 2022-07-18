@@ -1,17 +1,10 @@
-import { ReactElement, useState, useRef } from 'react';
+import { ReactElement, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
-  Paper,
-  Grow,
-  ClickAwayListener,
-  MenuList,
-  Popper,
-  MenuItem,
   Typography,
  } from '@mui/material';
- import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { getDeckApi } from '../../../lib/api/deckFunctions';
 
 // import styles from './SideBar.module.css';
@@ -22,23 +15,7 @@ export default function SideBar(
 ) : ReactElement {
 
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event: Event) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   const startDailyReview = async () => {
     const deck = await getDeckApi(deckId);
@@ -85,7 +62,7 @@ export default function SideBar(
         </Button>
         <Button
             variant="contained"
-            onClick={handleToggle}
+            onClick={testAllCards}
             color="primary"
             sx={{
               width: "50%",
@@ -94,7 +71,7 @@ export default function SideBar(
             }}
           >
             Practice All Cards
-          </Button>
+        </Button>
       </ButtonGroup>
       <Typography
           color="text.secondary"

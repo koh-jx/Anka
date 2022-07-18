@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FmdBadIcon from '@mui/icons-material/FmdBad';
 import { useSnackbar } from 'notistack';
 
 import { createCard } from '../Card/CardFactory';
@@ -177,6 +178,11 @@ function DeckManager(): ReactElement {
                     { cards.map((card) => (
                         <div className={styles.gridItem} key={card.id}>
                             <div className={styles.card}>
+                                { isDueForReview(card) && 
+                                    <div className={styles.dueForReview}>
+                                        <FmdBadIcon />
+                                        Review required
+                                    </div> }
                                 {createCard(card)}
                             </div>
                             <div className={styles.cardSettings}>

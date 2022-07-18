@@ -21,6 +21,7 @@
 }
 
 .card {
+    position: relative;
     width: 290px;
     height: 190px;
     font-size: 2rem;
@@ -78,4 +79,15 @@
 .topBar {
     display: flex;
     flex-direction: row;
+}
+
+.dueForReview {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 10px;
+    z-index: 2;
+    font-size: 0.8rem;
 }

@@ -152,11 +152,11 @@ export const reviewCardApi = async (cardId: string, selfEvaluation: number) : Pr
 
 export const isDueForReview = (card: CardType) => {
   if (!card.lastReviewedDate) {
-      return true;
+    return true;
   } else if (card.interval) {
-      const daysSinceLastReview = (new Date().getTime() - card.lastReviewedDate.getTime()) / (1000 * 60 * 60 * 24);
-      return daysSinceLastReview >= card.interval;
+    const daysSinceLastReview = (new Date().getTime() - new Date(card.lastReviewedDate).getTime()) / (1000 * 60 * 60 * 24);
+    return daysSinceLastReview >= card.interval;
   } else {
-      return false;
+    return false;
   }
 }
