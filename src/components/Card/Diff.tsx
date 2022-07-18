@@ -9,9 +9,9 @@ function Diff({  userAnswer, actualAnswer } : { userAnswer: string, actualAnswer
             {
                 Array.prototype.map.call(actualAnswer, (letter, index) => {
                     if (lowercaseAnswer[index] === lowercaseActualAnswer[index]) {
-                        return <span className={styles.correct}>{letter}</span>
+                        return <span key={index} className={styles.correct}>{letter}</span>
                     } else {
-                        return <span className={styles.incorrect}>{letter}</span>
+                        return <span key={index} className={styles.incorrect}>{letter}</span>
                     }
                 })
             }

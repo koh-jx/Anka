@@ -7,7 +7,7 @@ import BackArrow from '../BackArrow';
 import LoadingScreen from '../LoadingScreen';
 import { createTestAnswerCard } from '../Card/CardFactory';
 import { CardType } from '../../common/types';
-import { getCardApi } from '../../lib/api/cardFunctions';
+import { getCardApi, reviewCardApi } from '../../lib/api/cardFunctions';
 import { getSnackbarActions } from '../../common/transitions';
 
 import styles from './TestingPage.module.css';
@@ -82,6 +82,7 @@ function TestingPage(): ReactElement {
     }
 
     const handleNext = () => {
+        reviewCardApi(cards[currentIndex].id, selfEvaluation);
         if (currentIndex < cards.length - 1) {
             setHasAnswered(false);
             setIsFlipped(false);    

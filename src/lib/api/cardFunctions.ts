@@ -132,3 +132,22 @@ export const removeCardByIdApi = async (cardId: string): Promise<CardType[]> => 
               });
   });
 }
+
+
+export const reviewCardApi = async (cardId: string, selfEvaluation: number) : Promise<CardType> => {
+  return new Promise((resolve, reject) => {
+    getAnkaApi()
+      .patch('/card/review', {
+        id: cardId,
+        selfEvaluation: selfEvaluation,
+      })
+      .then(({ data }) => {
+        console.log(data);
+        resolve(data);
+      })
+      .catch(() => {
+        reject();
+      });
+  }
+);
+}
