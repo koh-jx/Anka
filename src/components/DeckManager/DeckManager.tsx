@@ -12,7 +12,7 @@ import TopBar from '../TopBar';
 import SideBar from './SideBar';
 
 import { 
-    getCardApi,
+    isDueForReview,
     editCardApi,
     removeCardApi, 
 } from '../../lib/api/cardFunctions';
@@ -20,9 +20,10 @@ import {
     createCardToDeckApi,
     removeCardFromDeckApi,
     getCardsFromDeckIdApi,
+    getCardsToReviewFromDeckApi,
     getDeckApi,
 } from '../../lib/api/deckFunctions';
-import { CardType, DeckType, isDueForReview } from '../../common/types';
+import { CardType, DeckType } from '../../common/types';
 import { NUM_CARDS_PER_PAGE } from '../../common/constants';
 import { getSnackbarActions } from '../../common/transitions';
 
@@ -50,16 +51,10 @@ function DeckManager(): ReactElement {
     useEffect(() => {
         getDeckApi(deckId).then(deck => {
             setNumCards(deck.cards.length);
-            // Get all cards and check if they are due for review
-            let dueForReview = 0;
-            Promise.all(deck.cards.map(cardId => getCardApi(cardId).then(
-                card => {
-                    if(isDueForReview(card)) dueForReview += 1;
-                }
-            ))).then(() => {
-                setDueForReviewCount(dueForReview);
-            });
         })
+        getCardsToReviewFromDeckApi(deckId).then(cards => {
+            setDueForReviewCount(cards.length);
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

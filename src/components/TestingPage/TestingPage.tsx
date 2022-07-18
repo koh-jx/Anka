@@ -1,28 +1,37 @@
 import { ReactElement, useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom';
+
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { Button, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
+
 import BackArrow from '../BackArrow';
 import LoadingScreen from '../LoadingScreen';
+import Textfield from '../Textfield';
+import SelfEvaluationBar from './SelfEvaluationBar';
 import { createTestAnswerCard } from '../Card/CardFactory';
-import { CardType } from '../../common/types';
+
+
 import { getCardApi, reviewCardApi } from '../../lib/api/cardFunctions';
+import { getDeckApi, getCardsToReviewFromDeckApi } from '../../lib/api/deckFunctions';
+import { CardType } from '../../common/types';
 import { getSnackbarActions } from '../../common/transitions';
+import { MIN_LOADING_TIME } from '../../common/constants';
 
 import styles from './TestingPage.module.css';
 import "./styles.css";
-import Textfield from '../Textfield';
-import SelfEvaluationBar from './SelfEvaluationBar';
+
 
 type LocationInfo = {
-    cardIds: string[];
+    deckId: string;
+    isDailyReview: boolean;
 }
 
 function TestingPage(): ReactElement {
     // React Router
     const location = useLocation();
-    const cardIds = (location.state as LocationInfo).cardIds;
+    const deckId = (location.state as LocationInfo).deckId;
+    const isDailyReview = (location.state as LocationInfo).isDailyReview;
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     
@@ -34,6 +43,7 @@ function TestingPage(): ReactElement {
     const [isFlipped, setIsFlipped] = useState(false);
     const [selfEvaluation, setSelfEvaluation] = useState(-1);
     const [hasEvaluated, setHasEvaluated] = useState(false);
+    const [isCorrect, setIsCorrect] = useState(false);
     const nodeRef = useRef<any>(null);
     const firstErrorClickRef = useRef<boolean>(true);
 
@@ -43,14 +53,28 @@ function TestingPage(): ReactElement {
         setCurrentIndex(0);
         setHasAnswered(false);
         setAnswer("");
-        Promise.all(cardIds.map(cardId => getCardApi(cardId)))
+        if (isDailyReview) {
+            getCardsToReviewFromDeckApi(deckId)
             .then(cards => {
                 shuffle(cards)
                 setCards(cards);
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 500);
+                }, MIN_LOADING_TIME);
             });
+        } else {
+            getDeckApi(deckId).then(deck => {
+                Promise.all(deck.cards.map(cardId => getCardApi(cardId)))
+                .then(cards => {
+                    shuffle(cards)
+                    setCards(cards);
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, MIN_LOADING_TIME);
+                });
+            })
+            
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -75,6 +99,7 @@ function TestingPage(): ReactElement {
     const handleSubmitAnswer = () => {
         setHasAnswered(true);
         setIsFlipped(true);
+        setIsCorrect(cards[currentIndex].backCardFaceProps.backTitle === answer);
     }
 
     const keyPressSubmit = (e: any) => {
@@ -82,7 +107,7 @@ function TestingPage(): ReactElement {
     }
 
     const handleNext = () => {
-        reviewCardApi(cards[currentIndex].id, selfEvaluation);
+        if (isDailyReview) reviewCardApi(cards[currentIndex].id, selfEvaluation);
         if (currentIndex < cards.length - 1) {
             setHasAnswered(false);
             setIsFlipped(false);    
@@ -123,7 +148,7 @@ function TestingPage(): ReactElement {
                             whiteSpace: 'nowrap',
                         }}
                     >
-                        {currentIndex + 1} of {cards.length} cards
+                        {currentIndex + 1} of {cards.length} {cards.length === 1 ? "card" : "cards"}
                     </Typography>
                 }
             </div>
@@ -184,11 +209,14 @@ function TestingPage(): ReactElement {
                                 Your answer was {answer}.
                             </Typography>
                             <div className={styles.bar}>
-                                <SelfEvaluationBar 
-                                    selfEvaluation={selfEvaluation} 
-                                    setSelfEvaluation={setSelfEvaluation} 
-                                    setHasEvaluated={setHasEvaluated} 
-                                />
+                                { isDailyReview && 
+                                    <SelfEvaluationBar
+                                        selfEvaluation={selfEvaluation} 
+                                        setSelfEvaluation={setSelfEvaluation} 
+                                        setHasEvaluated={setHasEvaluated} 
+                                        isCorrect={isCorrect}
+                                    /> 
+                                }
                                 <Button 
                                     variant="contained"
                                     color="primary"
@@ -198,7 +226,7 @@ function TestingPage(): ReactElement {
                                         borderRadius: "30px",
                                     }}
                                     onClick={handleNext}
-                                    disabled={!hasEvaluated}
+                                    disabled={isDailyReview && !hasEvaluated}
                                 >
                                     {(currentIndex < cards.length - 1) ? "Next" : "Finish Test"}
                                 </Button>

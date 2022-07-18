@@ -11,16 +11,20 @@ export default function SelfEvaluationBar(
     selfEvaluation,
     setSelfEvaluation,
     setHasEvaluated,
+    isCorrect,
   }
   : {
     selfEvaluation: number;
     setSelfEvaluation: (selfEvaluation: number) => void;
     setHasEvaluated: (hasEvaluated: boolean) => void;
+    isCorrect: boolean;
   }
 ) {
 
   const handleSelfEvaluation = (newSelfEvaluation: number) => {
-    if (selfEvaluation === newSelfEvaluation) {
+    if (!isCorrect && newSelfEvaluation >= 3) {
+      return;
+    } else if (selfEvaluation === newSelfEvaluation) {
       setSelfEvaluation(-1);
       setHasEvaluated(false);
     } else {
@@ -43,15 +47,27 @@ export default function SelfEvaluationBar(
         onClick={() => handleSelfEvaluation(2)}
       />
       <SentimentSatisfiedIcon 
-        className={[styles.warning, styles.button, selfEvaluation === 3 ? styles.warningClicked : null].join(' ')}
+        className={[
+          isCorrect ? styles.warning : styles.wrongAnswer,
+          isCorrect && styles.button, 
+          selfEvaluation === 3 && styles.warningClicked
+        ].join(' ')}
         onClick={() => handleSelfEvaluation(3)}
       />
       <SentimentSatisfiedAltIcon 
-        className={[styles.midSuccess, styles.button, selfEvaluation === 4 ? styles.midSuccessClicked : null].join(' ')} 
+        className={[
+          isCorrect ? styles.midSuccess : styles.wrongAnswer, 
+          isCorrect && styles.button, 
+          selfEvaluation === 4 && styles.midSuccessClicked
+        ].join(' ')} 
         onClick={() => handleSelfEvaluation(4)}
       />
       <SentimentVerySatisfiedIcon 
-        className={[styles.success, styles.button, selfEvaluation === 5 ? styles.successClicked : null].join(' ')} 
+        className={[
+          isCorrect ? styles.success : styles.wrongAnswer, 
+          isCorrect && styles.button, 
+          selfEvaluation === 5 && styles.successClicked
+        ].join(' ')} 
         onClick={() => handleSelfEvaluation(5)}
       />
     </div>

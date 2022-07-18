@@ -25,10 +25,6 @@ export default function SideBar(
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = () => {
-    console.info(`Start test`);
-  };
-
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -44,14 +40,23 @@ export default function SideBar(
     setOpen(false);
   };
 
-  const testSelectedCards = () => {
-    console.info("Test selected cards");
-  }
+  const startDailyReview = async () => {
+    const deck = await getDeckApi(deckId);
+    navigate(`/test`, {
+      state: { 
+        deckId: deck.id,
+        isDailyReview: true,
+      }
+    });
+  };
 
   const testAllCards = async () => {
     const deck = await getDeckApi(deckId);
     navigate(`/test`, {
-      state: { cardIds: deck.cards }
+      state: { 
+        deckId: deck.id,
+        isDailyReview: false,
+      }
     });
   }
 
@@ -73,7 +78,8 @@ export default function SideBar(
             fontSize: "1.8rem",
             borderRadius: "30px",
           }}
-          onClick={handleClick}
+          onClick={startDailyReview}
+          disabled={dueForReviewCount === 0}
         >
           Start Daily Review
         </Button>
@@ -105,12 +111,12 @@ export default function SideBar(
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" autoFocusItem>
-                    <MenuItem
+                    {/* <MenuItem
                       sx={{ color: "black" }}
                       onClick={testSelectedCards}
                     >
                       Select Cards to Practice
-                    </MenuItem>
+                    </MenuItem> */}
                     <MenuItem
                       sx={{ color: "black" }}
                       onClick={testAllCards}

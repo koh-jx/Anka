@@ -46,6 +46,7 @@
   width: 40%;
   gap: 10px;
   align-items: center;
+  justify-content: center;
 }
 
 .testTitle {

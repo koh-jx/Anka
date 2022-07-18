@@ -55,9 +55,7 @@ export const getUserCardsApi = async (page: number): Promise<CardType[]> =>
 
 // Get deck from a given array of ids
 export const getDeckFromArrayApi = async (cards: string[]): Promise<CardType[]> => {
-    return await Promise.all(
-        cards.map(async (card) => getCardApi(card))
-    );
+    return Promise.all(cards.map((card) => getCardApi(card)));
 };
 
 // Create new card
@@ -150,4 +148,15 @@ export const reviewCardApi = async (cardId: string, selfEvaluation: number) : Pr
       });
   }
 );
+}
+
+export const isDueForReview = (card: CardType) => {
+  if (!card.lastReviewedDate) {
+      return true;
+  } else if (card.interval) {
+      const daysSinceLastReview = (new Date().getTime() - card.lastReviewedDate.getTime()) / (1000 * 60 * 60 * 24);
+      return daysSinceLastReview >= card.interval;
+  } else {
+      return false;
+  }
 }
