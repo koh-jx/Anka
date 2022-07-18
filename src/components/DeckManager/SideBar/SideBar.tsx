@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { ReactElement, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -9,13 +9,17 @@ import {
   MenuList,
   Popper,
   MenuItem,
+  Typography,
  } from '@mui/material';
  import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { getDeckApi } from '../../../lib/api/deckFunctions';
 
 // import styles from './SideBar.module.css';
 
-export default function SideBar({ deckId, numCards } : { deckId: string, numCards: number }) {
+export default function SideBar(
+  { deckId, numCards, dueForReviewCount } 
+  : { deckId: string, numCards: number, dueForReviewCount: number }
+) : ReactElement {
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -66,12 +70,12 @@ export default function SideBar({ deckId, numCards } : { deckId: string, numCard
           color="primary"
           sx={{
             width: "80%",
-            fontSize: "2rem",
+            fontSize: "1.8rem",
             borderRadius: "30px",
           }}
           onClick={handleClick}
         >
-          Start Review
+          Start Daily Review
         </Button>
         <Button
             variant="contained"
@@ -105,13 +109,13 @@ export default function SideBar({ deckId, numCards } : { deckId: string, numCard
                       sx={{ color: "black" }}
                       onClick={testSelectedCards}
                     >
-                      Select Cards to Review
+                      Select Cards to Practice
                     </MenuItem>
                     <MenuItem
                       sx={{ color: "black" }}
                       onClick={testAllCards}
                     >
-                      Review all cards
+                      Practice all cards
                     </MenuItem>
                 </MenuList>
               </ClickAwayListener>
@@ -119,6 +123,15 @@ export default function SideBar({ deckId, numCards } : { deckId: string, numCard
           </Grow>
         )}
       </Popper>
+      <Typography
+          color="text.secondary"
+          variant="h6"
+          sx={{
+            padding: "1rem",
+          }}
+      >
+          You have {dueForReviewCount} {dueForReviewCount === 1 ? "card" : "cards"} pending review
+      </Typography>
     </>
   );
 }

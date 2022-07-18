@@ -25,7 +25,19 @@ export type CardType = {
     // The SM2-related scores are handled by the backend and is thus not needed here
     // consecutiveRecallCount?: number;
     // easinessFactor?: number;
-    // interval?: number;
+    interval?: number;
+}
+
+export const isDueForReview = (card: CardType) => {
+    if (!card.lastReviewedDate) {
+        return true;
+    } else if (card.interval) {
+        const daysSinceLastReview = (new Date().getTime() - card.lastReviewedDate.getTime()) / (1000 * 60 * 60 * 24);
+        console.log(daysSinceLastReview);
+        return daysSinceLastReview >= card.interval;
+    } else {
+        return false;
+    }
 }
 
 export type DeckType = {
