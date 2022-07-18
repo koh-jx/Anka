@@ -74,8 +74,8 @@ export default function SideBar(
           variant="contained"
           color="primary"
           sx={{
-            width: "80%",
-            fontSize: "1.8rem",
+            width: "50%",
+            fontSize: "1.2rem",
             borderRadius: "30px",
           }}
           onClick={startDailyReview}
@@ -88,47 +88,14 @@ export default function SideBar(
             onClick={handleToggle}
             color="primary"
             sx={{
-              width: "20%",
-              fontSize: "2rem",
+              width: "50%",
+              fontSize: "1.2rem",
               borderRadius: "30px",
             }}
           >
-            <ArrowDropDownIcon />
+            Practice All Cards
           </Button>
       </ButtonGroup>
-      <Popper
-        open={open}
-        anchorEl={anchorRef.current}
-        placement="bottom-end"
-        transition
-        disablePortal
-      >
-        {({ TransitionProps }) => (
-          <Grow
-            {...TransitionProps}
-            style={{ transformOrigin: 'center top' }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="split-button-menu" autoFocusItem>
-                    {/* <MenuItem
-                      sx={{ color: "black" }}
-                      onClick={testSelectedCards}
-                    >
-                      Select Cards to Practice
-                    </MenuItem> */}
-                    <MenuItem
-                      sx={{ color: "black" }}
-                      onClick={testAllCards}
-                    >
-                      Practice all cards
-                    </MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
       <Typography
           color="text.secondary"
           variant="h6"
