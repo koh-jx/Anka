@@ -199,15 +199,32 @@ function TestingPage(): ReactElement {
                     }
                     {hasAnswered &&
                         <>
-                            <Typography
-                                color="text.secondary"
-                                variant="h5"
-                                sx={{
-                                    paddingBottom: "1rem",
-                                }}
-                            >
-                                Your answer was {answer}.
-                            </Typography>
+                            <div className={styles.bar}>
+                                <Typography
+                                    color="text.secondary"
+                                    variant="h5"
+                                    sx={{
+                                        marginBottom: "1rem",
+                                    }}
+                                >
+                                    Your answer was {answer}.
+                                </Typography>
+                                {!isCorrect && isDailyReview && <Button
+                                    variant="text"
+                                    sx={{
+                                        color: "rgb(0,0,0,0.3)",
+                                        marginLeft: "1rem",
+                                        marginBottom: "1rem",
+                                    }}
+                                    onClick={() => setIsCorrect(true)}
+                                >
+                                    <Typography
+                                        variant="subtitle2"
+                                    >
+                                    My answer was correct
+                                </Typography>
+                                </Button> }
+                            </div>
                             <div className={styles.bar}>
                                 { isDailyReview && 
                                     <SelfEvaluationBar

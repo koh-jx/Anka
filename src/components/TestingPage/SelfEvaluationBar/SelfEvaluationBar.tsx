@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
@@ -6,7 +7,7 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 
 import styles from "./SelfEvaluationBar.module.css";
 
-export default function SelfEvaluationBar(
+export default function SelfEvaluationBar (
   {
     selfEvaluation,
     setSelfEvaluation,
@@ -19,7 +20,7 @@ export default function SelfEvaluationBar(
     setHasEvaluated: (hasEvaluated: boolean) => void;
     isCorrect: boolean;
   }
-) {
+) : ReactElement {
 
   const handleSelfEvaluation = (newSelfEvaluation: number) => {
     if (!isCorrect && newSelfEvaluation >= 3) {
