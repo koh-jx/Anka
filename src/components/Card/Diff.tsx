@@ -7,13 +7,17 @@ function Diff({  userAnswer, actualAnswer } : { userAnswer: string, actualAnswer
     return (    
         <div className={styles.diff}>
             {
-                Array.prototype.map.call(actualAnswer, (letter, index) => {
-                    if (lowercaseAnswer[index] === lowercaseActualAnswer[index]) {
-                        return <span key={index} className={styles.correct}>{letter}</span>
-                    } else {
-                        return <span key={index} className={styles.incorrect}>{letter}</span>
+                <>
+                    { 
+                        Array.prototype.map.call(actualAnswer, (letter, index) => {
+                            if (lowercaseAnswer[index] === lowercaseActualAnswer[index]) {
+                                return <span key={index} className={styles.correct}>{letter}</span>
+                            } else {
+                                return <span key={index} className={styles.incorrect}>{letter}</span>
+                            }
+                        })
                     }
-                })
+                </>
             }
         </div>
     )
