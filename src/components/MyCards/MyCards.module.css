@@ -23,6 +23,12 @@
 .card {
     width: 290px;
     height: 190px;
+    font-size: 2rem;
+}
+
+.addCard {
+    width: 290px;
+    height: 190px;
     background-color: rgb(0, 0, 0, 0.2);
     font-size: 30px;
     justify-content: center; 
@@ -35,7 +41,7 @@
     
 }
 
-.card:hover {
+.addCard:hover {
     background-color: rgb(0, 0, 0, 0.3);
 }
 

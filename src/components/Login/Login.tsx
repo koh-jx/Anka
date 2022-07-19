@@ -1,4 +1,5 @@
 import React, { ReactElement, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import {
   Alert,
   Button,
@@ -20,6 +21,7 @@ import styles from './Login.module.css'
 function Login(
   { setIsLoggedIn } : { setIsLoggedIn : React.Dispatch<React.SetStateAction<boolean>>}
 ): ReactElement {
+  const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +46,7 @@ function Login(
         //put jwt in local storage
         setJwtToLocalStorage(data.access_token);
         resetAnkaApi();
+        navigate('/');
       }).catch((err : any) => {
         setShowAlert(true);
         setAlertMessage("Invalid email or password");

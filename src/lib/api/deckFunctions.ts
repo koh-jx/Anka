@@ -132,3 +132,17 @@ export const getCardsFromDeckIdApi = async (deckId: string, pageNumber: number):
     }
     );
 }
+
+export const getCardsToReviewFromDeckApi = async (deckId: string): Promise<CardType[]> => {
+    return new Promise((resolve, reject) => {
+        getAnkaApi()
+            .get('/deck/review-cards?id=' + deckId)
+            .then(({ data }) => {
+                resolve(data);
+            })
+            .catch(() => {
+                reject();
+            });
+    }
+    );
+}

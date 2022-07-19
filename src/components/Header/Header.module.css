@@ -8,7 +8,7 @@
   position: fixed;
   padding: 0.7rem 2rem;
   overflow: hidden;
-  z-index: 2;
+  z-index: 5;
   width: 100%; 
   margin: auto;
   top: 0;

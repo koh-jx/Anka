@@ -14,13 +14,20 @@
 }
 
 .gridItem {
-    padding: 10px 20px 0px 20px;
+    margin: 10px 20px 0px 20px;
     text-align: center;
     display: flex;
     flex-direction: column;
 }
 
 .card {
+    position: relative;
+    width: 290px;
+    height: 190px;
+    font-size: 2rem;
+}
+
+.addCard {
     width: 290px;
     height: 190px;
     background-color: rgb(0, 0, 0, 0.2);
@@ -32,10 +39,9 @@
     cursor: pointer;
     border-radius: 15px;
     box-shadow: inset 0px 0px 20px rgb(0, 0, 0, 0.5);
-    
 }
 
-.card:hover {
+.addCard:hover {
     background-color: rgb(0, 0, 0, 0.3);
 }
 
@@ -63,19 +69,37 @@
 .sidebar {
     width: 28%;
     margin-left: 2%;
-    background-color: rgb(0, 0, 0, 0.1);
-    box-shadow: inset 0px 0px 10px rgb(0, 0, 0, 0.25);
-    box-shadow: inset 0px 0px 10px rgb(0, 0, 0, 0.25);
-    border-radius: 15px;
     overflow-y: auto;
     display: flex;
-    flex-direction: row;
-    flex-wrap:wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
 }
 
 .topBar {
     display: flex;
     flex-direction: row;
+}
+
+.dueForReview {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 10px;
+    z-index: 2;
+    font-size: 0.8rem;
+}
+
+.reviewText {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 10px;
+    z-index: 2;
+    font-size: 0.8rem;
+    color:rgb(255, 255, 255, 0.5)
 }

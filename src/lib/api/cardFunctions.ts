@@ -55,9 +55,7 @@ export const getUserCardsApi = async (page: number): Promise<CardType[]> =>
 
 // Get deck from a given array of ids
 export const getDeckFromArrayApi = async (cards: string[]): Promise<CardType[]> => {
-    return await Promise.all(
-        cards.map(async (card) => getCardApi(card))
-    );
+    return Promise.all(cards.map((card) => getCardApi(card)));
 };
 
 // Create new card
@@ -131,4 +129,52 @@ export const removeCardByIdApi = async (cardId: string): Promise<CardType[]> => 
                   reject();
               });
   });
+}
+
+
+export const reviewCardApi = async (cardId: string, selfEvaluation: number) : Promise<CardType> => {
+  return new Promise((resolve, reject) => {
+    getAnkaApi()
+      .patch('/card/review', {
+        id: cardId,
+        selfEvaluation: selfEvaluation,
+      })
+      .then(({ data }) => {
+        console.log(data);
+        resolve(data);
+      })
+      .catch(() => {
+        reject();
+      });
+  }
+);
+}
+
+export const isDueForReview = (card: CardType) => {
+  if (!card.lastReviewedDate) {
+    return true;
+  } else if (card.interval) {
+    const daysSinceLastReview = daysBetween(new Date(), new Date(card.lastReviewedDate));
+    return daysSinceLastReview >= card.interval;
+  } else {
+    return false;
+  }
+}
+
+export const getTimeToReview = (card: CardType) => {
+  if (card.interval && card.lastReviewedDate) {
+    const daysSinceLastReview = daysBetween(new Date(), new Date(card.lastReviewedDate));
+    return card.interval - daysSinceLastReview;
+  } else {
+    return 0;
+  }
+}
+
+const daysBetween = (date1: Date, date2: Date) : number => {
+  const one = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  const two = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const millisBetween = two.getTime() - one.getTime();
+  const days = millisBetween / millisecondsPerDay;
+  return Math.abs(Math.round(days));
 }

@@ -1,24 +1,25 @@
 import React, { ReactElement } from 'react'
 import Flippy, { FrontSide, BackSide } from 'react-flippy';
       
+// Gets the font size, height and width from the parent div container
 const FlippyStyle = {
-    width: '290px',
-    height: '190px',
+    width: '100%',
+    height: '100%',
     textAlign: 'center',
     color: '#FFF',
-    fontFamily: 'sans-serif',
-    fontSize: '30px',
+    fontFamily: 'roboto',
     justifyContent: 'center',
 }
 
 // Card Factory uses this template to create a card
 function Card(
   { 
-    frontCardface, backCardface, tags
+    frontCardface, backCardface, tags, isFlipped,
   } : {
     frontCardface: ReactElement,
     backCardface: ReactElement,
     tags: string[],
+    isFlipped?: boolean,
   }
 ): ReactElement {
 
@@ -51,17 +52,16 @@ function Card(
     );
 
     return (    
-        <div>
-            <Flippy
-                flipOnClick={true}
-                flipDirection={'horizontal'}
-                style={FlippyStyle}
-            >
-                <DefaultCardContents>
-                  Pack name
-                </DefaultCardContents>
-            </Flippy>
-        </div>
+      <Flippy
+          flipOnClick={isFlipped !== undefined ? false : true}
+          flipDirection={'horizontal'}
+          style={FlippyStyle}
+          isFlipped={isFlipped}
+      >
+          <DefaultCardContents>
+            Placeholder content
+          </DefaultCardContents>
+      </Flippy>
     );
 }
 

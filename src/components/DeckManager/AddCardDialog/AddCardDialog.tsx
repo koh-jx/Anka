@@ -29,9 +29,9 @@ export default function AddCardDialog(
   }
 ) {
 
-  const [frontTitle, setFrontTitle] = useState('Front');
+  const [frontTitle, setFrontTitle] = useState('');
   const [frontDescription, setFrontDescription] = useState('');
-  const [backTitle, setBackTitle] = useState('Back');
+  const [backTitle, setBackTitle] = useState('');
   const [backDescription, setBackDescription] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 
@@ -76,9 +76,9 @@ export default function AddCardDialog(
   }
 
   const resetDialog = () => {
-    setFrontTitle('Front');
+    setFrontTitle('');
     setFrontDescription('');
-    setBackTitle('Back');
+    setBackTitle('');
     setBackDescription('');
     setTags([]);
   }
@@ -100,6 +100,7 @@ export default function AddCardDialog(
           // Cant use primary theme here for some reason
           backgroundColor: window.localStorage.getItem('mode') === 'light' ? "#94e2e4" : '#3e5641', // theme primary.light
           borderRadius: '10px',
+          height: '90%',
         },
       }}
     >

@@ -26,6 +26,8 @@ function Textfield(
             background: 'rgba(255,255,255,0.8)',
           }
         }}
+        autoComplete='off'
+        autoFocus
         InputLabelProps={{
           style: { color: '#000' },
         }}

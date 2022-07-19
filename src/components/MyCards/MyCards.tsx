@@ -156,7 +156,9 @@ export default function MyCards(): ReactElement {
                     {/* Card displays  */}
                     { cards.map((card) => (
                         <div className={styles.gridItem} key={card.id}>
-                            {createCard(card)}
+                            <div className={styles.card}>
+                                {createCard(card)}
+                            </div>
                             <div className={styles.cardSettings}>
                                 <ModeEditIcon 
                                     className={styles.cardSettingsIcon}
@@ -174,7 +176,7 @@ export default function MyCards(): ReactElement {
                     {/* Add Card button  */}
                     { cards.length < NUM_CARDS_PER_PAGE && <div className={styles.gridItem}>
                         <div 
-                            className={styles.card}
+                            className={styles.addCard}
                             onClick={handleClickOpen}
                         >
                             <AddCircleIcon sx={{ 

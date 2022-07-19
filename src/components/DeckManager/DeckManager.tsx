@@ -3,15 +3,18 @@ import { useLocation } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from '@mui/material';
+import FmdBadIcon from '@mui/icons-material/FmdBad';
 import { useSnackbar } from 'notistack';
 
 import { createCard } from '../Card/CardFactory';
 import AddCardDialog from './AddCardDialog';
 import DeleteDialog from '../DeleteDialog';
-import { CardType, DeckType } from '../../common/types';
+import TopBar from '../TopBar';
+import SideBar from './SideBar';
 
 import { 
+    isDueForReview,
+    getTimeToReview,
     editCardApi,
     removeCardApi, 
 } from '../../lib/api/cardFunctions';
@@ -19,13 +22,14 @@ import {
     createCardToDeckApi,
     removeCardFromDeckApi,
     getCardsFromDeckIdApi,
+    getCardsToReviewFromDeckApi,
     getDeckApi,
 } from '../../lib/api/deckFunctions';
-
-import styles from './DeckManager.module.css';
-import TopBar from '../TopBar';
+import { CardType, DeckType } from '../../common/types';
 import { NUM_CARDS_PER_PAGE } from '../../common/constants';
 import { getSnackbarActions } from '../../common/transitions';
+
+import styles from './DeckManager.module.css';
   
 function DeckManager(): ReactElement {
     // React Router
@@ -37,18 +41,22 @@ function DeckManager(): ReactElement {
     const [cards, setCards] = useState<CardType[]>([]);
     const [pageNumber, setPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [numCards, setNumCards] = useState(1);
+    const [numCards, setNumCards] = useState(0);
     const [editObject, setEditObject] = useState<CardType | null>(null);           // The original card before edit (for dialog)     
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteObject, setDeleteObject] = useState<CardType | null>(null);       // The original card before delete (for dialog)
+    const [dueForReviewCount, setDueForReviewCount] = useState(0);
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     // Initialise the number of cards (and total pages) and card data for the first page
     useEffect(() => {
         getDeckApi(deckId).then(deck => {
-            setNumCards(deck.cards.length)
+            setNumCards(deck.cards.length);
         })
+        getCardsToReviewFromDeckApi(deckId).then(cards => {
+            setDueForReviewCount(cards.length);
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -82,6 +90,7 @@ function DeckManager(): ReactElement {
         createCardToDeckApi(toAdd, deckId)
             .then(result => {
                 setCards([...cards, result]);
+                setDueForReviewCount(dueForReviewCount+1);
                 const action = getSnackbarActions(closeSnackbar);
                 
                 // Set number of cards, updating totalPages in the useEffect
@@ -100,12 +109,13 @@ function DeckManager(): ReactElement {
     const handleDeleteClickClose = (isHardDelete: boolean) => {
         setDeleteDialogOpen(false);
         if (!deleteObject) return;
-        else if (isHardDelete) removeCardApi(deleteObject).then(deleteCard);
-        else removeCardFromDeckApi(deleteObject, deckId).then(deleteCard);
+        const dueForReview = isDueForReview(deleteObject);
+        if (isHardDelete) removeCardApi(deleteObject).then(() => deleteCard(dueForReview));
+        else removeCardFromDeckApi(deleteObject, deckId).then(() => deleteCard(dueForReview));
     }
 
     // Called by delete functions to handle data after different types of deletion as seen above
-    const deleteCard = () => {
+    const deleteCard = (dueForReview: boolean) => {
         setCards(cards.filter(card => {
             return card.id !== (deleteObject as CardType).id
         }));
@@ -113,6 +123,7 @@ function DeckManager(): ReactElement {
 
         // Set number of cards, updating totalPages in the useEffect
         setNumCards(numCards - 1);
+        if (dueForReview) setDueForReviewCount(dueForReviewCount-1);
 
         getCardsFromDeckIdApi(deckId, pageNumber)
             .then(cards => {
@@ -167,7 +178,20 @@ function DeckManager(): ReactElement {
                     {/* Card displays  */}
                     { cards.map((card) => (
                         <div className={styles.gridItem} key={card.id}>
-                            {createCard(card)}
+                            <div className={styles.card}>
+                                { isDueForReview(card) && 
+                                    <div className={styles.dueForReview}>
+                                        <FmdBadIcon />
+                                        Review required
+                                    </div> 
+                                }
+                                { !isDueForReview(card) && 
+                                    <div className={styles.reviewText}>
+                                        Review in { getTimeToReview(card) } { getTimeToReview(card) === 1 ? 'day' : 'days' }
+                                    </div> 
+                                }
+                                {createCard(card)}
+                            </div>
                             <div className={styles.cardSettings}>
                                 <ModeEditIcon 
                                     className={styles.cardSettingsIcon}
@@ -185,7 +209,7 @@ function DeckManager(): ReactElement {
                     {/* Add Card button  */}
                     { cards.length < NUM_CARDS_PER_PAGE && <div className={styles.gridItem}>
                         <div 
-                            className={styles.card}
+                            className={styles.addCard}
                             onClick={handleClickOpen}
                         >
                             <AddCircleIcon sx={{ 
@@ -213,11 +237,7 @@ function DeckManager(): ReactElement {
                     />
                 </div>
                 <div className={styles.sidebar}>
-                    <Button 
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                    />
+                    <SideBar deckId={deckId} numCards={numCards} dueForReviewCount={dueForReviewCount}/>
                 </div>
             </div>
         </>

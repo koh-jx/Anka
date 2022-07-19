@@ -23,11 +23,11 @@ function Header(
 ): ReactElement {
 
     const navigate = useNavigate();
-    
     const logoutUser = async () => {
         await logout()
             .then(() => {
                 setIsLoggedIn(false);
+                navigate('/');
             }
         );
     }
