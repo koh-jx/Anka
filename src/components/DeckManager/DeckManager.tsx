@@ -14,6 +14,7 @@ import SideBar from './SideBar';
 
 import { 
     isDueForReview,
+    getTimeToReview,
     editCardApi,
     removeCardApi, 
 } from '../../lib/api/cardFunctions';
@@ -182,7 +183,13 @@ function DeckManager(): ReactElement {
                                     <div className={styles.dueForReview}>
                                         <FmdBadIcon />
                                         Review required
-                                    </div> }
+                                    </div> 
+                                }
+                                { !isDueForReview(card) && 
+                                    <div className={styles.reviewText}>
+                                        Review in { getTimeToReview(card) } { getTimeToReview(card) === 1 ? 'day' : 'days' }
+                                    </div> 
+                                }
                                 {createCard(card)}
                             </div>
                             <div className={styles.cardSettings}>

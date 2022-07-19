@@ -154,9 +154,27 @@ export const isDueForReview = (card: CardType) => {
   if (!card.lastReviewedDate) {
     return true;
   } else if (card.interval) {
-    const daysSinceLastReview = (new Date().getTime() - new Date(card.lastReviewedDate).getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceLastReview = daysBetween(new Date(), new Date(card.lastReviewedDate));
     return daysSinceLastReview >= card.interval;
   } else {
     return false;
   }
+}
+
+export const getTimeToReview = (card: CardType) => {
+  if (card.interval && card.lastReviewedDate) {
+    const daysSinceLastReview = daysBetween(new Date(), new Date(card.lastReviewedDate));
+    return card.interval - daysSinceLastReview;
+  } else {
+    return 0;
+  }
+}
+
+const daysBetween = (date1: Date, date2: Date) : number => {
+  const one = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  const two = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const millisBetween = two.getTime() - one.getTime();
+  const days = millisBetween / millisecondsPerDay;
+  return Math.abs(Math.round(days));
 }

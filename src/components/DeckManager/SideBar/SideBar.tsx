@@ -80,7 +80,8 @@ export default function SideBar(
             padding: "1rem",
           }}
       >
-          You have {dueForReviewCount} {dueForReviewCount === 1 ? "card" : "cards"} pending review
+          {dueForReviewCount !== 0 && `You have ${dueForReviewCount} ${dueForReviewCount === 1 ? "card" : "cards"} pending review`}
+          {dueForReviewCount === 0 && `No cards to review! Try a practice session!`}
       </Typography>
     </>
   );

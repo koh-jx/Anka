@@ -91,3 +91,15 @@
     z-index: 2;
     font-size: 0.8rem;
 }
+
+.reviewText {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 10px;
+    z-index: 2;
+    font-size: 0.8rem;
+    color:rgb(255, 255, 255, 0.5)
+}
