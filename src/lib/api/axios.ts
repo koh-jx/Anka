@@ -1,7 +1,8 @@
 import Axios from 'axios';
+const ANKA_API = "https://anka-api.herokuapp.com/api";
 
 var ankaApi = Axios.create({ 
-    baseURL: process.env.REACT_APP_URL ?? "https://anka-api.herokuapp.com/api", 
+    baseURL: ANKA_API, 
     timeout: 5000,
     headers: {
         Authorization: 'Bearer '+ localStorage.getItem('jwt')
@@ -11,7 +12,7 @@ var ankaApi = Axios.create({
 export const getAnkaApi = () => ankaApi;
 export const resetAnkaApi = () => {
     ankaApi = Axios.create({ 
-        baseURL: process.env.REACT_APP_URL ?? "https://anka-api.herokuapp.com/api", 
+        baseURL: ANKA_API, 
         timeout: 5000,
         headers: {
             Authorization: 'Bearer '+ localStorage.getItem('jwt')
