@@ -52,6 +52,7 @@ function Login(
         navigate('/');
         setIsLoading(false);
       }).catch((err : any) => {
+        console.error(err);
         setIsLoading(false);
         setShowAlert(true);
         setAlertMessage("Invalid email or password");
@@ -64,6 +65,7 @@ function Login(
     await registerNewUser(username, password)
       .then (() => { loginUser(); })
       .catch((err : any) => {
+        console.error(err);
         setIsLoading(false);
         setShowAlert(true);
         setAlertMessage(err.message);
