@@ -1,5 +1,5 @@
 import { ReactElement, useState, useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { Button, Typography } from '@mui/material';
@@ -24,13 +24,16 @@ import "./styles.css";
 
 type LocationInfo = {
     deckId: string;
+    deckName: string;
     isDailyReview: boolean;
 }
 
 function TestingPage(): ReactElement {
     // React Router
     const location = useLocation();
+    const navigate = useNavigate();
     const deckId = (location.state as LocationInfo).deckId;
+    const deckName = (location.state as LocationInfo).deckName;
     const isDailyReview = (location.state as LocationInfo).isDailyReview;
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -116,6 +119,11 @@ function TestingPage(): ReactElement {
             setSelfEvaluation(-1);
             setHasEvaluated(false);
         }
+    }
+
+    const finishTest = () => {
+        if (isDailyReview) reviewCardApi(cards[currentIndex].id, selfEvaluation);
+        navigate(-1);
     }
 
     const handleClickCard = () => {
@@ -242,7 +250,7 @@ function TestingPage(): ReactElement {
                                         fontSize: "1rem",
                                         borderRadius: "30px",
                                     }}
-                                    onClick={handleNext}
+                                    onClick={(currentIndex < cards.length - 1) ? handleNext : finishTest}
                                     disabled={isDailyReview && !hasEvaluated}
                                 >
                                     {(currentIndex < cards.length - 1) ? "Next" : "Finish Test"}

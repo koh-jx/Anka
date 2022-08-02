@@ -1,5 +1,5 @@
 import Axios from 'axios';
-const ANKA_API = "https://anka-api.herokuapp.com/api";
+const ANKA_API = process.env.REACT_APP_URL;
 
 var ankaApi = Axios.create({ 
     baseURL: ANKA_API, 
