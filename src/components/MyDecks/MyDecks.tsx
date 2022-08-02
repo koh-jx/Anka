@@ -36,6 +36,7 @@ function MyDecks(): ReactElement {
     const [editObject, setEditObject] = useState<DeckType | null>(null); 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deckToDelete, setDeckToDelete] = useState<DeckType | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     // Snackbar
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -50,8 +51,10 @@ function MyDecks(): ReactElement {
 
     // API call whenever page number is changed
     useEffect(() => {
+        setIsLoading(true);
         getUserDecksApi(pageNumber).then(decks => {
             setDecks(decks);
+            setIsLoading(false);
         });
     }, [pageNumber]);
 
@@ -173,7 +176,12 @@ function MyDecks(): ReactElement {
             />
             <div className={styles.deckManager}>
                 <div className={styles.gridContainer}>
-                    { decks.map((deck, index) => (
+                    { isLoading && 
+                        <div className={styles.gridItem}>
+                            <div className={styles.loadingDeck} />
+                        </div> 
+                    }
+                    { !isLoading && decks.map((deck, index) => (
                         <div className={styles.gridItem} key={index}>
                             <div 
                                 className={styles.deck}
@@ -226,7 +234,7 @@ function MyDecks(): ReactElement {
                             </div>
                         </div>
                     )) }
-                    { decks.length < NUM_DECKS_PER_PAGE && <div className={styles.gridItem}>
+                    { !isLoading && decks.length < NUM_DECKS_PER_PAGE && <div className={styles.gridItem}>
                         <div 
                             className={styles.card}
                             onClick={handleClickOpen}

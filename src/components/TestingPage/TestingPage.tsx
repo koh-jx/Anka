@@ -33,7 +33,6 @@ function TestingPage(): ReactElement {
     const location = useLocation();
     const navigate = useNavigate();
     const deckId = (location.state as LocationInfo).deckId;
-    const deckName = (location.state as LocationInfo).deckName;
     const isDailyReview = (location.state as LocationInfo).isDailyReview;
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();

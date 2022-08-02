@@ -7,6 +7,7 @@ import {
   TextField,
   InputAdornment,
   IconButton,
+  CircularProgress
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -25,6 +26,7 @@ function Login(
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
@@ -40,6 +42,7 @@ function Login(
   }
 
   const loginUser = async () => {
+    setIsLoading(true);
     await login(username, password)
       .then ((data) => {
         setIsLoggedIn(true);
@@ -47,7 +50,9 @@ function Login(
         setJwtToLocalStorage(data.access_token);
         resetAnkaApi();
         navigate('/');
+        setIsLoading(false);
       }).catch((err : any) => {
+        setIsLoading(false);
         setShowAlert(true);
         setAlertMessage("Invalid email or password");
       }
@@ -55,9 +60,11 @@ function Login(
   }
 
   const registerUser = async () => {
+    setIsLoading(true);
     await registerNewUser(username, password)
       .then (() => { loginUser(); })
       .catch((err : any) => {
+        setIsLoading(false);
         setShowAlert(true);
         setAlertMessage(err.message);
       }
@@ -126,21 +133,32 @@ function Login(
 
           {isRegister && (
             <>
-              <Button 
-                color="primary"
-                variant="contained"
-                style={{ 
-                  borderRadius: 25, 
-                  marginLeft: 'auto', 
-                  marginRight: 'auto', 
-                  width: '50%', 
-                  fontFamily: 'Roboto', 
-                  fontWeight: 'bold',
-                }}
-                onClick={registerUser}
-              >
-                Create account
-              </Button>
+              <Box sx={{ position: 'relative' }}>
+                <Button 
+                  color="primary"
+                  variant="contained"
+                  style={{ 
+                    borderRadius: 25, 
+                    left: "25%",
+                    width: '50%', 
+                  }}
+                  onClick={registerUser}
+                >
+                  Create account
+                </Button>
+                {isLoading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
 
               <Button 
                 color="secondary"
@@ -150,8 +168,6 @@ function Login(
                   marginLeft: 'auto', 
                   marginRight: 'auto', 
                   width: '50%', 
-                  fontFamily: 'Roboto', 
-                  fontWeight: 'bold',
                   whiteSpace: 'nowrap',
                 }}
                 onClick={() => reset(false)}
@@ -163,22 +179,34 @@ function Login(
   
           {!isRegister && (
             <>
-              <Button 
-                color="primary"
-                variant="contained"
-                style={{ 
-                  borderRadius: 25, 
-                  marginLeft: 'auto', 
-                  marginRight: 'auto', 
-                  width: '50%', 
-                  fontFamily: 'Roboto', 
-                  fontWeight: 'bold',
-                  whiteSpace: 'nowrap'
-                }}
-                onClick={loginUser}
-              >
-                Login
-              </Button>
+              <Box sx={{ position: 'relative' }}>
+                <Button 
+                  color="primary"
+                  variant="contained"
+                  style={{ 
+                    borderRadius: 25, 
+                    left: "25%",
+                    width: '50%', 
+                    whiteSpace: 'nowrap'
+                  }}
+                  disabled={isLoading}
+                  onClick={loginUser}
+                >
+                  Login
+                </Button>
+                {isLoading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
               
               <Button 
                 color="secondary"
@@ -189,8 +217,6 @@ function Login(
                   marginLeft: 'auto', 
                   marginRight: 'auto', 
                   width: '50%', 
-                  fontFamily: 'Roboto', 
-                  fontWeight: 'bold',
                   whiteSpace: 'nowrap'
                 }}
                 onClick={() => reset(true)}

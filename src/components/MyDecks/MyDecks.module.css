@@ -72,6 +72,36 @@
     padding: 1rem;
 }
 
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0
+    }
+    100%{
+        background-position: 468px 0
+    }
+}
+
+.loadingDeck {
+    width: 290px;
+    height: 190px;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background-color: rgb(255, 255, 255, 0.2);
+    background: linear-gradient(to right, rgb(255,255,255,0.2) 8%, rgb(255,255,255,0.1) 18%, rgb(255,255,255,0.2) 33%);
+    background-size: 800px 104px;
+    background-color: rgb(255, 255, 255, 0.2);
+    justify-content: center; 
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    box-shadow: 0px 10px 10px rgb(0, 0, 0, 0.5);
+    padding: 1rem;
+}
+
 .deck:hover {
     background-color: rgb(255, 255, 255, 0.15);
 }
