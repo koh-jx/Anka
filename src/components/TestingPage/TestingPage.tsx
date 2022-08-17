@@ -101,7 +101,7 @@ function TestingPage(): ReactElement {
     const handleSubmitAnswer = () => {
         setHasAnswered(true);
         setIsFlipped(true);
-        setIsCorrect(cards[currentIndex].backCardFaceProps.backTitle === answer);
+        setIsCorrect(cards[currentIndex].backCardFaceProps.backTitle.toLowerCase() === answer.toLowerCase());
     }
 
     const keyPressSubmit = (e: any) => {
