@@ -18,4 +18,4 @@ Anka is a Flashcard app designed with the intention of making it easier to learn
 
 Anka is currently hosted on Vercel, with its [backend](https://github.com/koh-jx/anka-api). Visit Anka @ https://anka-kohjx.vercel.app/
 
-NOTE: Since the end of Heroku's free dyno, Anka is no longer operational beyond the front login page. Apologies for the inconvenience.
+<h2>NOTE: Since the end of Heroku's free dyno, Anka is no longer operational beyond the front login page. Apologies for the inconvenience.</h2>
