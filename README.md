@@ -16,4 +16,5 @@ Anka is a Flashcard app designed with the intention of making it easier to learn
   
 <h1> Anki means memorization in Japanese (暗記), but do you know that Anka means🦆Duck🦆in🦆Swedish?🦆🦆 </h1>
 
-Anka is currently hosted on Vercel, with its [backend](https://github.com/koh-jx/anka-api) hosted on Heroku. Visit Anka @ https://anka-kohjx.vercel.app/
+Anka is currently hosted on Vercel, with its [backend](https://github.com/koh-jx/anka-api). Visit Anka @ https://anka-kohjx.vercel.app/
+NOTE: Since the end of Heroku's free dyno, Anka is no longer operational beyond the front login page. Apologies for the inconvenience.
